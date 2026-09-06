@@ -43,6 +43,93 @@
       padding-bottom: 80px;
     }
 
+    /* Lock Screen Overlay */
+    #lockOverlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(12px);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .lock-box {
+      background: white;
+      border-radius: 20px;
+      max-width: 420px;
+      width: 100%;
+      padding: 36px 28px;
+      text-align: center;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .lock-icon {
+      font-size: 3rem;
+      margin-bottom: 12px;
+    }
+
+    .lock-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .lock-desc {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    .pin-input-wrap {
+      margin-bottom: 16px;
+    }
+
+    .pin-input {
+      width: 100%;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      padding: 12px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .pin-input:focus {
+      border-color: var(--primary);
+    }
+
+    .unlock-btn {
+      width: 100%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 14px;
+      font-size: 1rem;
+      font-weight: 700;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .unlock-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .pin-error {
+      color: var(--danger);
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 12px;
+      display: none;
+    }
+
     header {
       background: linear-gradient(135deg, #0284c7 0%, #0369a1 50%, #1e3a8a 100%);
       color: white;
@@ -56,6 +143,25 @@
       margin: 0 auto;
     }
 
+    .header-top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .lock-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      padding: 5px 12px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+    }
+
     .badge {
       display: inline-flex;
       align-items: center;
@@ -66,7 +172,6 @@
       border-radius: 9999px;
       font-size: 0.875rem;
       font-weight: 600;
-      margin-bottom: 16px;
       border: 1px solid rgba(255, 255, 255, 0.25);
     }
 
@@ -585,130 +690,150 @@
 </head>
 <body>
 
-  <header>
-    <div class="header-content">
-      <div class="badge">🇸🇪 Svíþjóð & Danmörk 2027 🇩🇰</div>
-      <h1>Sumarfrí Fjölskyldunnar 2027</h1>
-      <p class="subtitle">Skipulag, dagsetningakosning og val á gististað fyrir 14 manna hópinn okkar!</p>
+  <!-- PIN Lock Screen -->
+  <div id="lockOverlay">
+    <div class="lock-box">
+      <div class="lock-icon">🔒</div>
+      <h2 class="lock-title">Fjölskylduaðgangur</h2>
+      <p class="lock-desc">Þessi síða inniheldur persónulegt frískipulag. Sláðu inn fjölskyldu-PIN til að halda áfram.</p>
       
-      <div class="quick-stats">
-        <div class="stat-pill">👥 14 manns (13 fullorðnir, 1 barn)</div>
-        <div class="stat-pill">💰 Viðmið: ~$3.000 / vika</div>
-        <div class="stat-pill">📅 Tímabil: 15. júní – 31. ágúst 2027</div>
-        <div class="stat-pill">📍 Suður-Svíþjóð eða Danmörk</div>
+      <div class="pin-input-wrap">
+        <input type="password" id="pinInput" class="pin-input" placeholder="••••" maxlength="10" autofocus onkeydown="if(event.key==='Enter') submitPIN()">
       </div>
+      <button class="unlock-btn" onclick="submitPIN()">Opna síðu 🔓</button>
+      <div class="pin-error" id="pinError">Rangt PIN-númer. Reyndu aftur.</div>
     </div>
-  </header>
+  </div>
 
-  <main class="container">
-
-    <div class="nav-tabs">
-      <button class="nav-btn active" onclick="showTab('vote')">🗳️ Skrá mína dagsetningu & val</button>
-      <button class="nav-btn" onclick="showTab('results')">📊 Niðurstöður & Samantekt</button>
-      <button class="nav-btn" onclick="showTab('houses')">🏡 Skoða öll húsin (12)</button>
-    </div>
-
-    <!-- TAB 1: KOSNING -->
-    <div id="tab-vote">
-      
-      <!-- Hver ert þú? -->
-      <div class="card">
-        <div class="card-title">1. Hver ert þú?</div>
-        <div class="card-desc">Veldu nafnið þitt úr hópnum til að skrá hvenær þú kemst:</div>
+  <div id="appContainer" style="display: none;">
+    <header>
+      <div class="header-content">
+        <div class="header-top-bar">
+          <div class="badge">🇸🇪 Svíþjóð & Danmörk 2027 🇩🇰</div>
+          <button class="lock-btn" onclick="lockApp()">Læsa síðu 🔒</button>
+        </div>
+        <h1>Sumarfrí Fjölskyldunnar 2027</h1>
+        <p class="subtitle">Skipulag, dagsetningakosning og val á gististað fyrir 14 manna hópinn okkar!</p>
         
-        <div class="person-chips" id="personChips"></div>
-
-        <div class="custom-name-row">
-          <input type="text" id="customNameInput" placeholder="Eða skrifaðu annað nafn (t.d. maki / gestur)..." oninput="onCustomNameInput(this.value)">
+        <div class="quick-stats">
+          <div class="stat-pill">👥 14 manns (13 fullorðnir, 1 barn)</div>
+          <div class="stat-pill">💰 Viðmið: ~$3.000 / vika</div>
+          <div class="stat-pill">📅 Tímabil: 15. júní – 31. ágúst 2027</div>
+          <div class="stat-pill">📍 Suður-Svíþjóð eða Danmörk</div>
         </div>
       </div>
+    </header>
 
-      <!-- Vikur -->
-      <div class="card">
-        <div class="card-title">2. Hvenær kemstu milli 15. júní og loka ágúst 2027?</div>
-        <div class="card-desc">Merktu við allar vikur sem gætu hentað þér. Markmiðið er að finna viku sem allir komast!</div>
+    <main class="container">
 
-        <div class="weeks-grid" id="weeksGrid"></div>
+      <div class="nav-tabs">
+        <button class="nav-btn active" onclick="showTab('vote', this)">🗳️ Skrá mína dagsetningu & val</button>
+        <button class="nav-btn" onclick="showTab('results', this)">📊 Niðurstöður & Samantekt</button>
+        <button class="nav-btn" onclick="showTab('houses', this)">🏡 Skoða öll húsin (12)</button>
       </div>
 
-      <!-- Uppáhalds hús -->
-      <div class="card">
-        <div class="card-title">3. Val á húsi (Gististaðir um ~$3.000)</div>
-        <div class="card-desc">Hér eru bestu húsin á óskalistanum sem rúma okkur öll (14 manns) og kosta um eða innan við $3.000/viku. Veldu þau sem þér líst best á:</div>
-
-        <div class="houses-grid" id="priorityHousesGrid"></div>
-      </div>
-
-      <!-- Athugasemdir -->
-      <div class="card">
-        <div class="card-title">4. Athugasemdir, hugmyndir & óskir</div>
-        <div class="card-desc">Hvað skiptir þig mestu máli? (Sundlaug, stutt á strönd, golf/padel, nálægt flugvelli, bílaleiga, matur/grill o.s.frv.)</div>
-        <textarea id="commentInput" rows="3" placeholder="Skrifaðu þínar pælingar eða óskir hér..."></textarea>
-      </div>
-
-      <!-- Save floating bar -->
-      <div class="save-bar">
-        <div>
-          <strong id="saveBarName">Enginn valinn</strong>
-          <div style="font-size: 0.85rem; opacity: 0.85;" id="saveBarStatus">Veldu nafn og merktu við vikurnar</div>
-        </div>
-        <button class="save-btn" onclick="saveCurrentVote()">Vista mitt svar ✅</button>
-      </div>
-
-    </div>
-
-    <!-- TAB 2: NIÐURSTÖÐUR -->
-    <div id="tab-results" style="display: none;">
-      <div class="card">
-        <div class="card-title">📊 Hvaða vika hentar best? (Yfirlit)</div>
-        <div class="card-desc">Hér sést samantekt á svörum allra. Vika með flest græn atkvæði er efst.</div>
+      <!-- TAB 1: KOSNING -->
+      <div id="tab-vote">
         
-        <div style="overflow-x: auto;">
-          <table class="results-table" id="resultsWeeksTable">
-            <thead>
-              <tr>
-                <th>Vika & Dagsetningar</th>
-                <th>Kemst vel ✅</th>
-                <th>Gæti gengið 🟡</th>
-                <th>Kemst ekki ❌</th>
-                <th>Hverjir komast / komast ekki</th>
-              </tr>
-            </thead>
-            <tbody id="resultsWeeksTbody"></tbody>
-          </table>
+        <!-- Hver ert þú? -->
+        <div class="card">
+          <div class="card-title">1. Hver ert þú?</div>
+          <div class="card-desc">Veldu nafnið þitt úr hópnum til að skrá hvenær þú kemst:</div>
+          
+          <div class="person-chips" id="personChips"></div>
+
+          <div class="custom-name-row">
+            <input type="text" id="customNameInput" placeholder="Eða skrifaðu annað nafn (t.d. maki / gestur)..." oninput="onCustomNameInput(this.value)">
+          </div>
+        </div>
+
+        <!-- Vikur -->
+        <div class="card">
+          <div class="card-title">2. Hvenær kemstu milli 15. júní og loka ágúst 2027?</div>
+          <div class="card-desc">Merktu við allar vikur sem gætu hentað þér. Markmiðið er að finna viku sem allir komast!</div>
+
+          <div class="weeks-grid" id="weeksGrid"></div>
+        </div>
+
+        <!-- Uppáhalds hús -->
+        <div class="card">
+          <div class="card-title">3. Val á húsi (Gististaðir um ~$3.000)</div>
+          <div class="card-desc">Hér eru bestu húsin á óskalistanum sem rúma okkur öll (14 manns) og kosta um eða innan við $3.000/viku. Veldu þau sem þér líst best á:</div>
+
+          <div class="houses-grid" id="priorityHousesGrid"></div>
+        </div>
+
+        <!-- Athugasemdir -->
+        <div class="card">
+          <div class="card-title">4. Athugasemdir, hugmyndir & óskir</div>
+          <div class="card-desc">Hvað skiptir þig mestu máli? (Sundlaug, stutt á strönd, golf/padel, nálægt flugvelli, bílaleiga, matur/grill o.s.frv.)</div>
+          <textarea id="commentInput" rows="3" placeholder="Skrifaðu þínar pælingar eða óskir hér..."></textarea>
+        </div>
+
+        <!-- Save floating bar -->
+        <div class="save-bar">
+          <div>
+            <strong id="saveBarName">Enginn valinn</strong>
+            <div style="font-size: 0.85rem; opacity: 0.85;" id="saveBarStatus">Veldu nafn og merktu við vikurnar</div>
+          </div>
+          <button class="save-btn" onclick="saveCurrentVote()">Vista mitt svar ✅</button>
+        </div>
+
+      </div>
+
+      <!-- TAB 2: NIÐURSTÖÐUR -->
+      <div id="tab-results" style="display: none;">
+        <div class="card">
+          <div class="card-title">📊 Hvaða vika hentar best? (Yfirlit)</div>
+          <div class="card-desc">Hér sést samantekt á svörum allra. Vika með flest græn atkvæði er efst.</div>
+          
+          <div style="overflow-x: auto;">
+            <table class="results-table" id="resultsWeeksTable">
+              <thead>
+                <tr>
+                  <th>Vika & Dagsetningar</th>
+                  <th>Kemst vel ✅</th>
+                  <th>Gæti gengið 🟡</th>
+                  <th>Kemst ekki ❌</th>
+                  <th>Hverjir komast / komast ekki</th>
+                </tr>
+              </thead>
+              <tbody id="resultsWeeksTbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">❤️ Vinsælustu húsin</div>
+          <div class="card-desc">Atkvæði fjölskyldunnar um gististaði:</div>
+          <div id="houseVotesSummary"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">💬 Athugasemdir & Óskir frá hópnum</div>
+          <div id="commentsList">Engar athugasemdir komnar enn.</div>
         </div>
       </div>
 
-      <div class="card">
-        <div class="card-title">❤️ Vinsælustu húsin</div>
-        <div class="card-desc">Atkvæði fjölskyldunnar um gististaði:</div>
-        <div id="houseVotesSummary"></div>
-      </div>
+      <!-- TAB 3: ÖLL HÚSIN -->
+      <div id="tab-houses" style="display: none;">
+        <div class="card">
+          <div class="card-title">🏡 Allir 12 gististaðirnir á Airbnb óskalistanum</div>
+          <div class="card-desc">Hér eru allir staðirnir sem Sigurjón setti á óskalistann í Airbnb, með beinum hlekkjum og upplýsingum.</div>
 
-      <div class="card">
-        <div class="card-title">💬 Athugasemdir & Óskir frá hópnum</div>
-        <div id="commentsList">Engar athugasemdir komnar enn.</div>
-      </div>
-    </div>
+          <div class="houses-filter">
+            <button class="filter-btn active" onclick="filterHouses('all', this)">Öll hús (12)</button>
+            <button class="filter-btn" onclick="filterHouses('budget', this)">Bara ~$3.000 & S-Svíþjóð/Danmörk (7)</button>
+            <button class="filter-btn" onclick="filterHouses('sweden', this)">Bara Svíþjóð (9)</button>
+            <button class="filter-btn" onclick="filterHouses('denmark', this)">Bara Danmörk (3)</button>
+          </div>
 
-    <!-- TAB 3: ÖLL HÚSIN -->
-    <div id="tab-houses" style="display: none;">
-      <div class="card">
-        <div class="card-title">🏡 Allir 12 gististaðirnir á Airbnb óskalistanum</div>
-        <div class="card-desc">Hér eru allir staðirnir sem Sigurjón setti á óskalistann í Airbnb, með beinum hlekkjum og upplýsingum.</div>
-
-        <div class="houses-filter">
-          <button class="filter-btn active" onclick="filterHouses('all', this)">Öll hús (12)</button>
-          <button class="filter-btn" onclick="filterHouses('budget', this)">Bara ~$3.000 & S-Svíþjóð/Danmörk (7)</button>
-          <button class="filter-btn" onclick="filterHouses('sweden', this)">Bara Svíþjóð (9)</button>
-          <button class="filter-btn" onclick="filterHouses('denmark', this)">Bara Danmörk (3)</button>
+          <div class="houses-grid" id="allHousesGrid"></div>
         </div>
-
-        <div class="houses-grid" id="allHousesGrid"></div>
       </div>
-    </div>
 
-  </main>
+    </main>
+  </div>
 
   <script>
     const FAMILY_MEMBERS = [
@@ -745,17 +870,83 @@
       comment: ""
     };
     let allVotes = {};
+    let activePIN = "";
+
+    // Auth & PIN Management
+    function getAuthHeaders() {
+      return {
+        "Content-Type": "application/json",
+        "X-Family-PIN": activePIN
+      };
+    }
+
+    async function submitPIN() {
+      const pin = document.getElementById("pinInput").value.trim();
+      if (!pin) return;
+      
+      const ok = await verifyAndUnlock(pin);
+      if (!ok) {
+        document.getElementById("pinError").style.display = "block";
+      }
+    }
+
+    async function verifyAndUnlock(pin) {
+      try {
+        const resp = await fetch("/api/verify-pin", {
+          headers: { "X-Family-PIN": pin }
+        });
+        if (resp.ok) {
+          activePIN = pin;
+          sessionStorage.setItem("family_pin", pin);
+          unlockUI();
+          await loadData();
+          return true;
+        }
+      } catch (e) {
+        // Ef keyrt án server.py (static skrá)
+        if (pin === "2027") {
+          activePIN = pin;
+          sessionStorage.setItem("family_pin", pin);
+          unlockUI();
+          await loadData();
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function unlockUI() {
+      document.getElementById("lockOverlay").style.display = "none";
+      document.getElementById("appContainer").style.display = "block";
+    }
+
+    function lockApp() {
+      sessionStorage.removeItem("family_pin");
+      activePIN = "";
+      document.getElementById("pinInput").value = "";
+      document.getElementById("pinError").style.display = "none";
+      document.getElementById("appContainer").style.display = "none";
+      document.getElementById("lockOverlay").style.display = "flex";
+    }
 
     // Load houses data
     async function loadData() {
       try {
-        const resp = await fetch("houses.json");
-        HOUSES = await resp.json();
+        const resp = await fetch("/api/houses", { headers: getAuthHeaders() });
+        if (resp.ok) {
+          HOUSES = await resp.json();
+        } else {
+          const fallback = await fetch("houses.json");
+          HOUSES = await fallback.json();
+        }
       } catch (e) {
-        console.error("Could not load houses.json directly:", e);
+        try {
+          const fallback = await fetch("houses.json");
+          HOUSES = await fallback.json();
+        } catch (err) {}
       }
 
-      // Load stored votes from localStorage or backend
+      // Load stored votes
       const stored = localStorage.getItem("sweeden_2027_votes");
       if (stored) {
         try { allVotes = JSON.parse(stored); } catch (e) {}
@@ -763,7 +954,7 @@
 
       // Try fetching from server if running
       try {
-        const sResp = await fetch("/api/votes");
+        const sResp = await fetch("/api/votes", { headers: getAuthHeaders() });
         if (sResp.ok) {
           allVotes = await sResp.json();
         }
@@ -775,7 +966,6 @@
       renderAllHouses('all');
       renderResults();
 
-      // default select first person if available
       selectPerson(FAMILY_MEMBERS[0]);
     }
 
@@ -800,7 +990,6 @@
       document.getElementById("saveBarName").textContent = name;
       document.getElementById("saveBarStatus").textContent = "Skráir svör fyrir " + name;
 
-      // Load existing vote if exists
       if (allVotes[name]) {
         currentVote = JSON.parse(JSON.stringify(allVotes[name]));
       } else {
@@ -943,14 +1132,12 @@
       currentVote.comment = document.getElementById("commentInput").value;
       allVotes[currentPerson] = currentVote;
 
-      // Save to localStorage
       localStorage.setItem("sweeden_2027_votes", JSON.stringify(allVotes));
 
-      // Try sending to python server
       try {
         await fetch("/api/vote", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: getAuthHeaders(),
           body: JSON.stringify({ person: currentPerson, data: currentVote })
         });
       } catch (e) {}
@@ -966,7 +1153,6 @@
       if (voters.length === 0) {
         tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--text-muted); padding: 24px;">Engin svör hafa borist enn. Vertu fyrst(ur) til að skrá!</td></tr>`;
       } else {
-        // Calculate scores for each week
         const weekStats = WEEKS.map(w => {
           let yes = [], maybe = [], no = [];
           voters.forEach(p => {
@@ -979,7 +1165,6 @@
           return { ...w, yes, maybe, no, score };
         });
 
-        // sort by score descending
         weekStats.sort((a, b) => b.score - a.score);
 
         tbody.innerHTML = weekStats.map(w => {
@@ -1060,9 +1245,9 @@
       }
     }
 
-    function showTab(tab) {
-      document.querySelectorAll(".nav-btn").forEach(btn => btn.classList.remove("active"));
-      event.target.classList.add("active");
+    function showTab(tab, btn) {
+      document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+      if (btn) btn.classList.add("active");
 
       document.getElementById("tab-vote").style.display = tab === 'vote' ? 'block' : 'none';
       document.getElementById("tab-results").style.display = tab === 'results' ? 'block' : 'none';
@@ -1073,7 +1258,22 @@
       }
     }
 
-    window.addEventListener("DOMContentLoaded", loadData);
+    // On page load: check PIN from session or URL parameter ?pin=...
+    window.addEventListener("DOMContentLoaded", async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlPin = urlParams.get("pin");
+      const savedPin = sessionStorage.getItem("family_pin");
+
+      const pinToTry = urlPin || savedPin;
+      if (pinToTry) {
+        const ok = await verifyAndUnlock(pinToTry);
+        if (ok) return;
+      }
+
+      // If not authenticated, show lock screen
+      document.getElementById("lockOverlay").style.display = "flex";
+      document.getElementById("appContainer").style.display = "none";
+    });
   </script>
 </body>
 </html>
