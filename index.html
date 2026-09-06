@@ -625,6 +625,29 @@
       background: #7dd3fc;
     }
 
+    /* Share modal */
+    #shareModal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(6px);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .share-box {
+      background: white;
+      border-radius: 20px;
+      max-width: 480px;
+      width: 100%;
+      padding: 30px;
+      text-align: center;
+      box-shadow: var(--shadow-lg);
+    }
+
     /* Results Dashboard */
     .results-table {
       width: 100%;
@@ -690,26 +713,27 @@
 </head>
 <body>
 
-  <!-- PIN Lock Screen -->
+  <!-- PIN Lock Screen (AES-256 Key Derivation) -->
   <div id="lockOverlay">
     <div class="lock-box">
       <div class="lock-icon">🔒</div>
       <h2 class="lock-title">Fjölskylduaðgangur</h2>
-      <p class="lock-desc">Þessi síða inniheldur persónulegt frískipulag. Sláðu inn fjölskyldu-PIN til að halda áfram.</p>
+      <p class="lock-desc">Þessi síða inniheldur persónulegt frískipulag. Gögnin eru dulkóðuð með AES-256. Sláðu inn fjölskyldu-PIN til að afkóða síðuna:</p>
       
       <div class="pin-input-wrap">
         <input type="password" id="pinInput" class="pin-input" placeholder="••••" maxlength="10" autofocus onkeydown="if(event.key==='Enter') submitPIN()">
       </div>
-      <button class="unlock-btn" onclick="submitPIN()">Opna síðu 🔓</button>
-      <div class="pin-error" id="pinError">Rangt PIN-númer. Reyndu aftur.</div>
+      <button class="unlock-btn" onclick="submitPIN()">Opna & Afkóða síðu 🔓</button>
+      <div class="pin-error" id="pinError">Rangt PIN-númer eða afkóðun mistókst. Reyndu aftur.</div>
     </div>
   </div>
 
+  <!-- Main App -->
   <div id="appContainer" style="display: none;">
     <header>
       <div class="header-content">
         <div class="header-top-bar">
-          <div class="badge">🇸🇪 Svíþjóð & Danmörk 2027 🇩🇰</div>
+          <div class="badge">🇸🇪 Svíþjóð & Danmörk 2027 🇩🇰 (Dulkóðuð síða 🛡️)</div>
           <button class="lock-btn" onclick="lockApp()">Læsa síðu 🔒</button>
         </div>
         <h1>Sumarfrí Fjölskyldunnar 2027</h1>
@@ -776,7 +800,7 @@
             <strong id="saveBarName">Enginn valinn</strong>
             <div style="font-size: 0.85rem; opacity: 0.85;" id="saveBarStatus">Veldu nafn og merktu við vikurnar</div>
           </div>
-          <button class="save-btn" onclick="saveCurrentVote()">Vista mitt svar ✅</button>
+          <button class="save-btn" onclick="saveCurrentVote()">Vista & Deila mínu svari ✅</button>
         </div>
 
       </div>
@@ -835,34 +859,32 @@
     </main>
   </div>
 
+  <!-- Share / Sync Modal -->
+  <div id="shareModal">
+    <div class="share-box">
+      <div style="font-size: 2.5rem; margin-bottom: 8px;">🎉</div>
+      <h3 style="margin-bottom: 8px;">Svörin þín hafa verið vistuð!</h3>
+      <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 18px;">
+        Til að hinir í fjölskyldunni sjái þín svör á GitHub Pages geturðu afritað deilihlekkinn eða sent beint í spjallið:
+      </p>
+      
+      <div style="display: flex; gap: 8px; margin-bottom: 14px;">
+        <input type="text" id="shareUrlInput" readonly style="font-size: 0.85rem;">
+        <button onclick="copyShareUrl()" style="padding: 10px 16px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: 700; cursor: pointer;">Afrita</button>
+      </div>
+
+      <div style="display: flex; gap: 10px; justify-content: center;">
+        <button onclick="shareViaWhatsApp()" style="background: #25D366; color: white; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 700; cursor: pointer;">📲 Senda á WhatsApp</button>
+        <button onclick="closeShareModal()" style="background: #f1f5f9; color: var(--text); border: none; padding: 10px 20px; border-radius: 10px; font-weight: 600; cursor: pointer;">Loka</button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    const FAMILY_MEMBERS = [
-      "Sigurjón Axel",
-      "Ólafía Rósbjörg (Lóa)",
-      "Axel Bjarkar",
-      "Rannveig Arna",
-      "Þórhildur Soffía",
-      "Birkir Evan",
-      "Viktor Ingi",
-      "Vala Björk",
-      "Sara Kristín"
-    ];
-
-    const WEEKS = [
-      { id: "w25", num: "Vika 25", dates: "15. jún – 22. jún 2027", tag: "Skólaslit" },
-      { id: "w26", num: "Vika 26", dates: "22. jún – 29. jún 2027", tag: "🇸🇪 Midsommar!" },
-      { id: "w27", num: "Vika 27", dates: "29. jún – 06. júl 2027", tag: "" },
-      { id: "w28", num: "Vika 28", dates: "06. júl – 13. júl 2027", tag: "" },
-      { id: "w29", num: "Vika 29", dates: "13. júl – 20. júl 2027", tag: "Háannatími" },
-      { id: "w30", num: "Vika 30", dates: "20. júl – 27. júl 2027", tag: "Háannatími" },
-      { id: "w31", num: "Vika 31", dates: "27. júl – 03. ágú 2027", tag: "Verslunarmannahelgi" },
-      { id: "w32", num: "Vika 32", dates: "03. ágú – 10. ágú 2027", tag: "" },
-      { id: "w33", num: "Vika 33", dates: "10. ágú – 17. ágú 2027", tag: "" },
-      { id: "w34", num: "Vika 34", dates: "17. ágú – 24. ágú 2027", tag: "" },
-      { id: "w35", num: "Vika 35", dates: "24. ágú – 31. ágú 2027", tag: "Lok ágúst" }
-    ];
-
+    let FAMILY_MEMBERS = [];
+    let WEEKS = [];
     let HOUSES = [];
+
     let currentPerson = "";
     let currentVote = {
       weeks: {},
@@ -872,12 +894,42 @@
     let allVotes = {};
     let activePIN = "";
 
-    // Auth & PIN Management
-    function getAuthHeaders() {
-      return {
-        "Content-Type": "application/json",
-        "X-Family-PIN": activePIN
-      };
+    // Web Crypto AES-256 Decryption with PBKDF2
+    async function decryptPayload(pin, payload) {
+      const enc = new TextEncoder();
+      const salt = Uint8Array.from(atob(payload.salt), c => c.charCodeAt(0));
+      const iv = Uint8Array.from(atob(payload.iv), c => c.charCodeAt(0));
+      const data = Uint8Array.from(atob(payload.data), c => c.charCodeAt(0));
+
+      const keyMaterial = await window.crypto.subtle.importKey(
+        "raw",
+        enc.encode(pin),
+        { name: "PBKDF2" },
+        false,
+        ["deriveKey"]
+      );
+
+      const key = await window.crypto.subtle.deriveKey(
+        {
+          name: "PBKDF2",
+          salt: salt,
+          iterations: 100000,
+          hash: "SHA-256"
+        },
+        keyMaterial,
+        { name: "AES-GCM", length: 256 },
+        false,
+        ["decrypt"]
+      );
+
+      const decrypted = await window.crypto.subtle.decrypt(
+        { name: "AES-GCM", iv: iv },
+        key,
+        data
+      );
+
+      const dec = new TextDecoder();
+      return JSON.parse(dec.decode(decrypted));
     }
 
     async function submitPIN() {
@@ -892,25 +944,25 @@
 
     async function verifyAndUnlock(pin) {
       try {
-        const resp = await fetch("/api/verify-pin", {
-          headers: { "X-Family-PIN": pin }
-        });
+        let payload = null;
+        // Sækja dulkóðuðu skrána
+        const resp = await fetch("encrypted_data.json");
         if (resp.ok) {
+          payload = await resp.json();
+          const decryptedData = await decryptPayload(pin, payload);
+          
+          FAMILY_MEMBERS = decryptedData.familyMembers;
+          WEEKS = decryptedData.weeks;
+          HOUSES = decryptedData.houses;
+
           activePIN = pin;
           sessionStorage.setItem("family_pin", pin);
           unlockUI();
-          await loadData();
+          initApp();
           return true;
         }
       } catch (e) {
-        // Ef keyrt án server.py (static skrá)
-        if (pin === "2027") {
-          activePIN = pin;
-          sessionStorage.setItem("family_pin", pin);
-          unlockUI();
-          await loadData();
-          return true;
-        }
+        console.warn("Afkóðun mistókst með slegnu PIN:", e);
       }
       return false;
     }
@@ -929,36 +981,15 @@
       document.getElementById("lockOverlay").style.display = "flex";
     }
 
-    // Load houses data
-    async function loadData() {
-      try {
-        const resp = await fetch("/api/houses", { headers: getAuthHeaders() });
-        if (resp.ok) {
-          HOUSES = await resp.json();
-        } else {
-          const fallback = await fetch("houses.json");
-          HOUSES = await fallback.json();
-        }
-      } catch (e) {
-        try {
-          const fallback = await fetch("houses.json");
-          HOUSES = await fallback.json();
-        } catch (err) {}
-      }
-
-      // Load stored votes
+    function initApp() {
+      // Lesa vistuð atkvæði úr localStorage
       const stored = localStorage.getItem("sweeden_2027_votes");
       if (stored) {
         try { allVotes = JSON.parse(stored); } catch (e) {}
       }
 
-      // Try fetching from server if running
-      try {
-        const sResp = await fetch("/api/votes", { headers: getAuthHeaders() });
-        if (sResp.ok) {
-          allVotes = await sResp.json();
-        }
-      } catch (e) {}
+      // Athuga hvort einhver sendi atkvæði í URL hash: #import=...
+      checkUrlHashImport();
 
       renderPersonChips();
       renderWeeks();
@@ -967,6 +998,26 @@
       renderResults();
 
       selectPerson(FAMILY_MEMBERS[0]);
+    }
+
+    function checkUrlHashImport() {
+      try {
+        const hash = window.location.hash;
+        if (hash.startsWith("#import=")) {
+          const b64 = hash.replace("#import=", "");
+          const jsonStr = decodeURIComponent(escape(atob(b64)));
+          const imported = JSON.parse(jsonStr);
+          if (imported.person && imported.data) {
+            allVotes[imported.person] = imported.data;
+            localStorage.setItem("sweeden_2027_votes", JSON.stringify(allVotes));
+            alert(`Nýtt svar frá ${imported.person} bætt við töfluna! 🎉`);
+            // Hreinsa hash úr URL
+            history.replaceState(null, null, ' ');
+          }
+        }
+      } catch (e) {
+        console.error("Gat ekki flutt inn svar úr hlekk:", e);
+      }
     }
 
     function renderPersonChips() {
@@ -1134,16 +1185,41 @@
 
       localStorage.setItem("sweeden_2027_votes", JSON.stringify(allVotes));
 
+      // Ef keyrt með server.py, senda á bakenda
       try {
         await fetch("/api/vote", {
           method: "POST",
-          headers: getAuthHeaders(),
+          headers: { "Content-Type": "application/json", "X-Family-PIN": activePIN },
           body: JSON.stringify({ person: currentPerson, data: currentVote })
         });
       } catch (e) {}
 
       renderResults();
-      alert(`Frábært ${currentPerson}! Svörin þín hafa verið vistuð.`);
+
+      // Búa til deilihlekk fyrir WhatsApp / Messenger / GitHub Pages
+      const exportObj = { person: currentPerson, data: currentVote };
+      const b64 = btoa(unescape(encodeURIComponent(JSON.stringify(exportObj))));
+      const shareUrl = `${window.location.origin}${window.location.pathname}?pin=${activePIN}#import=${b64}`;
+
+      document.getElementById("shareUrlInput").value = shareUrl;
+      document.getElementById("shareModal").style.display = "flex";
+    }
+
+    function copyShareUrl() {
+      const input = document.getElementById("shareUrlInput");
+      input.select();
+      navigator.clipboard.writeText(input.value);
+      alert("Hlekkur afritaður! Límdu hann í fjölskylduspjallið á Messenger eða WhatsApp.");
+    }
+
+    function shareViaWhatsApp() {
+      const url = document.getElementById("shareUrlInput").value;
+      const text = encodeURIComponent(`Hér eru mín svör fyrir Svíþjóðarferðina 2027: ${url}`);
+      window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+    }
+
+    function closeShareModal() {
+      document.getElementById("shareModal").style.display = "none";
     }
 
     function renderResults() {
@@ -1189,7 +1265,6 @@
         }).join("");
       }
 
-      // House votes summary
       const houseVotesDiv = document.getElementById("houseVotesSummary");
       const houseScores = {};
       HOUSES.forEach(h => {
@@ -1230,7 +1305,6 @@
         `).join("");
       }
 
-      // Comments list
       const commentsDiv = document.getElementById("commentsList");
       const withComments = voters.filter(p => allVotes[p].comment && allVotes[p].comment.trim());
       if (withComments.length === 0) {
@@ -1258,7 +1332,6 @@
       }
     }
 
-    // On page load: check PIN from session or URL parameter ?pin=...
     window.addEventListener("DOMContentLoaded", async () => {
       const urlParams = new URLSearchParams(window.location.search);
       const urlPin = urlParams.get("pin");
@@ -1270,7 +1343,6 @@
         if (ok) return;
       }
 
-      // If not authenticated, show lock screen
       document.getElementById("lockOverlay").style.display = "flex";
       document.getElementById("appContainer").style.display = "none";
     });
