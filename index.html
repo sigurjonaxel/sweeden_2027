@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="is">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Svíþjóðarferð 2027 🇸🇪🇩🇰 - Skipulag & Kosning</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --primary-light: #e0f2fe;
+      --success: #16a34a;
+      --success-light: #dcfce7;
+      --warning: #eab308;
+      --warning-light: #fef9c3;
+      --danger: #dc2626;
+      --danger-light: #fee2e2;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 16px;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding-bottom: 80px;
+    }
+
+    header {
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 50%, #1e3a8a 100%);
+      color: white;
+      padding: 48px 20px 40px;
+      text-align: center;
+      position: relative;
+    }
+
+    .header-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      margin-bottom: 12px;
+    }
+
+    .subtitle {
+      font-size: 1.125rem;
+      color: #e0f2fe;
+      max-width: 620px;
+      margin: 0 auto 20px;
+    }
+
+    .quick-stats {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .stat-pill {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 8px 16px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .container {
+      max-width: 1040px;
+      margin: -24px auto 0;
+      padding: 0 16px;
+    }
+
+    .nav-tabs {
+      display: flex;
+      background: var(--surface);
+      border-radius: 14px;
+      padding: 6px;
+      box-shadow: var(--shadow);
+      margin-bottom: 28px;
+      gap: 6px;
+      overflow-x: auto;
+    }
+
+    .nav-btn {
+      flex: 1;
+      padding: 12px 18px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border-radius: 10px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .nav-btn.active {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 2px 8px rgba(2, 132, 199, 0.35);
+    }
+
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow);
+      margin-bottom: 28px;
+      border: 1px solid var(--border);
+    }
+
+    .card-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 22px;
+    }
+
+    /* Person selector */
+    .person-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .person-chip {
+      padding: 10px 18px;
+      border-radius: 9999px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .person-chip:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .person-chip.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .custom-name-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      max-width: 420px;
+    }
+
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus, textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+    }
+
+    /* Week selection table */
+    .weeks-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .week-row {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 14px 18px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #fafafa;
+      transition: background 0.15s;
+    }
+
+    @media (min-width: 640px) {
+      .week-row {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+
+    .week-info {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .week-number {
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 8px;
+      background: var(--border);
+      color: var(--text);
+      min-width: 72px;
+      text-align: center;
+    }
+
+    .week-dates {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .week-tag {
+      font-size: 0.8rem;
+      font-weight: 600;
+      background: #fef08a;
+      color: #854d0e;
+      padding: 2px 8px;
+      border-radius: 6px;
+      margin-left: 8px;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 6px;
+    }
+
+    .choice-btn {
+      flex: 1;
+      padding: 8px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      background: white;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+
+    .choice-btn[data-val="yes"]:hover, .choice-btn[data-val="yes"].active {
+      background: var(--success-light);
+      border-color: var(--success);
+      color: #15803d;
+    }
+
+    .choice-btn[data-val="maybe"]:hover, .choice-btn[data-val="maybe"].active {
+      background: var(--warning-light);
+      border-color: var(--warning);
+      color: #a16207;
+    }
+
+    .choice-btn[data-val="no"]:hover, .choice-btn[data-val="no"].active {
+      background: var(--danger-light);
+      border-color: var(--danger);
+      color: #b91c1c;
+    }
+
+    /* House cards */
+    .houses-filter {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: white;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .filter-btn.active {
+      background: var(--text);
+      color: white;
+      border-color: var(--text);
+    }
+
+    .houses-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    @media (min-width: 768px) {
+      .houses-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .house-card {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .house-card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+
+    .house-img-box {
+      position: relative;
+      width: 100%;
+      height: 220px;
+      background: #e2e8f0;
+      overflow: hidden;
+    }
+
+    .house-img-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .house-badge-loc {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: rgba(15, 23, 42, 0.85);
+      color: white;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      backdrop-filter: blur(4px);
+    }
+
+    .house-badge-price {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      background: rgba(255, 255, 255, 0.95);
+      color: var(--text);
+      padding: 5px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      box-shadow: var(--shadow);
+    }
+
+    .house-body {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .house-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      line-height: 1.35;
+    }
+
+    .house-specs {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .house-specs span {
+      background: #f1f5f9;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    .house-actions {
+      margin-top: auto;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .airbnb-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .airbnb-link:hover {
+      text-decoration: underline;
+    }
+
+    .vote-btns {
+      display: flex;
+      gap: 6px;
+    }
+
+    .vote-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      transition: all 0.15s;
+    }
+
+    .vote-btn.active-love {
+      background: #fecdd3;
+      border-color: #f43f5e;
+    }
+
+    .vote-btn.active-like {
+      background: #bbf7d0;
+      border-color: #22c55e;
+    }
+
+    .vote-btn.active-dislike {
+      background: #fecaca;
+      border-color: #ef4444;
+    }
+
+    /* Submit section */
+    .save-bar {
+      position: sticky;
+      bottom: 20px;
+      z-index: 100;
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(10px);
+      padding: 16px 24px;
+      border-radius: 16px;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: white;
+      margin-top: 30px;
+    }
+
+    .save-btn {
+      background: #38bdf8;
+      color: #082f49;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .save-btn:hover {
+      background: #7dd3fc;
+    }
+
+    /* Results Dashboard */
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+      font-size: 0.9rem;
+    }
+
+    .results-table th, .results-table td {
+      padding: 12px;
+      border: 1px solid var(--border);
+      text-align: left;
+    }
+
+    .results-table th {
+      background: #f8fafc;
+      font-weight: 700;
+    }
+
+    .heat-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    .heat-high {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .heat-med {
+      background: #fef9c3;
+      color: #854d0e;
+    }
+
+    .heat-low {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .comment-item {
+      padding: 12px 16px;
+      border-left: 4px solid var(--primary);
+      background: #f8fafc;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 10px;
+    }
+
+    .comment-author {
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+    }
+
+    .comment-text {
+      color: var(--text);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-content">
+      <div class="badge">🇸🇪 Svíþjóð & Danmörk 2027 🇩🇰</div>
+      <h1>Sumarfrí Fjölskyldunnar 2027</h1>
+      <p class="subtitle">Skipulag, dagsetningakosning og val á gististað fyrir 14 manna hópinn okkar!</p>
+      
+      <div class="quick-stats">
+        <div class="stat-pill">👥 14 manns (13 fullorðnir, 1 barn)</div>
+        <div class="stat-pill">💰 Viðmið: ~$3.000 / vika</div>
+        <div class="stat-pill">📅 Tímabil: 15. júní – 31. ágúst 2027</div>
+        <div class="stat-pill">📍 Suður-Svíþjóð eða Danmörk</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <div class="nav-tabs">
+      <button class="nav-btn active" onclick="showTab('vote')">🗳️ Skrá mína dagsetningu & val</button>
+      <button class="nav-btn" onclick="showTab('results')">📊 Niðurstöður & Samantekt</button>
+      <button class="nav-btn" onclick="showTab('houses')">🏡 Skoða öll húsin (12)</button>
+    </div>
+
+    <!-- TAB 1: KOSNING -->
+    <div id="tab-vote">
+      
+      <!-- Hver ert þú? -->
+      <div class="card">
+        <div class="card-title">1. Hver ert þú?</div>
+        <div class="card-desc">Veldu nafnið þitt úr hópnum til að skrá hvenær þú kemst:</div>
+        
+        <div class="person-chips" id="personChips"></div>
+
+        <div class="custom-name-row">
+          <input type="text" id="customNameInput" placeholder="Eða skrifaðu annað nafn (t.d. maki / gestur)..." oninput="onCustomNameInput(this.value)">
+        </div>
+      </div>
+
+      <!-- Vikur -->
+      <div class="card">
+        <div class="card-title">2. Hvenær kemstu milli 15. júní og loka ágúst 2027?</div>
+        <div class="card-desc">Merktu við allar vikur sem gætu hentað þér. Markmiðið er að finna viku sem allir komast!</div>
+
+        <div class="weeks-grid" id="weeksGrid"></div>
+      </div>
+
+      <!-- Uppáhalds hús -->
+      <div class="card">
+        <div class="card-title">3. Val á húsi (Gististaðir um ~$3.000)</div>
+        <div class="card-desc">Hér eru bestu húsin á óskalistanum sem rúma okkur öll (14 manns) og kosta um eða innan við $3.000/viku. Veldu þau sem þér líst best á:</div>
+
+        <div class="houses-grid" id="priorityHousesGrid"></div>
+      </div>
+
+      <!-- Athugasemdir -->
+      <div class="card">
+        <div class="card-title">4. Athugasemdir, hugmyndir & óskir</div>
+        <div class="card-desc">Hvað skiptir þig mestu máli? (Sundlaug, stutt á strönd, golf/padel, nálægt flugvelli, bílaleiga, matur/grill o.s.frv.)</div>
+        <textarea id="commentInput" rows="3" placeholder="Skrifaðu þínar pælingar eða óskir hér..."></textarea>
+      </div>
+
+      <!-- Save floating bar -->
+      <div class="save-bar">
+        <div>
+          <strong id="saveBarName">Enginn valinn</strong>
+          <div style="font-size: 0.85rem; opacity: 0.85;" id="saveBarStatus">Veldu nafn og merktu við vikurnar</div>
+        </div>
+        <button class="save-btn" onclick="saveCurrentVote()">Vista mitt svar ✅</button>
+      </div>
+
+    </div>
+
+    <!-- TAB 2: NIÐURSTÖÐUR -->
+    <div id="tab-results" style="display: none;">
+      <div class="card">
+        <div class="card-title">📊 Hvaða vika hentar best? (Yfirlit)</div>
+        <div class="card-desc">Hér sést samantekt á svörum allra. Vika með flest græn atkvæði er efst.</div>
+        
+        <div style="overflow-x: auto;">
+          <table class="results-table" id="resultsWeeksTable">
+            <thead>
+              <tr>
+                <th>Vika & Dagsetningar</th>
+                <th>Kemst vel ✅</th>
+                <th>Gæti gengið 🟡</th>
+                <th>Kemst ekki ❌</th>
+                <th>Hverjir komast / komast ekki</th>
+              </tr>
+            </thead>
+            <tbody id="resultsWeeksTbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">❤️ Vinsælustu húsin</div>
+        <div class="card-desc">Atkvæði fjölskyldunnar um gististaði:</div>
+        <div id="houseVotesSummary"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">💬 Athugasemdir & Óskir frá hópnum</div>
+        <div id="commentsList">Engar athugasemdir komnar enn.</div>
+      </div>
+    </div>
+
+    <!-- TAB 3: ÖLL HÚSIN -->
+    <div id="tab-houses" style="display: none;">
+      <div class="card">
+        <div class="card-title">🏡 Allir 12 gististaðirnir á Airbnb óskalistanum</div>
+        <div class="card-desc">Hér eru allir staðirnir sem Sigurjón setti á óskalistann í Airbnb, með beinum hlekkjum og upplýsingum.</div>
+
+        <div class="houses-filter">
+          <button class="filter-btn active" onclick="filterHouses('all', this)">Öll hús (12)</button>
+          <button class="filter-btn" onclick="filterHouses('budget', this)">Bara ~$3.000 & S-Svíþjóð/Danmörk (7)</button>
+          <button class="filter-btn" onclick="filterHouses('sweden', this)">Bara Svíþjóð (9)</button>
+          <button class="filter-btn" onclick="filterHouses('denmark', this)">Bara Danmörk (3)</button>
+        </div>
+
+        <div class="houses-grid" id="allHousesGrid"></div>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    const FAMILY_MEMBERS = [
+      "Sigurjón Axel",
+      "Ólafía Rósbjörg (Lóa)",
+      "Axel Bjarkar",
+      "Rannveig Arna",
+      "Þórhildur Soffía",
+      "Birkir Evan",
+      "Viktor Ingi",
+      "Vala Björk",
+      "Sara Kristín"
+    ];
+
+    const WEEKS = [
+      { id: "w25", num: "Vika 25", dates: "15. jún – 22. jún 2027", tag: "Skólaslit" },
+      { id: "w26", num: "Vika 26", dates: "22. jún – 29. jún 2027", tag: "🇸🇪 Midsommar!" },
+      { id: "w27", num: "Vika 27", dates: "29. jún – 06. júl 2027", tag: "" },
+      { id: "w28", num: "Vika 28", dates: "06. júl – 13. júl 2027", tag: "" },
+      { id: "w29", num: "Vika 29", dates: "13. júl – 20. júl 2027", tag: "Háannatími" },
+      { id: "w30", num: "Vika 30", dates: "20. júl – 27. júl 2027", tag: "Háannatími" },
+      { id: "w31", num: "Vika 31", dates: "27. júl – 03. ágú 2027", tag: "Verslunarmannahelgi" },
+      { id: "w32", num: "Vika 32", dates: "03. ágú – 10. ágú 2027", tag: "" },
+      { id: "w33", num: "Vika 33", dates: "10. ágú – 17. ágú 2027", tag: "" },
+      { id: "w34", num: "Vika 34", dates: "17. ágú – 24. ágú 2027", tag: "" },
+      { id: "w35", num: "Vika 35", dates: "24. ágú – 31. ágú 2027", tag: "Lok ágúst" }
+    ];
+
+    let HOUSES = [];
+    let currentPerson = "";
+    let currentVote = {
+      weeks: {},
+      houseVotes: {},
+      comment: ""
+    };
+    let allVotes = {};
+
+    // Load houses data
+    async function loadData() {
+      try {
+        const resp = await fetch("houses.json");
+        HOUSES = await resp.json();
+      } catch (e) {
+        console.error("Could not load houses.json directly:", e);
+      }
+
+      // Load stored votes from localStorage or backend
+      const stored = localStorage.getItem("sweeden_2027_votes");
+      if (stored) {
+        try { allVotes = JSON.parse(stored); } catch (e) {}
+      }
+
+      // Try fetching from server if running
+      try {
+        const sResp = await fetch("/api/votes");
+        if (sResp.ok) {
+          allVotes = await sResp.json();
+        }
+      } catch (e) {}
+
+      renderPersonChips();
+      renderWeeks();
+      renderPriorityHouses();
+      renderAllHouses('all');
+      renderResults();
+
+      // default select first person if available
+      selectPerson(FAMILY_MEMBERS[0]);
+    }
+
+    function renderPersonChips() {
+      const c = document.getElementById("personChips");
+      c.innerHTML = FAMILY_MEMBERS.map(name => `
+        <button class="person-chip" onclick="selectPerson('${name}')" id="chip-${name.replace(/[^a-zA-Z0-9]/g, '')}">
+          ${name}
+        </button>
+      `).join("");
+    }
+
+    function selectPerson(name) {
+      currentPerson = name;
+      document.getElementById("customNameInput").value = FAMILY_MEMBERS.includes(name) ? "" : name;
+      
+      document.querySelectorAll(".person-chip").forEach(el => el.classList.remove("active"));
+      const safeId = "chip-" + name.replace(/[^a-zA-Z0-9]/g, '');
+      const activeEl = document.getElementById(safeId);
+      if (activeEl) activeEl.classList.add("active");
+
+      document.getElementById("saveBarName").textContent = name;
+      document.getElementById("saveBarStatus").textContent = "Skráir svör fyrir " + name;
+
+      // Load existing vote if exists
+      if (allVotes[name]) {
+        currentVote = JSON.parse(JSON.stringify(allVotes[name]));
+      } else {
+        currentVote = { weeks: {}, houseVotes: {}, comment: "" };
+      }
+
+      document.getElementById("commentInput").value = currentVote.comment || "";
+      updateWeeksUI();
+      updateHouseVotesUI();
+    }
+
+    function onCustomNameInput(val) {
+      if (val.trim()) {
+        document.querySelectorAll(".person-chip").forEach(el => el.classList.remove("active"));
+        currentPerson = val.trim();
+        document.getElementById("saveBarName").textContent = currentPerson;
+        document.getElementById("saveBarStatus").textContent = "Skráir svör fyrir " + currentPerson;
+        if (allVotes[currentPerson]) {
+          currentVote = JSON.parse(JSON.stringify(allVotes[currentPerson]));
+        } else {
+          currentVote = { weeks: {}, houseVotes: {}, comment: "" };
+        }
+        document.getElementById("commentInput").value = currentVote.comment || "";
+        updateWeeksUI();
+        updateHouseVotesUI();
+      }
+    }
+
+    function renderWeeks() {
+      const grid = document.getElementById("weeksGrid");
+      grid.innerHTML = WEEKS.map(w => `
+        <div class="week-row" id="row-${w.id}">
+          <div class="week-info">
+            <div class="week-number">${w.num}</div>
+            <div class="week-dates">
+              ${w.dates}
+              ${w.tag ? `<span class="week-tag">${w.tag}</span>` : ""}
+            </div>
+          </div>
+          <div class="btn-group">
+            <button class="choice-btn" data-week="${w.id}" data-val="yes" onclick="setWeekVote('${w.id}', 'yes')">✅ Kemst vel</button>
+            <button class="choice-btn" data-week="${w.id}" data-val="maybe" onclick="setWeekVote('${w.id}', 'maybe')">🟡 Gæti gengið</button>
+            <button class="choice-btn" data-week="${w.id}" data-val="no" onclick="setWeekVote('${w.id}', 'no')">❌ Kemst ekki</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function setWeekVote(weekId, val) {
+      currentVote.weeks[weekId] = val;
+      updateWeeksUI();
+    }
+
+    function updateWeeksUI() {
+      WEEKS.forEach(w => {
+        const val = currentVote.weeks[w.id];
+        document.querySelectorAll(`.choice-btn[data-week="${w.id}"]`).forEach(btn => {
+          btn.classList.toggle("active", btn.getAttribute("data-val") === val);
+        });
+      });
+    }
+
+    function renderPriorityHouses() {
+      const grid = document.getElementById("priorityHousesGrid");
+      const priority = HOUSES.filter(h => h.isBudgetFit);
+      grid.innerHTML = priority.map(h => createHouseCardHTML(h, true)).join("");
+    }
+
+    function renderAllHouses(filter) {
+      const grid = document.getElementById("allHousesGrid");
+      let list = HOUSES;
+      if (filter === 'budget') list = HOUSES.filter(h => h.isBudgetFit);
+      else if (filter === 'sweden') list = HOUSES.filter(h => h.country === 'Svíþjóð');
+      else if (filter === 'denmark') list = HOUSES.filter(h => h.country === 'Danmörk');
+
+      grid.innerHTML = list.map(h => createHouseCardHTML(h, false)).join("");
+      updateHouseVotesUI();
+    }
+
+    function filterHouses(filter, btn) {
+      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      renderAllHouses(filter);
+    }
+
+    function createHouseCardHTML(h, isPrioritySection) {
+      const specsHTML = (h.specs || []).map(s => `<span>${s}</span>`).join("");
+      return `
+        <div class="house-card">
+          <div class="house-img-box">
+            <img src="${h.photo}" alt="${h.title}" loading="lazy" />
+            <div class="house-badge-loc">${h.region}</div>
+            <div class="house-badge-price">${h.priceFormatted}</div>
+          </div>
+          <div class="house-body">
+            <h3 class="house-title">${h.title}</h3>
+            <div class="house-specs">
+              <span>⭐ ${h.rating}</span>
+              ${specsHTML}
+            </div>
+            <div class="house-actions">
+              <a href="${h.url}" target="_blank" rel="noopener" class="airbnb-link">Skoða á Airbnb ↗</a>
+              <div class="vote-btns">
+                <button class="vote-btn" data-house="${h.id}" data-vote="love" title="Elska þetta hús!" onclick="setHouseVote('${h.id}', 'love')">❤️</button>
+                <button class="vote-btn" data-house="${h.id}" data-vote="like" title="Líst vel á" onclick="setHouseVote('${h.id}', 'like')">👍</button>
+                <button class="vote-btn" data-house="${h.id}" data-vote="dislike" title="Líst ekki á" onclick="setHouseVote('${h.id}', 'dislike')">👎</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function setHouseVote(houseId, vote) {
+      if (currentVote.houseVotes[houseId] === vote) {
+        delete currentVote.houseVotes[houseId];
+      } else {
+        currentVote.houseVotes[houseId] = vote;
+      }
+      updateHouseVotesUI();
+    }
+
+    function updateHouseVotesUI() {
+      document.querySelectorAll(".vote-btn").forEach(btn => {
+        const hid = btn.getAttribute("data-house");
+        const vote = btn.getAttribute("data-vote");
+        const cur = currentVote.houseVotes[hid];
+        btn.classList.toggle("active-love", vote === 'love' && cur === 'love');
+        btn.classList.toggle("active-like", vote === 'like' && cur === 'like');
+        btn.classList.toggle("active-dislike", vote === 'dislike' && cur === 'dislike');
+      });
+    }
+
+    async function saveCurrentVote() {
+      if (!currentPerson) {
+        alert("Vinsamlegast veldu eða skrifaðu nafn áður en þú vistar.");
+        return;
+      }
+
+      currentVote.comment = document.getElementById("commentInput").value;
+      allVotes[currentPerson] = currentVote;
+
+      // Save to localStorage
+      localStorage.setItem("sweeden_2027_votes", JSON.stringify(allVotes));
+
+      // Try sending to python server
+      try {
+        await fetch("/api/vote", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ person: currentPerson, data: currentVote })
+        });
+      } catch (e) {}
+
+      renderResults();
+      alert(`Frábært ${currentPerson}! Svörin þín hafa verið vistuð.`);
+    }
+
+    function renderResults() {
+      const tbody = document.getElementById("resultsWeeksTbody");
+      const voters = Object.keys(allVotes);
+
+      if (voters.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--text-muted); padding: 24px;">Engin svör hafa borist enn. Vertu fyrst(ur) til að skrá!</td></tr>`;
+      } else {
+        // Calculate scores for each week
+        const weekStats = WEEKS.map(w => {
+          let yes = [], maybe = [], no = [];
+          voters.forEach(p => {
+            const v = allVotes[p].weeks?.[w.id];
+            if (v === 'yes') yes.push(p);
+            else if (v === 'maybe') maybe.push(p);
+            else if (v === 'no') no.push(p);
+          });
+          const score = (yes.length * 2) + maybe.length - (no.length * 3);
+          return { ...w, yes, maybe, no, score };
+        });
+
+        // sort by score descending
+        weekStats.sort((a, b) => b.score - a.score);
+
+        tbody.innerHTML = weekStats.map(w => {
+          const allGood = w.no.length === 0 && w.yes.length > 0;
+          return `
+            <tr style="${allGood ? 'background: #f0fdf4;' : ''}">
+              <td>
+                <strong>${w.num}</strong>: ${w.dates}
+                ${w.tag ? `<span class="week-tag">${w.tag}</span>` : ""}
+                ${allGood ? `<br><span style="color: #16a34a; font-weight:700; font-size:0.75rem;">🌟 Allir komast!</span>` : ""}
+              </td>
+              <td><span class="heat-pill heat-high">${w.yes.length}</span></td>
+              <td><span class="heat-pill heat-med">${w.maybe.length}</span></td>
+              <td><span class="heat-pill heat-low">${w.no.length}</span></td>
+              <td style="font-size: 0.85rem;">
+                ${w.yes.length > 0 ? `<div style="color:#15803d;"><strong>Já:</strong> ${w.yes.join(", ")}</div>` : ""}
+                ${w.maybe.length > 0 ? `<div style="color:#854d0e;"><strong>Gæti:</strong> ${w.maybe.join(", ")}</div>` : ""}
+                ${w.no.length > 0 ? `<div style="color:#b91c1c;"><strong>Nei:</strong> ${w.no.join(", ")}</div>` : ""}
+              </td>
+            </tr>
+          `;
+        }).join("");
+      }
+
+      // House votes summary
+      const houseVotesDiv = document.getElementById("houseVotesSummary");
+      const houseScores = {};
+      HOUSES.forEach(h => {
+        houseScores[h.id] = { house: h, love: [], like: [], dislike: [] };
+      });
+
+      voters.forEach(p => {
+        const hv = allVotes[p].houseVotes || {};
+        for (const hid in hv) {
+          if (houseScores[hid]) {
+            const voteType = hv[hid];
+            if (voteType === 'love') houseScores[hid].love.push(p);
+            else if (voteType === 'like') houseScores[hid].like.push(p);
+            else if (voteType === 'dislike') houseScores[hid].dislike.push(p);
+          }
+        }
+      });
+
+      const rankedHouses = Object.values(houseScores)
+        .filter(x => x.love.length + x.like.length + x.dislike.length > 0)
+        .sort((a, b) => ((b.love.length * 2 + b.like.length) - (a.love.length * 2 + a.like.length)));
+
+      if (rankedHouses.length === 0) {
+        houseVotesDiv.innerHTML = `<p style="color: var(--text-muted);">Engin húsakosning komin enn.</p>`;
+      } else {
+        houseVotesDiv.innerHTML = rankedHouses.map(x => `
+          <div style="display:flex; justify-content:space-between; align-items:center; padding: 12px; border-bottom: 1px solid var(--border); gap: 12px; flex-wrap: wrap;">
+            <div>
+              <strong>${x.house.title}</strong> (${x.house.region}) – <span style="color:var(--text-muted);">${x.house.priceFormatted}</span>
+              <br><small><a href="${x.house.url}" target="_blank" class="airbnb-link">Skoða á Airbnb</a></small>
+            </div>
+            <div style="display:flex; gap: 10px; font-size: 0.9rem;">
+              <span>❤️ ${x.love.length}</span>
+              <span>👍 ${x.like.length}</span>
+              <span>👎 ${x.dislike.length}</span>
+            </div>
+          </div>
+        `).join("");
+      }
+
+      // Comments list
+      const commentsDiv = document.getElementById("commentsList");
+      const withComments = voters.filter(p => allVotes[p].comment && allVotes[p].comment.trim());
+      if (withComments.length === 0) {
+        commentsDiv.innerHTML = `<p style="color: var(--text-muted);">Engar athugasemdir skráðar enn.</p>`;
+      } else {
+        commentsDiv.innerHTML = withComments.map(p => `
+          <div class="comment-item">
+            <div class="comment-author">${p}</div>
+            <div class="comment-text">${allVotes[p].comment}</div>
+          </div>
+        `).join("");
+      }
+    }
+
+    function showTab(tab) {
+      document.querySelectorAll(".nav-btn").forEach(btn => btn.classList.remove("active"));
+      event.target.classList.add("active");
+
+      document.getElementById("tab-vote").style.display = tab === 'vote' ? 'block' : 'none';
+      document.getElementById("tab-results").style.display = tab === 'results' ? 'block' : 'none';
+      document.getElementById("tab-houses").style.display = tab === 'houses' ? 'block' : 'none';
+
+      if (tab === 'results') {
+        renderResults();
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", loadData);
+  </script>
+</body>
+</html>
