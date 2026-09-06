@@ -29,12 +29,7 @@
       --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
       background: var(--bg);
@@ -45,686 +40,251 @@
 
     /* Lock Screen Overlay */
     #lockOverlay {
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0;
       background: rgba(15, 23, 42, 0.95);
       backdrop-filter: blur(12px);
       z-index: 9999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       padding: 20px;
     }
-
     .lock-box {
-      background: white;
-      border-radius: 20px;
-      max-width: 420px;
-      width: 100%;
-      padding: 36px 28px;
-      text-align: center;
+      background: white; border-radius: 20px;
+      max-width: 420px; width: 100%;
+      padding: 36px 28px; text-align: center;
       box-shadow: var(--shadow-lg);
     }
-
-    .lock-icon {
-      font-size: 3rem;
-      margin-bottom: 12px;
-    }
-
-    .lock-title {
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: var(--text);
-      margin-bottom: 8px;
-    }
-
-    .lock-desc {
-      font-size: 0.95rem;
-      color: var(--text-muted);
-      margin-bottom: 24px;
-    }
-
-    .pin-input-wrap {
-      margin-bottom: 16px;
-    }
-
+    .lock-icon { font-size: 3rem; margin-bottom: 12px; }
+    .lock-title { font-size: 1.5rem; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+    .lock-desc { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 24px; }
     .pin-input {
-      width: 100%;
-      text-align: center;
-      font-size: 1.5rem;
-      font-weight: 700;
-      letter-spacing: 0.25em;
-      padding: 12px;
-      border: 2px solid var(--border);
-      border-radius: 12px;
-      outline: none;
-      transition: border-color 0.2s;
+      width: 100%; text-align: center; font-size: 1.5rem; font-weight: 700;
+      letter-spacing: 0.25em; padding: 12px; border: 2px solid var(--border);
+      border-radius: 12px; outline: none; margin-bottom: 16px;
     }
-
-    .pin-input:focus {
-      border-color: var(--primary);
-    }
-
+    .pin-input:focus { border-color: var(--primary); }
     .unlock-btn {
-      width: 100%;
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 14px;
-      font-size: 1rem;
-      font-weight: 700;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: background 0.15s;
+      width: 100%; background: var(--primary); color: white; border: none;
+      padding: 14px; font-size: 1rem; font-weight: 700; border-radius: 12px;
+      cursor: pointer; transition: background 0.15s;
     }
-
-    .unlock-btn:hover {
-      background: var(--primary-dark);
-    }
-
-    .pin-error {
-      color: var(--danger);
-      font-size: 0.85rem;
-      font-weight: 600;
-      margin-top: 12px;
-      display: none;
-    }
+    .unlock-btn:hover { background: var(--primary-dark); }
+    .pin-error { color: var(--danger); font-size: 0.85rem; font-weight: 600; margin-top: 12px; display: none; }
 
     header {
       background: linear-gradient(135deg, #0284c7 0%, #0369a1 50%, #1e3a8a 100%);
-      color: white;
-      padding: 48px 20px 40px;
-      text-align: center;
-      position: relative;
+      color: white; padding: 44px 20px 36px; text-align: center; position: relative;
     }
-
-    .header-content {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .header-top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-    }
-
+    .header-content { max-width: 840px; margin: 0 auto; }
+    .header-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
     .lock-btn {
-      background: rgba(255, 255, 255, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      color: white;
-      padding: 5px 12px;
-      border-radius: 8px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-      backdrop-filter: blur(4px);
+      background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white; padding: 5px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer;
     }
-
     .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(8px);
-      padding: 6px 14px;
-      border-radius: 9999px;
-      font-size: 0.875rem;
-      font-weight: 600;
-      border: 1px solid rgba(255, 255, 255, 0.25);
+      display: inline-flex; align-items: center; gap: 6px; background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px); padding: 5px 14px; border-radius: 9999px; font-size: 0.85rem; font-weight: 600;
     }
-
-    h1 {
-      font-size: 2.25rem;
-      font-weight: 800;
-      letter-spacing: -0.025em;
-      margin-bottom: 12px;
-    }
-
-    .subtitle {
-      font-size: 1.125rem;
-      color: #e0f2fe;
-      max-width: 620px;
-      margin: 0 auto 20px;
-    }
-
-    .quick-stats {
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      flex-wrap: wrap;
-      margin-top: 20px;
-    }
-
+    h1 { font-size: 2.1rem; font-weight: 800; letter-spacing: -0.025em; margin-bottom: 10px; }
+    .subtitle { font-size: 1.05rem; color: #e0f2fe; max-width: 620px; margin: 0 auto 18px; }
+    .quick-stats { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
     .stat-pill {
-      background: rgba(255, 255, 255, 0.15);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      padding: 8px 16px;
-      border-radius: 12px;
-      font-size: 0.9rem;
-      font-weight: 500;
+      background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 6px 14px; border-radius: 10px; font-size: 0.85rem; font-weight: 500;
     }
 
-    .container {
-      max-width: 1040px;
-      margin: -24px auto 0;
-      padding: 0 16px;
-    }
+    .container { max-width: 1040px; margin: -22px auto 0; padding: 0 16px; }
 
     .nav-tabs {
-      display: flex;
-      background: var(--surface);
-      border-radius: 14px;
-      padding: 6px;
-      box-shadow: var(--shadow);
-      margin-bottom: 28px;
-      gap: 6px;
-      overflow-x: auto;
+      display: flex; background: var(--surface); border-radius: 14px; padding: 6px;
+      box-shadow: var(--shadow); margin-bottom: 24px; gap: 6px; overflow-x: auto;
     }
-
     .nav-btn {
-      flex: 1;
-      padding: 12px 18px;
-      border: none;
-      background: transparent;
-      color: var(--text-muted);
-      font-family: inherit;
-      font-size: 0.95rem;
-      font-weight: 600;
-      border-radius: 10px;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.2s;
+      flex: 1; padding: 12px 16px; border: none; background: transparent; color: var(--text-muted);
+      font-family: inherit; font-size: 0.95rem; font-weight: 600; border-radius: 10px; cursor: pointer;
+      white-space: nowrap; transition: all 0.2s;
     }
-
     .nav-btn.active {
-      background: var(--primary);
-      color: white;
-      box-shadow: 0 2px 8px rgba(2, 132, 199, 0.35);
+      background: var(--primary); color: white; box-shadow: 0 2px 8px rgba(2, 132, 199, 0.35);
     }
 
     .card {
-      background: var(--surface);
-      border-radius: var(--radius);
-      padding: 28px;
-      box-shadow: var(--shadow);
-      margin-bottom: 28px;
-      border: 1px solid var(--border);
+      background: var(--surface); border-radius: var(--radius); padding: 24px;
+      box-shadow: var(--shadow); margin-bottom: 24px; border: 1px solid var(--border);
     }
-
     .card-title {
-      font-size: 1.35rem;
-      font-weight: 700;
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      font-size: 1.25rem; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; justify-content: space-between;
     }
+    .card-desc { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; }
 
-    .card-desc {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      margin-bottom: 22px;
-    }
-
-    /* Person selector */
-    .person-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
+    .person-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
     .person-chip {
-      padding: 10px 18px;
-      border-radius: 9999px;
-      border: 1.5px solid var(--border);
-      background: var(--surface);
-      color: var(--text);
-      font-weight: 600;
-      font-size: 0.95rem;
-      cursor: pointer;
-      transition: all 0.15s;
+      padding: 8px 16px; border-radius: 9999px; border: 1.5px solid var(--border);
+      background: var(--surface); color: var(--text); font-weight: 600; font-size: 0.9rem; cursor: pointer;
     }
+    .person-chip:hover { border-color: var(--primary); background: var(--primary-light); }
+    .person-chip.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-    .person-chip:hover {
-      border-color: var(--primary);
-      background: var(--primary-light);
+    input[type="text"], input[type="url"], textarea, select {
+      width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 10px;
+      font-family: inherit; font-size: 0.95rem; outline: none;
     }
+    input:focus, textarea:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15); }
 
-    .person-chip.active {
-      background: var(--primary);
-      color: white;
-      border-color: var(--primary);
-    }
-
-    .custom-name-row {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      max-width: 420px;
-    }
-
-    input[type="text"], textarea {
-      width: 100%;
-      padding: 12px 16px;
-      border: 1.5px solid var(--border);
-      border-radius: 12px;
-      font-family: inherit;
-      font-size: 0.95rem;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    input[type="text"]:focus, textarea:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
-    }
-
-    /* Week selection table */
-    .weeks-grid {
-      display: grid;
-      gap: 12px;
-    }
-
+    /* Weeks */
+    .weeks-grid { display: grid; gap: 10px; }
     .week-row {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      padding: 14px 18px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: #fafafa;
-      transition: background 0.15s;
+      display: flex; flex-direction: column; gap: 10px; padding: 12px 16px;
+      border-radius: 12px; border: 1px solid var(--border); background: #fafafa;
     }
-
     @media (min-width: 640px) {
-      .week-row {
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-      }
+      .week-row { flex-direction: row; align-items: center; justify-content: space-between; }
     }
-
-    .week-info {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
+    .week-info { display: flex; align-items: center; gap: 12px; }
     .week-number {
-      font-size: 0.85rem;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 8px;
-      background: var(--border);
-      color: var(--text);
-      min-width: 72px;
-      text-align: center;
+      font-size: 0.8rem; font-weight: 700; padding: 3px 8px; border-radius: 6px;
+      background: var(--border); color: var(--text); min-width: 68px; text-align: center;
     }
-
-    .week-dates {
-      font-weight: 600;
-      font-size: 1rem;
-    }
-
+    .week-dates { font-weight: 600; font-size: 0.95rem; }
     .week-tag {
-      font-size: 0.8rem;
-      font-weight: 600;
-      background: #fef08a;
-      color: #854d0e;
-      padding: 2px 8px;
-      border-radius: 6px;
-      margin-left: 8px;
+      font-size: 0.75rem; font-weight: 600; background: #fef08a; color: #854d0e;
+      padding: 2px 7px; border-radius: 5px; margin-left: 6px;
     }
 
-    .btn-group {
-      display: flex;
-      gap: 6px;
-    }
-
+    .btn-group { display: flex; gap: 6px; }
     .choice-btn {
-      flex: 1;
-      padding: 8px 14px;
-      border: 1.5px solid var(--border);
-      border-radius: 10px;
-      background: white;
-      font-family: inherit;
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.15s;
-      white-space: nowrap;
+      flex: 1; padding: 7px 12px; border: 1.5px solid var(--border); border-radius: 8px;
+      background: white; font-family: inherit; font-size: 0.8rem; font-weight: 600; cursor: pointer;
     }
-
     .choice-btn[data-val="yes"]:hover, .choice-btn[data-val="yes"].active {
-      background: var(--success-light);
-      border-color: var(--success);
-      color: #15803d;
+      background: var(--success-light); border-color: var(--success); color: #15803d;
     }
-
     .choice-btn[data-val="maybe"]:hover, .choice-btn[data-val="maybe"].active {
-      background: var(--warning-light);
-      border-color: var(--warning);
-      color: #a16207;
+      background: var(--warning-light); border-color: var(--warning); color: #a16207;
     }
-
     .choice-btn[data-val="no"]:hover, .choice-btn[data-val="no"].active {
-      background: var(--danger-light);
-      border-color: var(--danger);
-      color: #b91c1c;
+      background: var(--danger-light); border-color: var(--danger); color: #b91c1c;
     }
 
-    /* House cards */
-    .houses-filter {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
+    /* Houses */
+    .houses-top-actions {
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 18px;
     }
+    .add-house-btn {
+      background: #0284c7; color: white; border: none; padding: 8px 16px; border-radius: 10px;
+      font-weight: 700; font-size: 0.85rem; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+    }
+    .add-house-btn:hover { background: #0369a1; }
 
+    .houses-filter { display: flex; gap: 6px; flex-wrap: wrap; }
     .filter-btn {
-      padding: 6px 14px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: white;
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
+      padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border);
+      background: white; font-size: 0.8rem; font-weight: 600; cursor: pointer;
     }
+    .filter-btn.active { background: var(--text); color: white; border-color: var(--text); }
 
-    .filter-btn.active {
-      background: var(--text);
-      color: white;
-      border-color: var(--text);
-    }
-
-    .houses-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 20px;
-    }
-
-    @media (min-width: 768px) {
-      .houses-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
+    .houses-grid { display: grid; grid-template-columns: 1fr; gap: 18px; }
+    @media (min-width: 768px) { .houses-grid { grid-template-columns: repeat(2, 1fr); } }
 
     .house-card {
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      overflow: hidden;
-      background: white;
-      display: flex;
-      flex-direction: column;
-      box-shadow: var(--shadow-sm);
-      transition: transform 0.15s, box-shadow 0.15s;
+      border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
+      background: white; display: flex; flex-direction: column; box-shadow: var(--shadow-sm);
     }
-
-    .house-card:hover {
-      box-shadow: var(--shadow-lg);
-      transform: translateY(-2px);
-    }
-
-    .house-img-box {
-      position: relative;
-      width: 100%;
-      height: 220px;
-      background: #e2e8f0;
-      overflow: hidden;
-    }
-
-    .house-img-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
+    .house-card:hover { box-shadow: var(--shadow-lg); }
+    .house-img-box { position: relative; width: 100%; height: 210px; background: #cbd5e1; overflow: hidden; }
+    .house-img-box img { width: 100%; height: 100%; object-fit: cover; }
     .house-badge-loc {
-      position: absolute;
-      top: 12px;
-      left: 12px;
-      background: rgba(15, 23, 42, 0.85);
-      color: white;
-      padding: 4px 10px;
-      border-radius: 8px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      backdrop-filter: blur(4px);
+      position: absolute; top: 10px; left: 10px; background: rgba(15, 23, 42, 0.85);
+      color: white; padding: 4px 9px; border-radius: 6px; font-size: 0.75rem; font-weight: 600;
     }
-
+    .house-badge-custom {
+      position: absolute; top: 10px; right: 10px; background: #f59e0b;
+      color: white; padding: 4px 9px; border-radius: 6px; font-size: 0.75rem; font-weight: 700;
+    }
     .house-badge-price {
-      position: absolute;
-      bottom: 12px;
-      right: 12px;
-      background: rgba(255, 255, 255, 0.95);
-      color: var(--text);
-      padding: 5px 12px;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      box-shadow: var(--shadow);
+      position: absolute; bottom: 10px; right: 10px; background: rgba(255, 255, 255, 0.95);
+      color: var(--text); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 700;
     }
 
-    .house-body {
-      padding: 18px;
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-    }
-
-    .house-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      margin-bottom: 6px;
-      line-height: 1.35;
-    }
-
-    .house-specs {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-bottom: 12px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .house-specs span {
-      background: #f1f5f9;
-      padding: 3px 8px;
-      border-radius: 6px;
-    }
+    .house-body { padding: 16px; display: flex; flex-direction: column; flex: 1; }
+    .house-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 6px; line-height: 1.3; }
+    .house-specs { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+    .house-specs span { background: #f1f5f9; padding: 2px 7px; border-radius: 5px; }
 
     .house-actions {
-      margin-top: auto;
-      padding-top: 14px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
+      margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
     }
-
-    .airbnb-link {
-      color: var(--primary);
-      text-decoration: none;
-      font-size: 0.85rem;
-      font-weight: 600;
-    }
-
-    .airbnb-link:hover {
-      text-decoration: underline;
-    }
-
-    .vote-btns {
-      display: flex;
-      gap: 6px;
-    }
-
+    .airbnb-link { color: var(--primary); text-decoration: none; font-size: 0.85rem; font-weight: 600; }
+    .vote-btns { display: flex; gap: 6px; }
     .vote-btn {
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: white;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
-      transition: all 0.15s;
+      width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border);
+      background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
     }
+    .vote-btn.active-love { background: #fecdd3; border-color: #f43f5e; }
+    .vote-btn.active-like { background: #bbf7d0; border-color: #22c55e; }
+    .vote-btn.active-dislike { background: #fecaca; border-color: #ef4444; }
 
-    .vote-btn.active-love {
-      background: #fecdd3;
-      border-color: #f43f5e;
-    }
-
-    .vote-btn.active-like {
-      background: #bbf7d0;
-      border-color: #22c55e;
-    }
-
-    .vote-btn.active-dislike {
-      background: #fecaca;
-      border-color: #ef4444;
-    }
-
-    /* Submit section */
+    /* Floating Save bar */
     .save-bar {
-      position: sticky;
-      bottom: 20px;
-      z-index: 100;
-      background: rgba(15, 23, 42, 0.92);
-      backdrop-filter: blur(10px);
-      padding: 16px 24px;
-      border-radius: 16px;
-      box-shadow: var(--shadow-lg);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      color: white;
-      margin-top: 30px;
+      position: sticky; bottom: 20px; z-index: 100;
+      background: rgba(15, 23, 42, 0.92); backdrop-filter: blur(10px);
+      padding: 14px 20px; border-radius: 14px; box-shadow: var(--shadow-lg);
+      display: flex; align-items: center; justify-content: space-between; color: white; margin-top: 24px;
     }
-
     .save-btn {
-      background: #38bdf8;
-      color: #082f49;
-      border: none;
-      padding: 12px 28px;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background 0.15s;
+      background: #38bdf8; color: #082f49; border: none; padding: 11px 24px;
+      border-radius: 10px; font-weight: 700; font-size: 0.95rem; cursor: pointer;
     }
 
-    .save-btn:hover {
-      background: #7dd3fc;
+    /* Modals */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(6px);
+      z-index: 10000; display: none; align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal-box {
+      background: white; border-radius: 18px; max-width: 480px; width: 100%;
+      padding: 26px; box-shadow: var(--shadow-lg); text-align: left;
     }
 
-    /* Share modal */
-    #shareModal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(6px);
-      z-index: 10000;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
+    /* Podium */
+    .podium {
+      display: flex; justify-content: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;
     }
+    .podium-item {
+      flex: 1; min-width: 220px; background: #f8fafc; border: 1.5px solid var(--border);
+      border-radius: 12px; padding: 16px; text-align: center;
+    }
+    .podium-gold { border-color: #f59e0b; background: #fefce8; }
+    .podium-rank { font-size: 1.8rem; margin-bottom: 4px; }
 
-    .share-box {
-      background: white;
-      border-radius: 20px;
-      max-width: 480px;
-      width: 100%;
-      padding: 30px;
-      text-align: center;
-      box-shadow: var(--shadow-lg);
-    }
-
-    /* Results Dashboard */
-    .results-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 14px;
-      font-size: 0.9rem;
-    }
-
-    .results-table th, .results-table td {
-      padding: 12px;
-      border: 1px solid var(--border);
-      text-align: left;
-    }
-
-    .results-table th {
-      background: #f8fafc;
-      font-weight: 700;
-    }
-
-    .heat-pill {
-      display: inline-flex;
-      align-items: center;
-      padding: 4px 10px;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 0.85rem;
-    }
-
-    .heat-high {
-      background: #dcfce7;
-      color: #15803d;
-    }
-
-    .heat-med {
-      background: #fef9c3;
-      color: #854d0e;
-    }
-
-    .heat-low {
-      background: #fee2e2;
-      color: #b91c1c;
-    }
+    /* Results table */
+    .results-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
+    .results-table th, .results-table td { padding: 10px; border: 1px solid var(--border); text-align: left; }
+    .results-table th { background: #f8fafc; font-weight: 700; }
+    .heat-pill { display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; }
+    .heat-high { background: #dcfce7; color: #15803d; }
+    .heat-med { background: #fef9c3; color: #854d0e; }
+    .heat-low { background: #fee2e2; color: #b91c1c; }
 
     .comment-item {
-      padding: 12px 16px;
-      border-left: 4px solid var(--primary);
-      background: #f8fafc;
-      border-radius: 0 8px 8px 0;
-      margin-bottom: 10px;
+      padding: 10px 14px; border-left: 4px solid var(--primary);
+      background: #f8fafc; border-radius: 0 8px 8px 0; margin-bottom: 8px;
     }
-
-    .comment-author {
-      font-weight: 700;
-      font-size: 0.9rem;
-      margin-bottom: 4px;
-    }
-
-    .comment-text {
-      color: var(--text);
-      font-size: 0.9rem;
-    }
+    .comment-author { font-weight: 700; font-size: 0.85rem; margin-bottom: 2px; }
+    .comment-text { font-size: 0.85rem; color: var(--text); }
   </style>
 </head>
 <body>
 
-  <!-- PIN Lock Screen (AES-256 Key Derivation) -->
+  <!-- PIN Lock Screen -->
   <div id="lockOverlay">
     <div class="lock-box">
       <div class="lock-icon">🔒</div>
       <h2 class="lock-title">Fjölskylduaðgangur</h2>
-      <p class="lock-desc">Þessi síða inniheldur persónulegt frískipulag. Gögnin eru dulkóðuð með AES-256. Sláðu inn fjölskyldu-PIN til að afkóða síðuna:</p>
-      
-      <div class="pin-input-wrap">
-        <input type="password" id="pinInput" class="pin-input" placeholder="••••" maxlength="10" autofocus onkeydown="if(event.key==='Enter') submitPIN()">
-      </div>
+      <p class="lock-desc">Þessi síða er dulkóðuð með AES-256. Sláðu inn fjölskyldu-PIN til að opna dagatal og hús:</p>
+      <input type="password" id="pinInput" class="pin-input" placeholder="••••" maxlength="10" autofocus onkeydown="if(event.key==='Enter') submitPIN()">
       <button class="unlock-btn" onclick="submitPIN()">Opna & Afkóða síðu 🔓</button>
-      <div class="pin-error" id="pinError">Rangt PIN-númer eða afkóðun mistókst. Reyndu aftur.</div>
+      <div class="pin-error" id="pinError">Rangt PIN-númer. Reyndu aftur.</div>
     </div>
   </div>
 
@@ -752,49 +312,42 @@
 
       <div class="nav-tabs">
         <button class="nav-btn active" onclick="showTab('vote', this)">🗳️ Skrá mína dagsetningu & val</button>
-        <button class="nav-btn" onclick="showTab('results', this)">📊 Niðurstöður & Samantekt</button>
-        <button class="nav-btn" onclick="showTab('houses', this)">🏡 Skoða öll húsin (12)</button>
+        <button class="nav-btn" onclick="showTab('results', this)">📊 Niðurstöður & Uppáhalds</button>
+        <button class="nav-btn" onclick="showTab('houses', this)">🏡 Skoða / Bæta við húsum</button>
       </div>
 
       <!-- TAB 1: KOSNING -->
       <div id="tab-vote">
-        
-        <!-- Hver ert þú? -->
         <div class="card">
           <div class="card-title">1. Hver ert þú?</div>
           <div class="card-desc">Veldu nafnið þitt úr hópnum til að skrá hvenær þú kemst:</div>
-          
           <div class="person-chips" id="personChips"></div>
-
-          <div class="custom-name-row">
+          <div style="max-width: 420px;">
             <input type="text" id="customNameInput" placeholder="Eða skrifaðu annað nafn (t.d. maki / gestur)..." oninput="onCustomNameInput(this.value)">
           </div>
         </div>
 
-        <!-- Vikur -->
         <div class="card">
           <div class="card-title">2. Hvenær kemstu milli 15. júní og loka ágúst 2027?</div>
           <div class="card-desc">Merktu við allar vikur sem gætu hentað þér. Markmiðið er að finna viku sem allir komast!</div>
-
           <div class="weeks-grid" id="weeksGrid"></div>
         </div>
 
-        <!-- Uppáhalds hús -->
         <div class="card">
-          <div class="card-title">3. Val á húsi (Gististaðir um ~$3.000)</div>
-          <div class="card-desc">Hér eru bestu húsin á óskalistanum sem rúma okkur öll (14 manns) og kosta um eða innan við $3.000/viku. Veldu þau sem þér líst best á:</div>
-
+          <div class="card-title">
+            <span>3. Uppáhalds hús (Veldu þín uppáhalds eða bættu við)</span>
+            <button class="add-house-btn" onclick="openAddHouseModal()">➕ Leggja til nýtt hús</button>
+          </div>
+          <div class="card-desc">Gefðu húsunum einkunn: ❤️ (Uppáhalds / 1. val), 👍 (Líst vel á), 👎 (Frekar ekki):</div>
           <div class="houses-grid" id="priorityHousesGrid"></div>
         </div>
 
-        <!-- Athugasemdir -->
         <div class="card">
           <div class="card-title">4. Athugasemdir, hugmyndir & óskir</div>
           <div class="card-desc">Hvað skiptir þig mestu máli? (Sundlaug, stutt á strönd, golf/padel, nálægt flugvelli, bílaleiga, matur/grill o.s.frv.)</div>
           <textarea id="commentInput" rows="3" placeholder="Skrifaðu þínar pælingar eða óskir hér..."></textarea>
         </div>
 
-        <!-- Save floating bar -->
         <div class="save-bar">
           <div>
             <strong id="saveBarName">Enginn valinn</strong>
@@ -802,15 +355,20 @@
           </div>
           <button class="save-btn" onclick="saveCurrentVote()">Vista & Deila mínu svari ✅</button>
         </div>
-
       </div>
 
       <!-- TAB 2: NIÐURSTÖÐUR -->
       <div id="tab-results" style="display: none;">
         <div class="card">
+          <div class="card-title">🏆 Uppáhalds gististaðir fjölskyldunnar (Topplisti)</div>
+          <div class="card-desc">Hér sést hvaða hús hafa fengið flest ❤️ og 👍 frá hópnum:</div>
+          <div class="podium" id="housePodium"></div>
+          <div id="houseVotesSummary"></div>
+        </div>
+
+        <div class="card">
           <div class="card-title">📊 Hvaða vika hentar best? (Yfirlit)</div>
           <div class="card-desc">Hér sést samantekt á svörum allra. Vika með flest græn atkvæði er efst.</div>
-          
           <div style="overflow-x: auto;">
             <table class="results-table" id="resultsWeeksTable">
               <thead>
@@ -828,12 +386,6 @@
         </div>
 
         <div class="card">
-          <div class="card-title">❤️ Vinsælustu húsin</div>
-          <div class="card-desc">Atkvæði fjölskyldunnar um gististaði:</div>
-          <div id="houseVotesSummary"></div>
-        </div>
-
-        <div class="card">
           <div class="card-title">💬 Athugasemdir & Óskir frá hópnum</div>
           <div id="commentsList">Engar athugasemdir komnar enn.</div>
         </div>
@@ -842,14 +394,20 @@
       <!-- TAB 3: ÖLL HÚSIN -->
       <div id="tab-houses" style="display: none;">
         <div class="card">
-          <div class="card-title">🏡 Allir 12 gististaðirnir á Airbnb óskalistanum</div>
-          <div class="card-desc">Hér eru allir staðirnir sem Sigurjón setti á óskalistann í Airbnb, með beinum hlekkjum og upplýsingum.</div>
+          <div class="card-title">
+            <span>🏡 Gististaðir á listanum</span>
+            <button class="add-house-btn" onclick="openAddHouseModal()">➕ Bæta við húsi</button>
+          </div>
+          <div class="card-desc">Hér eru öll hús á óskalistanum auk tillagna sem fjölskyldan hefur bætt við.</div>
 
-          <div class="houses-filter">
-            <button class="filter-btn active" onclick="filterHouses('all', this)">Öll hús (12)</button>
-            <button class="filter-btn" onclick="filterHouses('budget', this)">Bara ~$3.000 & S-Svíþjóð/Danmörk (7)</button>
-            <button class="filter-btn" onclick="filterHouses('sweden', this)">Bara Svíþjóð (9)</button>
-            <button class="filter-btn" onclick="filterHouses('denmark', this)">Bara Danmörk (3)</button>
+          <div class="houses-top-actions">
+            <div class="houses-filter">
+              <button class="filter-btn active" onclick="filterHouses('all', this)">Öll hús (<span id="countAll">0</span>)</button>
+              <button class="filter-btn" onclick="filterHouses('budget', this)">Bara ~$3.000 (<span id="countBudget">0</span>)</button>
+              <button class="filter-btn" onclick="filterHouses('sweden', this)">Svíþjóð (<span id="countSwe">0</span>)</button>
+              <button class="filter-btn" onclick="filterHouses('denmark', this)">Danmörk (<span id="countDen">0</span>)</button>
+              <button class="filter-btn" onclick="filterHouses('custom', this)">Fjölskyldutillögur (<span id="countCustom">0</span>)</button>
+            </div>
           </div>
 
           <div class="houses-grid" id="allHousesGrid"></div>
@@ -859,23 +417,81 @@
     </main>
   </div>
 
-  <!-- Share / Sync Modal -->
-  <div id="shareModal">
-    <div class="share-box">
-      <div style="font-size: 2.5rem; margin-bottom: 8px;">🎉</div>
-      <h3 style="margin-bottom: 8px;">Svörin þín hafa verið vistuð!</h3>
-      <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 18px;">
-        Til að hinir í fjölskyldunni sjái þín svör á GitHub Pages geturðu afritað deilihlekkinn eða sent beint í spjallið:
+  <!-- Modal: Bæta við húsi -->
+  <div class="modal-overlay" id="addHouseModal">
+    <div class="modal-box">
+      <h3 style="margin-bottom: 6px; font-size: 1.25rem;">➕ Leggja til nýtt hús</h3>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 18px;">
+        Fannstu spennandi hús á Airbnb eða annars staðar? Bættu því við svo allir geti skoðað og kosið!
+      </p>
+
+      <div style="display:flex; flex-direction:column; gap: 12px;">
+        <div>
+          <label style="font-size: 0.8rem; font-weight:700; display:block; margin-bottom:4px;">Airbnb eða vefslóð *</label>
+          <input type="url" id="newHouseUrl" placeholder="https://www.airbnb.com/rooms/..." required>
+        </div>
+
+        <div>
+          <label style="font-size: 0.8rem; font-weight:700; display:block; margin-bottom:4px;">Nafn eða lýsing á húsinu *</label>
+          <input type="text" id="newHouseTitle" placeholder="t.d. Glæsileg villa við ströndina á Skáni" required>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div>
+            <label style="font-size: 0.8rem; font-weight:700; display:block; margin-bottom:4px;">Svæði / Staður *</label>
+            <input type="text" id="newHouseRegion" placeholder="t.d. Borrby, Skáni">
+          </div>
+          <div>
+            <label style="font-size: 0.8rem; font-weight:700; display:block; margin-bottom:4px;">Land *</label>
+            <select id="newHouseCountry">
+              <option value="Svíþjóð">Svíþjóð</option>
+              <option value="Danmörk">Danmörk</option>
+              <option value="Annað">Annað</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div>
+            <label style="font-size: 0.8rem; font-weight:700; display:block; margin-bottom:4px;">Áætlað verð á viku</label>
+            <input type="text" id="newHousePrice" placeholder="t.d. ~$2.800 eða €2.500">
+          </div>
+          <div>
+            <label style="font-size: 0.8rem; font-weight:700; display:block; margin-bottom:4px;">Fjöldi herbergja / rúma</label>
+            <input type="text" id="newHouseSpecs" placeholder="t.d. 7 herb, 14 rúm">
+          </div>
+        </div>
+
+        <div>
+          <label style="font-size: 0.8rem; font-weight:700; display:block; margin-bottom:4px;">Myndaslóð (valfrjálst)</label>
+          <input type="url" id="newHousePhoto" placeholder="https://... mynd af húsinu (má sleppa)">
+        </div>
+
+        <div style="display:flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+          <button onclick="closeAddHouseModal()" style="padding: 10px 18px; border: 1px solid var(--border); background: white; border-radius: 8px; font-weight: 600; cursor: pointer;">Hætta við</button>
+          <button onclick="submitNewHouse()" style="padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">Bæta við húsi ➕</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Deila atkvæði -->
+  <div class="modal-overlay" id="shareModal">
+    <div class="modal-box" style="text-align: center;">
+      <div style="font-size: 2.5rem; margin-bottom: 6px;">🎉</div>
+      <h3 style="margin-bottom: 6px; font-size: 1.3rem;">Svörin þín hafa verið vistuð!</h3>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
+        Til að hinir í fjölskyldunni sjái svörin þín á GitHub Pages geturðu sent hlekkinn beint í fjölskylduhópinn:
       </p>
       
       <div style="display: flex; gap: 8px; margin-bottom: 14px;">
-        <input type="text" id="shareUrlInput" readonly style="font-size: 0.85rem;">
-        <button onclick="copyShareUrl()" style="padding: 10px 16px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: 700; cursor: pointer;">Afrita</button>
+        <input type="text" id="shareUrlInput" readonly style="font-size: 0.8rem;">
+        <button onclick="copyShareUrl()" style="padding: 10px 16px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; white-space: nowrap;">Afrita</button>
       </div>
 
       <div style="display: flex; gap: 10px; justify-content: center;">
-        <button onclick="shareViaWhatsApp()" style="background: #25D366; color: white; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 700; cursor: pointer;">📲 Senda á WhatsApp</button>
-        <button onclick="closeShareModal()" style="background: #f1f5f9; color: var(--text); border: none; padding: 10px 20px; border-radius: 10px; font-weight: 600; cursor: pointer;">Loka</button>
+        <button onclick="shareViaWhatsApp()" style="background: #25D366; color: white; border: none; padding: 10px 18px; border-radius: 10px; font-weight: 700; cursor: pointer;">📲 Senda á WhatsApp</button>
+        <button onclick="closeShareModal()" style="background: #f1f5f9; color: var(--text); border: none; padding: 10px 18px; border-radius: 10px; font-weight: 600; cursor: pointer;">Loka</button>
       </div>
     </div>
   </div>
@@ -884,17 +500,13 @@
     let FAMILY_MEMBERS = [];
     let WEEKS = [];
     let HOUSES = [];
+    let CUSTOM_HOUSES = [];
 
     let currentPerson = "";
-    let currentVote = {
-      weeks: {},
-      houseVotes: {},
-      comment: ""
-    };
+    let currentVote = { weeks: {}, houseVotes: {}, comment: "" };
     let allVotes = {};
     let activePIN = "";
 
-    // Web Crypto AES-256 Decryption with PBKDF2
     async function decryptPayload(pin, payload) {
       const enc = new TextEncoder();
       const salt = Uint8Array.from(atob(payload.salt), c => c.charCodeAt(0));
@@ -902,32 +514,17 @@
       const data = Uint8Array.from(atob(payload.data), c => c.charCodeAt(0));
 
       const keyMaterial = await window.crypto.subtle.importKey(
-        "raw",
-        enc.encode(pin),
-        { name: "PBKDF2" },
-        false,
-        ["deriveKey"]
+        "raw", enc.encode(pin), { name: "PBKDF2" }, false, ["deriveKey"]
       );
 
       const key = await window.crypto.subtle.deriveKey(
-        {
-          name: "PBKDF2",
-          salt: salt,
-          iterations: 100000,
-          hash: "SHA-256"
-        },
-        keyMaterial,
-        { name: "AES-GCM", length: 256 },
-        false,
-        ["decrypt"]
+        { name: "PBKDF2", salt: salt, iterations: 100000, hash: "SHA-256" },
+        keyMaterial, { name: "AES-GCM", length: 256 }, false, ["decrypt"]
       );
 
       const decrypted = await window.crypto.subtle.decrypt(
-        { name: "AES-GCM", iv: iv },
-        key,
-        data
+        { name: "AES-GCM", iv: iv }, key, data
       );
-
       const dec = new TextDecoder();
       return JSON.parse(dec.decode(decrypted));
     }
@@ -935,7 +532,6 @@
     async function submitPIN() {
       const pin = document.getElementById("pinInput").value.trim();
       if (!pin) return;
-      
       const ok = await verifyAndUnlock(pin);
       if (!ok) {
         document.getElementById("pinError").style.display = "block";
@@ -944,16 +540,13 @@
 
     async function verifyAndUnlock(pin) {
       try {
-        let payload = null;
-        // Sækja dulkóðuðu skrána
         const resp = await fetch("encrypted_data.json");
         if (resp.ok) {
-          payload = await resp.json();
-          const decryptedData = await decryptPayload(pin, payload);
-          
-          FAMILY_MEMBERS = decryptedData.familyMembers;
-          WEEKS = decryptedData.weeks;
-          HOUSES = decryptedData.houses;
+          const payload = await resp.json();
+          const data = await decryptPayload(pin, payload);
+          FAMILY_MEMBERS = data.familyMembers;
+          WEEKS = data.weeks;
+          HOUSES = data.houses;
 
           activePIN = pin;
           sessionStorage.setItem("family_pin", pin);
@@ -962,7 +555,7 @@
           return true;
         }
       } catch (e) {
-        console.warn("Afkóðun mistókst með slegnu PIN:", e);
+        console.warn("Afkóðun mistókst:", e);
       }
       return false;
     }
@@ -982,19 +575,30 @@
     }
 
     function initApp() {
-      // Lesa vistuð atkvæði úr localStorage
+      // Lesa custom hús
+      const storedCustom = localStorage.getItem("sweeden_2027_custom_houses");
+      if (storedCustom) {
+        try {
+          CUSTOM_HOUSES = JSON.parse(storedCustom);
+          CUSTOM_HOUSES.forEach(ch => {
+            if (!HOUSES.some(h => h.id === ch.id)) HOUSES.push(ch);
+          });
+        } catch (e) {}
+      }
+
+      // Lesa atkvæði
       const stored = localStorage.getItem("sweeden_2027_votes");
       if (stored) {
         try { allVotes = JSON.parse(stored); } catch (e) {}
       }
 
-      // Athuga hvort einhver sendi atkvæði í URL hash: #import=...
       checkUrlHashImport();
 
       renderPersonChips();
       renderWeeks();
       renderPriorityHouses();
       renderAllHouses('all');
+      updateHouseCounts();
       renderResults();
 
       selectPerson(FAMILY_MEMBERS[0]);
@@ -1007,16 +611,27 @@
           const b64 = hash.replace("#import=", "");
           const jsonStr = decodeURIComponent(escape(atob(b64)));
           const imported = JSON.parse(jsonStr);
+          
+          // Ef fylgdu með ný hús sem einhver bjó til
+          if (imported.customHouses && Array.isArray(imported.customHouses)) {
+            imported.customHouses.forEach(ch => {
+              if (!HOUSES.some(h => h.id === ch.id)) {
+                HOUSES.push(ch);
+                if (!CUSTOM_HOUSES.some(c => c.id === ch.id)) CUSTOM_HOUSES.push(ch);
+              }
+            });
+            localStorage.setItem("sweeden_2027_custom_houses", JSON.stringify(CUSTOM_HOUSES));
+          }
+
           if (imported.person && imported.data) {
             allVotes[imported.person] = imported.data;
             localStorage.setItem("sweeden_2027_votes", JSON.stringify(allVotes));
             alert(`Nýtt svar frá ${imported.person} bætt við töfluna! 🎉`);
-            // Hreinsa hash úr URL
             history.replaceState(null, null, ' ');
           }
         }
       } catch (e) {
-        console.error("Gat ekki flutt inn svar úr hlekk:", e);
+        console.error("Gat ekki flutt inn svar:", e);
       }
     }
 
@@ -1032,7 +647,6 @@
     function selectPerson(name) {
       currentPerson = name;
       document.getElementById("customNameInput").value = FAMILY_MEMBERS.includes(name) ? "" : name;
-      
       document.querySelectorAll(".person-chip").forEach(el => el.classList.remove("active"));
       const safeId = "chip-" + name.replace(/[^a-zA-Z0-9]/g, '');
       const activeEl = document.getElementById(safeId);
@@ -1103,10 +717,18 @@
       });
     }
 
+    function updateHouseCounts() {
+      document.getElementById("countAll").textContent = HOUSES.length;
+      document.getElementById("countBudget").textContent = HOUSES.filter(h => h.isBudgetFit).length;
+      document.getElementById("countSwe").textContent = HOUSES.filter(h => h.country === 'Svíþjóð').length;
+      document.getElementById("countDen").textContent = HOUSES.filter(h => h.country === 'Danmörk').length;
+      document.getElementById("countCustom").textContent = CUSTOM_HOUSES.length;
+    }
+
     function renderPriorityHouses() {
       const grid = document.getElementById("priorityHousesGrid");
-      const priority = HOUSES.filter(h => h.isBudgetFit);
-      grid.innerHTML = priority.map(h => createHouseCardHTML(h, true)).join("");
+      const priority = HOUSES.filter(h => h.isBudgetFit || h.isCustom);
+      grid.innerHTML = priority.map(h => createHouseCardHTML(h)).join("");
     }
 
     function renderAllHouses(filter) {
@@ -1115,8 +737,9 @@
       if (filter === 'budget') list = HOUSES.filter(h => h.isBudgetFit);
       else if (filter === 'sweden') list = HOUSES.filter(h => h.country === 'Svíþjóð');
       else if (filter === 'denmark') list = HOUSES.filter(h => h.country === 'Danmörk');
+      else if (filter === 'custom') list = HOUSES.filter(h => h.isCustom);
 
-      grid.innerHTML = list.map(h => createHouseCardHTML(h, false)).join("");
+      grid.innerHTML = list.map(h => createHouseCardHTML(h)).join("");
       updateHouseVotesUI();
     }
 
@@ -1126,13 +749,15 @@
       renderAllHouses(filter);
     }
 
-    function createHouseCardHTML(h, isPrioritySection) {
+    function createHouseCardHTML(h) {
       const specsHTML = (h.specs || []).map(s => `<span>${s}</span>`).join("");
+      const defaultImg = "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&auto=format&fit=crop&q=80";
       return `
         <div class="house-card">
           <div class="house-img-box">
-            <img src="${h.photo}" alt="${h.title}" loading="lazy" />
+            <img src="${h.photo || defaultImg}" alt="${h.title}" loading="lazy" onerror="this.src='${defaultImg}'" />
             <div class="house-badge-loc">${h.region}</div>
+            ${h.isCustom ? `<div class="house-badge-custom">Tillaga: ${h.suggestedBy || 'Fjölskylda'}</div>` : ''}
             <div class="house-badge-price">${h.priceFormatted}</div>
           </div>
           <div class="house-body">
@@ -1142,11 +767,11 @@
               ${specsHTML}
             </div>
             <div class="house-actions">
-              <a href="${h.url}" target="_blank" rel="noopener" class="airbnb-link">Skoða á Airbnb ↗</a>
+              <a href="${h.url}" target="_blank" rel="noopener" class="airbnb-link">Skoða gististað ↗</a>
               <div class="vote-btns">
-                <button class="vote-btn" data-house="${h.id}" data-vote="love" title="Elska þetta hús!" onclick="setHouseVote('${h.id}', 'love')">❤️</button>
-                <button class="vote-btn" data-house="${h.id}" data-vote="like" title="Líst vel á" onclick="setHouseVote('${h.id}', 'like')">👍</button>
-                <button class="vote-btn" data-house="${h.id}" data-vote="dislike" title="Líst ekki á" onclick="setHouseVote('${h.id}', 'dislike')">👎</button>
+                <button class="vote-btn" data-house="${h.id}" data-vote="love" title="Uppáhalds / 1. val ❤️" onclick="setHouseVote('${h.id}', 'love')">❤️</button>
+                <button class="vote-btn" data-house="${h.id}" data-vote="like" title="Líst vel á 👍" onclick="setHouseVote('${h.id}', 'like')">👍</button>
+                <button class="vote-btn" data-house="${h.id}" data-vote="dislike" title="Líst ekki á 👎" onclick="setHouseVote('${h.id}', 'dislike')">👎</button>
               </div>
             </div>
           </div>
@@ -1174,6 +799,67 @@
       });
     }
 
+    // Modal: Bæta við húsi
+    function openAddHouseModal() {
+      document.getElementById("addHouseModal").style.display = "flex";
+    }
+
+    function closeAddHouseModal() {
+      document.getElementById("addHouseModal").style.display = "none";
+    }
+
+    function submitNewHouse() {
+      const url = document.getElementById("newHouseUrl").value.trim();
+      const title = document.getElementById("newHouseTitle").value.trim();
+      const region = document.getElementById("newHouseRegion").value.trim() || "Ótilgreint";
+      const country = document.getElementById("newHouseCountry").value;
+      const price = document.getElementById("newHousePrice").value.trim() || "Verð ótilgreint";
+      const specs = document.getElementById("newHouseSpecs").value.trim();
+      const photo = document.getElementById("newHousePhoto").value.trim();
+
+      if (!url || !title) {
+        alert("Vinsamlegast fylltu út slóð og heiti hússins.");
+        return;
+      }
+
+      const newId = "custom_" + Date.now();
+      const newHouse = {
+        id: newId,
+        title: title,
+        propertyType: "Tillaga frá fjölskyldu",
+        city: region,
+        region: `${region} (${country})`,
+        country: country,
+        specs: specs ? [specs] : ["Tillaga"],
+        rating: "Nýtt",
+        ratingLabel: "",
+        priceFormatted: price,
+        photo: photo,
+        url: url,
+        isBudgetFit: true,
+        isCustom: true,
+        suggestedBy: currentPerson || "Fjölskylda"
+      };
+
+      HOUSES.unshift(newHouse);
+      CUSTOM_HOUSES.unshift(newHouse);
+      localStorage.setItem("sweeden_2027_custom_houses", JSON.stringify(CUSTOM_HOUSES));
+
+      // Hreinsa form
+      document.getElementById("newHouseUrl").value = "";
+      document.getElementById("newHouseTitle").value = "";
+      document.getElementById("newHouseRegion").value = "";
+      document.getElementById("newHousePrice").value = "";
+      document.getElementById("newHouseSpecs").value = "";
+      document.getElementById("newHousePhoto").value = "";
+
+      closeAddHouseModal();
+      renderPriorityHouses();
+      renderAllHouses('all');
+      updateHouseCounts();
+      alert(`Glæsilegt! „${title}“ hefur verið bætt við listann.`);
+    }
+
     async function saveCurrentVote() {
       if (!currentPerson) {
         alert("Vinsamlegast veldu eða skrifaðu nafn áður en þú vistar.");
@@ -1182,10 +868,9 @@
 
       currentVote.comment = document.getElementById("commentInput").value;
       allVotes[currentPerson] = currentVote;
-
       localStorage.setItem("sweeden_2027_votes", JSON.stringify(allVotes));
 
-      // Ef keyrt með server.py, senda á bakenda
+      // Senda á bakenda ef server er í gangi
       try {
         await fetch("/api/vote", {
           method: "POST",
@@ -1196,8 +881,12 @@
 
       renderResults();
 
-      // Búa til deilihlekk fyrir WhatsApp / Messenger / GitHub Pages
-      const exportObj = { person: currentPerson, data: currentVote };
+      // Deilihlekkur
+      const exportObj = {
+        person: currentPerson,
+        data: currentVote,
+        customHouses: CUSTOM_HOUSES
+      };
       const b64 = btoa(unescape(encodeURIComponent(JSON.stringify(exportObj))));
       const shareUrl = `${window.location.origin}${window.location.pathname}?pin=${activePIN}#import=${b64}`;
 
@@ -1214,7 +903,7 @@
 
     function shareViaWhatsApp() {
       const url = document.getElementById("shareUrlInput").value;
-      const text = encodeURIComponent(`Hér eru mín svör fyrir Svíþjóðarferðina 2027: ${url}`);
+      const text = encodeURIComponent(`Hér eru mín svör og uppáhalds hús fyrir Svíþjóðarferðina 2027: ${url}`);
       window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
     }
 
@@ -1226,8 +915,9 @@
       const tbody = document.getElementById("resultsWeeksTbody");
       const voters = Object.keys(allVotes);
 
+      // 1. Vikur
       if (voters.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--text-muted); padding: 24px;">Engin svör hafa borist enn. Vertu fyrst(ur) til að skrá!</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--text-muted); padding: 20px;">Engin svör komin enn. Vertu fyrst(ur) til að kjósa!</td></tr>`;
       } else {
         const weekStats = WEEKS.map(w => {
           let yes = [], maybe = [], no = [];
@@ -1265,7 +955,7 @@
         }).join("");
       }
 
-      const houseVotesDiv = document.getElementById("houseVotesSummary");
+      // 2. Húsakosning & Verðlaunapallur (Podium)
       const houseScores = {};
       HOUSES.forEach(h => {
         houseScores[h.id] = { house: h, love: [], like: [], dislike: [] };
@@ -1275,40 +965,57 @@
         const hv = allVotes[p].houseVotes || {};
         for (const hid in hv) {
           if (houseScores[hid]) {
-            const voteType = hv[hid];
-            if (voteType === 'love') houseScores[hid].love.push(p);
-            else if (voteType === 'like') houseScores[hid].like.push(p);
-            else if (voteType === 'dislike') houseScores[hid].dislike.push(p);
+            const v = hv[hid];
+            if (v === 'love') houseScores[hid].love.push(p);
+            else if (v === 'like') houseScores[hid].like.push(p);
+            else if (v === 'dislike') houseScores[hid].dislike.push(p);
           }
         }
       });
 
-      const rankedHouses = Object.values(houseScores)
+      const ranked = Object.values(houseScores)
         .filter(x => x.love.length + x.like.length + x.dislike.length > 0)
-        .sort((a, b) => ((b.love.length * 2 + b.like.length) - (a.love.length * 2 + a.like.length)));
+        .sort((a, b) => ((b.love.length * 3 + b.like.length) - (a.love.length * 3 + a.like.length)));
 
-      if (rankedHouses.length === 0) {
-        houseVotesDiv.innerHTML = `<p style="color: var(--text-muted);">Engin húsakosning komin enn.</p>`;
+      const podiumDiv = document.getElementById("housePodium");
+      const listDiv = document.getElementById("houseVotesSummary");
+
+      if (ranked.length === 0) {
+        podiumDiv.innerHTML = "";
+        listDiv.innerHTML = `<p style="color: var(--text-muted); font-size: 0.9rem;">Engin húsakosning skráð enn. Merktu við ❤️ eða 👍 við þín uppáhalds hús!</p>`;
       } else {
-        houseVotesDiv.innerHTML = rankedHouses.map(x => `
-          <div style="display:flex; justify-content:space-between; align-items:center; padding: 12px; border-bottom: 1px solid var(--border); gap: 12px; flex-wrap: wrap;">
+        // Podium Top 3
+        const medals = ["🥇 1. Sæti", "🥈 2. Sæti", "🥉 3. Sæti"];
+        podiumDiv.innerHTML = ranked.slice(0, 3).map((item, idx) => `
+          <div class="podium-item ${idx === 0 ? 'podium-gold' : ''}">
+            <div class="podium-rank">${medals[idx]}</div>
+            <strong style="font-size:0.95rem;">${item.house.title}</strong>
+            <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom: 6px;">${item.house.region} • ${item.house.priceFormatted}</div>
+            <div style="font-size:0.85rem; font-weight:700; color: #f43f5e;">❤️ ${item.love.length} elskuðu • 👍 ${item.like.length}</div>
+          </div>
+        `).join("");
+
+        listDiv.innerHTML = ranked.map(x => `
+          <div style="display:flex; justify-content:space-between; align-items:center; padding: 10px; border-bottom: 1px solid var(--border); gap: 10px; flex-wrap: wrap;">
             <div>
-              <strong>${x.house.title}</strong> (${x.house.region}) – <span style="color:var(--text-muted);">${x.house.priceFormatted}</span>
-              <br><small><a href="${x.house.url}" target="_blank" class="airbnb-link">Skoða á Airbnb</a></small>
+              <strong>${x.house.title}</strong> (${x.house.region}) – <span style="color:var(--text-muted); font-size:0.85rem;">${x.house.priceFormatted}</span>
+              ${x.house.isCustom ? `<span style="background:#fef3c7; color:#92400e; font-size:0.75rem; font-weight:700; padding:2px 6px; border-radius:4px; margin-left:6px;">Tillaga frá ${x.house.suggestedBy}</span>` : ''}
+              <br><small><a href="${x.house.url}" target="_blank" class="airbnb-link">Skoða gististað ↗</a></small>
             </div>
-            <div style="display:flex; gap: 10px; font-size: 0.9rem;">
-              <span>❤️ ${x.love.length}</span>
-              <span>👍 ${x.like.length}</span>
-              <span>👎 ${x.dislike.length}</span>
+            <div style="display:flex; gap: 8px; font-size: 0.85rem;">
+              <span title="Uppáhalds: ${x.love.join(', ')}">❤️ ${x.love.length}</span>
+              <span title="Líst vel á: ${x.like.join(', ')}">👍 ${x.like.length}</span>
+              <span title="Frekar ekki: ${x.dislike.join(', ')}">👎 ${x.dislike.length}</span>
             </div>
           </div>
         `).join("");
       }
 
+      // 3. Athugasemdir
       const commentsDiv = document.getElementById("commentsList");
       const withComments = voters.filter(p => allVotes[p].comment && allVotes[p].comment.trim());
       if (withComments.length === 0) {
-        commentsDiv.innerHTML = `<p style="color: var(--text-muted);">Engar athugasemdir skráðar enn.</p>`;
+        commentsDiv.innerHTML = `<p style="color: var(--text-muted); font-size: 0.9rem;">Engar athugasemdir skráðar enn.</p>`;
       } else {
         commentsDiv.innerHTML = withComments.map(p => `
           <div class="comment-item">
@@ -1327,9 +1034,7 @@
       document.getElementById("tab-results").style.display = tab === 'results' ? 'block' : 'none';
       document.getElementById("tab-houses").style.display = tab === 'houses' ? 'block' : 'none';
 
-      if (tab === 'results') {
-        renderResults();
-      }
+      if (tab === 'results') renderResults();
     }
 
     window.addEventListener("DOMContentLoaded", async () => {
