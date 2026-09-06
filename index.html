@@ -233,27 +233,27 @@
     .house-specs span { background: #f1f5f9; padding: 2px 7px; border-radius: 5px; }
 
     .house-votes-breakdown {
-      margin-top: 4px; margin-bottom: 10px; padding: 8px 10px;
-      background: #f8fafc; border-radius: 8px; border: 1px solid var(--border);
+      margin-top: 6px; margin-bottom: 12px; padding: 10px 12px;
+      background: #f8fafc; border-radius: 10px; border: 1.5px solid #e2e8f0;
     }
     .votes-breakdown-title {
-      font-size: 0.72rem; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;
-      text-transform: uppercase; letter-spacing: 0.4px;
+      font-size: 0.74rem; font-weight: 800; color: #475569; margin-bottom: 6px;
+      text-transform: uppercase; letter-spacing: 0.5px; display: flex; justify-content: space-between; align-items: center;
     }
-    .votes-breakdown-chips { display: flex; flex-wrap: wrap; gap: 5px; }
-    .vote-chip { font-size: 0.78rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; }
-    .chip-love { background: #ffe4e6; color: #9f1239; }
-    .chip-like { background: #dcfce7; color: #166534; }
-    .chip-dislike { background: #fee2e2; color: #991b1b; }
-    .house-votes-empty { font-size: 0.75rem; color: var(--text-muted); margin: 6px 0 10px 0; font-style: italic; }
+    .votes-breakdown-chips { display: flex; flex-direction: column; gap: 5px; }
+    .vote-chip { font-size: 0.82rem; font-weight: 600; padding: 4px 10px; border-radius: 6px; display: inline-block; }
+    .chip-love { background: #ffe4e6; color: #9f1239; border: 1px solid #fecdd3; }
+    .chip-like { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+    .chip-dislike { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+    .house-votes-empty { font-size: 0.78rem; color: var(--text-muted); margin: 6px 0 10px 0; font-style: italic; }
 
     .week-attendees-box {
-      margin-top: 8px; padding-top: 8px; border-top: 1px dashed #e2e8f0; width: 100%;
+      margin-top: 8px; padding-top: 8px; border-top: 1px dashed #cbd5e1; width: 100%;
     }
-    .mini-name-chip { font-size: 0.74rem; font-weight: 600; padding: 2px 6px; border-radius: 4px; }
-    .chip-yes { background: #dcfce7; color: #15803d; }
-    .chip-maybe { background: #fef9c3; color: #854d0e; }
-    .chip-no { background: #fee2e2; color: #b91c1c; }
+    .mini-name-chip { font-size: 0.78rem; font-weight: 600; padding: 3px 8px; border-radius: 6px; display: inline-block; }
+    .chip-yes { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+    .chip-maybe { background: #fef9c3; color: #854d0e; border: 1px solid #fef08a; }
+    .chip-no { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
 
     .house-actions {
       margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border);
@@ -385,9 +385,8 @@
     <main class="container">
 
       <div class="nav-tabs">
-        <button class="nav-btn active" onclick="showTab('vote', this)">🗳️ Skrá mína dagsetningu & val</button>
-        <button class="nav-btn" onclick="showTab('results', this)">📊 Niðurstöður & Uppáhalds</button>
-        <button class="nav-btn" onclick="showTab('houses', this)">🏡 Skoða / Bæta við húsum</button>
+        <button class="nav-btn active" onclick="showTab('vote', this)">🗳️ 1. Kjósa (Vikur & Öll 13 húsin)</button>
+        <button class="nav-btn" onclick="showTab('results', this)">🏆 2. Niðurstöður & Vinsældalisti</button>
       </div>
 
       <!-- TAB 1: KOSNING -->
@@ -417,19 +416,35 @@
 
         <div class="card">
           <div class="card-title" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-            <span>3. Uppáhalds hús (Veldu þín uppáhalds eða bættu við)</span>
-            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-              <select id="sortTab1Select" onchange="changeTab1Sort(this.value)" style="padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border); font-size: 0.8rem; font-weight: 600; background: white; cursor: pointer;">
+            <span>3. Gististaðir & Hús (Öll 13 húsin á listanum)</span>
+            <button class="add-house-btn" onclick="openAddHouseModal()">➕ Leggja til nýtt hús</button>
+          </div>
+          <div class="card-desc">
+            Skoðaðu öll 13 húsin á listanum, síaðu eftir landi eða verði, og veldu þín uppáhalds: ❤️ (Elska / 1. val), 👍 (Líst vel á), 👎 (Frekar ekki):
+          </div>
+
+          <div class="houses-top-actions" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+            <div class="houses-filter">
+              <button class="filter-btn active" onclick="filterHouses('all', this)">Öll hús (<span id="countAll">0</span>)</button>
+              <button class="filter-btn" onclick="filterHouses('popularity', this)">🔥 Vinsælust (<span id="countPop">0</span>)</button>
+              <button class="filter-btn" onclick="filterHouses('sweden', this)">Svíþjóð (<span id="countSwe">0</span>)</button>
+              <button class="filter-btn" onclick="filterHouses('denmark', this)">Danmörk (<span id="countDen">0</span>)</button>
+              <button class="filter-btn" onclick="filterHouses('budget', this)">Bara ~$3.000 (<span id="countBudget">0</span>)</button>
+              <button class="filter-btn" onclick="filterHouses('custom', this)">Fjölskyldutillögur (<span id="countCustom">0</span>)</button>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span style="font-size: 0.82rem; color: var(--text-muted); font-weight: 600;">Raða:</span>
+              <select id="sortHousesSelect" onchange="changeHousesSort(this.value)" style="padding: 7px 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 0.82rem; font-weight: 600; background: white; cursor: pointer;">
                 <option value="popularity">🔥 Vinsælust hjá fjölskyldu</option>
                 <option value="default">Sjálfgefin röð</option>
                 <option value="price-asc">💰 Ódýrust fyrst</option>
-                <option value="rating">⭐ Hæst metin</option>
+                <option value="price-desc">💎 Dýrust fyrst</option>
+                <option value="rating">⭐ Hæst metin á Airbnb</option>
               </select>
-              <button class="add-house-btn" onclick="openAddHouseModal()">➕ Leggja til hús</button>
             </div>
           </div>
-          <div class="card-desc">Gefðu húsunum einkunn: ❤️ (Uppáhalds / 1. val), 👍 (Líst vel á), 👎 (Frekar ekki):</div>
-          <div class="houses-grid" id="priorityHousesGrid"></div>
+
+          <div class="houses-grid" id="allHousesGrid"></div>
         </div>
 
         <div class="card">
@@ -498,40 +513,6 @@
         <div class="card">
           <div class="card-title">💬 Athugasemdir & Óskir frá hópnum</div>
           <div id="commentsList">Engar athugasemdir komnar enn.</div>
-        </div>
-      </div>
-
-      <!-- TAB 3: ÖLL HÚSIN -->
-      <div id="tab-houses" style="display: none;">
-        <div class="card">
-          <div class="card-title">
-            <span>🏡 Gististaðir á listanum</span>
-            <button class="add-house-btn" onclick="openAddHouseModal()">➕ Bæta við húsi</button>
-          </div>
-          <div class="card-desc">Hér eru öll hús á óskalistanum auk tillagna sem fjölskyldan hefur bætt við.</div>
-
-          <div class="houses-top-actions" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
-            <div class="houses-filter">
-              <button class="filter-btn active" onclick="filterHouses('all', this)">Öll hús (<span id="countAll">0</span>)</button>
-              <button class="filter-btn" onclick="filterHouses('popularity', this)">🔥 Vinsælust (<span id="countPop">0</span>)</button>
-              <button class="filter-btn" onclick="filterHouses('budget', this)">Bara ~$3.000 (<span id="countBudget">0</span>)</button>
-              <button class="filter-btn" onclick="filterHouses('sweden', this)">Svíþjóð (<span id="countSwe">0</span>)</button>
-              <button class="filter-btn" onclick="filterHouses('denmark', this)">Danmörk (<span id="countDen">0</span>)</button>
-              <button class="filter-btn" onclick="filterHouses('custom', this)">Fjölskyldutillögur (<span id="countCustom">0</span>)</button>
-            </div>
-            <div style="display: flex; align-items: center; gap: 6px;">
-              <span style="font-size: 0.82rem; color: var(--text-muted); font-weight: 600;">Raða eftir:</span>
-              <select id="sortHousesSelect" onchange="changeHousesSort(this.value)" style="padding: 7px 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 0.82rem; font-weight: 600; background: white; cursor: pointer;">
-                <option value="popularity">🔥 Vinsælust hjá fjölskyldu</option>
-                <option value="default">Sjálfgefin röð</option>
-                <option value="price-asc">💰 Ódýrust fyrst</option>
-                <option value="price-desc">💎 Dýrust fyrst</option>
-                <option value="rating">⭐ Hæst metin á Airbnb</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="houses-grid" id="allHousesGrid"></div>
         </div>
       </div>
 
@@ -767,12 +748,19 @@
           const encrypted = await resp.json();
           if (encrypted && encrypted.data && encrypted.salt && encrypted.iv) {
             const cloudData = await decryptPayload(activePIN, encrypted);
-            let hasChanges = false;
 
             if (cloudData.votes && typeof cloudData.votes === "object") {
               allVotes = { ...allVotes, ...cloudData.votes };
               localStorage.setItem("sweeden_2027_votes", JSON.stringify(allVotes));
-              hasChanges = true;
+
+              // Uppfæra currentVote ef viðkomandi á svör í skýinu
+              if (currentPerson && allVotes[currentPerson]) {
+                currentVote = JSON.parse(JSON.stringify(allVotes[currentPerson]));
+                const cEl = document.getElementById("commentInput");
+                if (cEl && (!cEl.value || cEl.value.trim() === "")) {
+                  cEl.value = currentVote.comment || "";
+                }
+              }
             }
 
             if (cloudData.customHouses && Array.isArray(cloudData.customHouses)) {
@@ -780,18 +768,18 @@
                 if (!CUSTOM_HOUSES.some(h => h.id === ch.id)) {
                   CUSTOM_HOUSES.push(ch);
                   if (!HOUSES.some(h => h.id === ch.id)) HOUSES.unshift(ch);
-                  hasChanges = true;
                 }
               });
               localStorage.setItem("sweeden_2027_custom_houses", JSON.stringify(CUSTOM_HOUSES));
             }
 
-            if (hasChanges) {
-              renderPriorityHouses();
-              renderAllHouses(currentFilter || 'all');
-              updateHouseCounts();
-              renderResults();
-            }
+            // Uppfæra alltaf allt viðmót samstundis svo nöfn og svör sjáist strax
+            renderWeeks();
+            renderAllHouses(currentFilter);
+            updateWeeksUI();
+            updateHouseVotesUI();
+            updateHouseCounts();
+            renderResults();
 
             const updatedInfo = cloudData.updatedBy ? ` (${cloudData.updatedBy})` : '';
             updateSyncBadge(`🟢 Samstillt við alla${updatedInfo}`, "success");
@@ -876,20 +864,14 @@
       checkUrlHashImport();
 
       renderPersonChips();
-      renderWeeks();
-      renderPriorityHouses();
-      renderAllHouses('all');
-      updateHouseCounts();
-      renderResults();
-
       selectPerson(FAMILY_MEMBERS[0]);
 
-      // Sækja sjálfkrafa úr skýi
+      // Sækja sjálfkrafa nýjustu gögn úr skýi
       await pullFromCloud(false);
 
-      // Athuga aftur á 30 sek fresti ef glugginn er opinn
+      // Athuga aftur á 20 sek fresti ef glugginn er opinn
       if (!window._syncInterval) {
-        window._syncInterval = setInterval(() => pullFromCloud(true), 30000);
+        window._syncInterval = setInterval(() => pullFromCloud(true), 20000);
       }
     }
 
@@ -953,6 +935,10 @@
       document.getElementById("commentInput").value = currentVote.comment || "";
       updateWeeksUI();
       updateHouseVotesUI();
+      renderWeeks();
+      renderAllHouses(currentFilter);
+      updateHouseCounts();
+      renderResults();
     }
 
     function onCustomNameInput(val) {
@@ -969,6 +955,10 @@
         document.getElementById("commentInput").value = currentVote.comment || "";
         updateWeeksUI();
         updateHouseVotesUI();
+        renderWeeks();
+        renderAllHouses(currentFilter);
+        updateHouseCounts();
+        renderResults();
       }
     }
 
@@ -1044,14 +1034,13 @@
               </div>
               <div class="week-attendees-box">
                 ${(stats.yes.length > 0 || stats.maybe.length > 0 || stats.no.length > 0) ? `
-                  <div style="display: flex; flex-wrap: wrap; gap: 4px; align-items: center;">
-                    <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; margin-right: 2px;">Svör:</span>
-                    ${stats.yes.map(n => `<span class="mini-name-chip chip-yes">✅ ${n}</span>`).join("")}
-                    ${stats.maybe.map(n => `<span class="mini-name-chip chip-maybe">🟡 ${n}</span>`).join("")}
-                    ${stats.no.map(n => `<span class="mini-name-chip chip-no">❌ ${n}</span>`).join("")}
+                  <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 4px;">
+                    ${stats.yes.length > 0 ? `<div><span class="mini-name-chip chip-yes">✅ <strong>Komast (${stats.yes.length}):</strong> ${stats.yes.join(", ")}</span></div>` : ''}
+                    ${stats.maybe.length > 0 ? `<div><span class="mini-name-chip chip-maybe">🟡 <strong>Gætu (${stats.maybe.length}):</strong> ${stats.maybe.join(", ")}</span></div>` : ''}
+                    ${stats.no.length > 0 ? `<div><span class="mini-name-chip chip-no">❌ <strong>Komast ekki (${stats.no.length}):</strong> ${stats.no.join(", ")}</span></div>` : ''}
                   </div>
                 ` : `
-                  <span style="font-size: 0.73rem; color: var(--text-muted); font-style: italic;">Enginn búinn að merkja við þessa viku enn</span>
+                  <span style="font-size: 0.75rem; color: var(--text-muted); font-style: italic;">Enginn búinn að merkja við þessa viku enn</span>
                 `}
               </div>
             </div>
@@ -1100,8 +1089,7 @@
       });
     }
 
-    let tab1Sort = "popularity";
-    let tab3Sort = "popularity";
+    let housesSort = "popularity";
 
     function getHousePopularity(houseId) {
       let love = [], like = [], dislike = [];
@@ -1143,36 +1131,29 @@
     }
 
     function updateHouseCounts() {
-      document.getElementById("countAll").textContent = HOUSES.length;
+      const countAll = document.getElementById("countAll");
+      if (countAll) countAll.textContent = HOUSES.length;
       const popCount = HOUSES.filter(h => getHousePopularity(h.id).totalVotes > 0).length;
       const popEl = document.getElementById("countPop");
       if (popEl) popEl.textContent = popCount;
-      document.getElementById("countBudget").textContent = HOUSES.filter(h => h.isBudgetFit).length;
-      document.getElementById("countSwe").textContent = HOUSES.filter(h => h.country === 'Svíþjóð').length;
-      document.getElementById("countDen").textContent = HOUSES.filter(h => h.country === 'Danmörk').length;
-      document.getElementById("countCustom").textContent = CUSTOM_HOUSES.length;
-    }
-
-    function renderPriorityHouses() {
-      const grid = document.getElementById("priorityHousesGrid");
-      let priority = HOUSES.filter(h => h.isBudgetFit || h.isCustom);
-      priority = sortHousesList(priority, tab1Sort);
-      grid.innerHTML = priority.map(h => createHouseCardHTML(h)).join("");
-      updateHouseVotesUI();
-    }
-
-    function changeTab1Sort(val) {
-      tab1Sort = val;
-      renderPriorityHouses();
+      const countBudget = document.getElementById("countBudget");
+      if (countBudget) countBudget.textContent = HOUSES.filter(h => h.isBudgetFit).length;
+      const countSwe = document.getElementById("countSwe");
+      if (countSwe) countSwe.textContent = HOUSES.filter(h => h.country === 'Svíþjóð').length;
+      const countDen = document.getElementById("countDen");
+      if (countDen) countDen.textContent = HOUSES.filter(h => h.country === 'Danmörk').length;
+      const countCustom = document.getElementById("countCustom");
+      if (countCustom) countCustom.textContent = CUSTOM_HOUSES.length;
     }
 
     function renderAllHouses(filter) {
       currentFilter = filter || currentFilter || 'all';
       const grid = document.getElementById("allHousesGrid");
+      if (!grid) return;
       let list = HOUSES;
       if (currentFilter === 'popularity') {
         list = HOUSES.filter(h => getHousePopularity(h.id).totalVotes > 0);
-        if (list.length === 0) list = HOUSES; // ef engin atkvæði enn, sýna öll
+        if (list.length === 0) list = HOUSES;
       } else if (currentFilter === 'budget') {
         list = HOUSES.filter(h => h.isBudgetFit);
       } else if (currentFilter === 'sweden') {
@@ -1183,15 +1164,13 @@
         list = HOUSES.filter(h => h.isCustom);
       }
 
-      const effectiveSort = (currentFilter === 'popularity' && tab3Sort === 'default') ? 'popularity' : tab3Sort;
-      list = sortHousesList(list, effectiveSort);
-
+      list = sortHousesList(list, housesSort);
       grid.innerHTML = list.map(h => createHouseCardHTML(h)).join("");
       updateHouseVotesUI();
     }
 
     function changeHousesSort(val) {
-      tab3Sort = val;
+      housesSort = val;
       renderAllHouses(currentFilter);
     }
 
@@ -1238,11 +1217,14 @@
 
             ${(pop.love.length > 0 || pop.like.length > 0 || pop.dislike.length > 0) ? `
               <div class="house-votes-breakdown">
-                <div class="votes-breakdown-title">Hverjir kusu þetta hús:</div>
+                <div class="votes-breakdown-title">
+                  <span>Hverjir kusu þetta hús:</span>
+                  <span style="font-size:0.75rem; color:${pop.score > 0 ? '#15803d' : pop.score < 0 ? '#b91c1c' : '#475569'}; font-weight:800;">${pop.score > 0 ? '+' : ''}${pop.score} stig</span>
+                </div>
                 <div class="votes-breakdown-chips">
-                  ${pop.love.length > 0 ? `<span class="vote-chip chip-love">❤️ ${pop.love.join(", ")}</span>` : ''}
-                  ${pop.like.length > 0 ? `<span class="vote-chip chip-like">👍 ${pop.like.join(", ")}</span>` : ''}
-                  ${pop.dislike.length > 0 ? `<span class="vote-chip chip-dislike">👎 ${pop.dislike.join(", ")}</span>` : ''}
+                  ${pop.love.length > 0 ? `<div class="vote-chip chip-love">❤️ <strong>Elska (${pop.love.length}):</strong> ${pop.love.join(", ")}</div>` : ''}
+                  ${pop.like.length > 0 ? `<div class="vote-chip chip-like">👍 <strong>Líst vel (${pop.like.length}):</strong> ${pop.like.join(", ")}</div>` : ''}
+                  ${pop.dislike.length > 0 ? `<div class="vote-chip chip-dislike">👎 <strong>Frekar ekki (${pop.dislike.length}):</strong> ${pop.dislike.join(", ")}</div>` : ''}
                 </div>
               </div>
             ` : `
@@ -1279,7 +1261,6 @@
         localStorage.setItem("sweeden_2027_votes", JSON.stringify(allVotes));
       }
       updateHouseVotesUI();
-      renderPriorityHouses();
       renderAllHouses(currentFilter);
       updateHouseCounts();
       renderResults();
@@ -1334,7 +1315,6 @@
       HOUSES = HOUSES.filter(x => x.id !== id);
       CUSTOM_HOUSES = CUSTOM_HOUSES.filter(x => x.id !== id);
       localStorage.setItem("sweeden_2027_custom_houses", JSON.stringify(CUSTOM_HOUSES));
-      renderPriorityHouses();
       renderAllHouses(currentFilter || 'all');
       updateHouseCounts();
       renderResults();
@@ -1380,7 +1360,6 @@
         if (idxC !== -1) CUSTOM_HOUSES[idxC] = updated;
         localStorage.setItem("sweeden_2027_custom_houses", JSON.stringify(CUSTOM_HOUSES));
         closeAddHouseModal();
-        renderPriorityHouses();
         renderAllHouses(currentFilter || 'all');
         updateHouseCounts();
         renderResults();
@@ -1411,7 +1390,6 @@
         CUSTOM_HOUSES.unshift(newHouse);
         localStorage.setItem("sweeden_2027_custom_houses", JSON.stringify(CUSTOM_HOUSES));
         closeAddHouseModal();
-        renderPriorityHouses();
         renderAllHouses(currentFilter || 'all');
         updateHouseCounts();
         renderResults();
@@ -1644,7 +1622,6 @@
 
       document.getElementById("tab-vote").style.display = tab === 'vote' ? 'block' : 'none';
       document.getElementById("tab-results").style.display = tab === 'results' ? 'block' : 'none';
-      document.getElementById("tab-houses").style.display = tab === 'houses' ? 'block' : 'none';
 
       if (tab === 'results') renderResults();
     }
