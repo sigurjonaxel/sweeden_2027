@@ -272,6 +272,32 @@
     }
     .comment-author { font-weight: 700; font-size: 0.85rem; margin-bottom: 2px; }
     .comment-text { font-size: 0.85rem; color: var(--text); }
+    #toastNotification {
+      position: fixed;
+      bottom: 25px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 14px 24px;
+      border-radius: 50px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+      border: 1px solid #334155;
+      font-weight: 600;
+      font-size: 0.95rem;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    #toastNotification.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+      pointer-events: auto;
+    }
   </style>
 </head>
 <body>
@@ -293,7 +319,10 @@
     <header>
       <div class="header-content">
         <div class="header-top-bar">
-          <div class="badge">🇸🇪 Svíþjóð & Danmörk 2027 🇩🇰 (Dulkóðuð síða 🛡️)</div>
+          <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+            <div class="badge">🇸🇪 Svíþjóð & Danmörk 2027 🇩🇰 (Dulkóðuð 🛡️)</div>
+            <div class="badge" id="syncStatusBadge" style="background: rgba(16, 185, 129, 0.2); border-color: rgba(16, 185, 129, 0.4); color: #34d399; cursor: pointer;" onclick="pullFromCloud()" title="Smelltu til að sækja nýjustu gögn">🟢 Skýjasamstilling virk 🔄</div>
+          </div>
           <button class="lock-btn" onclick="lockApp()">Læsa síðu 🔒</button>
         </div>
         <h1>Sumarfrí Fjölskyldunnar 2027</h1>
@@ -351,14 +380,24 @@
         <div class="save-bar">
           <div>
             <strong id="saveBarName">Enginn valinn</strong>
-            <div style="font-size: 0.85rem; opacity: 0.85;" id="saveBarStatus">Veldu nafn og merktu við vikurnar</div>
+            <div style="font-size: 0.85rem; opacity: 0.85;" id="saveBarStatus">Samstillist sjálfkrafa við alla í fjölskyldunni ☁️</div>
           </div>
-          <button class="save-btn" onclick="saveCurrentVote()">Vista & Deila mínu svari ✅</button>
+          <button class="save-btn" onclick="saveCurrentVote()">Vista mitt val ✅</button>
         </div>
       </div>
 
       <!-- TAB 2: NIÐURSTÖÐUR -->
       <div id="tab-results" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: white; padding: 12px 18px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); flex-wrap: wrap; gap: 10px;">
+          <div>
+            <strong style="color: var(--primary);">☁️ Sjálfvirk rauntímasamstilling</strong>
+            <div style="font-size: 0.8rem; color: var(--text-muted);" id="cloudSyncStatusText">Öll atkvæði og ný hús samstillast sjálfkrafa við alla í fjölskyldunni.</div>
+          </div>
+          <button onclick="pullFromCloud()" style="background: var(--bg); border: 1px solid var(--border); padding: 8px 14px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 0.85rem;">
+            🔄 Sækja nýjustu svör
+          </button>
+        </div>
+
         <div class="card">
           <div class="card-title">🏆 Uppáhalds gististaðir fjölskyldunnar (Topplisti)</div>
           <div class="card-desc">Hér sést hvaða hús hafa fengið flest ❤️ og 👍 frá hópnum:</div>
@@ -506,12 +545,59 @@
     let currentVote = { weeks: {}, houseVotes: {}, comment: "" };
     let allVotes = {};
     let activePIN = "";
+    let currentFilter = "all";
+
+    const CLOUD_SYNC_URL = "https://kvdb.io/SKmnoosJYG9rrzQ9ioVJEn/family_sync";
+
+    function arrayBufferToBase64(buffer) {
+      let binary = '';
+      const bytes = new Uint8Array(buffer);
+      for (let i = 0; i < bytes.byteLength; i++) {
+        binary += String.fromCharCode(bytes[i]);
+      }
+      return btoa(binary);
+    }
+
+    function base64ToArrayBuffer(base64) {
+      const binaryString = atob(base64);
+      const bytes = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      return bytes;
+    }
+
+    async function encryptPayload(pin, obj) {
+      const enc = new TextEncoder();
+      const salt = window.crypto.getRandomValues(new Uint8Array(16));
+      const iv = window.crypto.getRandomValues(new Uint8Array(12));
+
+      const keyMaterial = await window.crypto.subtle.importKey(
+        "raw", enc.encode(pin), { name: "PBKDF2" }, false, ["deriveKey"]
+      );
+
+      const key = await window.crypto.subtle.deriveKey(
+        { name: "PBKDF2", salt: salt, iterations: 100000, hash: "SHA-256" },
+        keyMaterial, { name: "AES-GCM", length: 256 }, false, ["encrypt"]
+      );
+
+      const rawBytes = enc.encode(JSON.stringify(obj));
+      const cipher = await window.crypto.subtle.encrypt(
+        { name: "AES-GCM", iv: iv }, key, rawBytes
+      );
+
+      return {
+        salt: arrayBufferToBase64(salt),
+        iv: arrayBufferToBase64(iv),
+        data: arrayBufferToBase64(cipher)
+      };
+    }
 
     async function decryptPayload(pin, payload) {
       const enc = new TextEncoder();
-      const salt = Uint8Array.from(atob(payload.salt), c => c.charCodeAt(0));
-      const iv = Uint8Array.from(atob(payload.iv), c => c.charCodeAt(0));
-      const data = Uint8Array.from(atob(payload.data), c => c.charCodeAt(0));
+      const salt = base64ToArrayBuffer(payload.salt);
+      const iv = base64ToArrayBuffer(payload.iv);
+      const data = base64ToArrayBuffer(payload.data);
 
       const keyMaterial = await window.crypto.subtle.importKey(
         "raw", enc.encode(pin), { name: "PBKDF2" }, false, ["deriveKey"]
@@ -527,6 +613,119 @@
       );
       const dec = new TextDecoder();
       return JSON.parse(dec.decode(decrypted));
+    }
+
+    function showToast(msg) {
+      let toast = document.getElementById("toastNotification");
+      if (!toast) {
+        toast = document.createElement("div");
+        toast.id = "toastNotification";
+        document.body.appendChild(toast);
+      }
+      toast.innerHTML = msg;
+      toast.classList.add("show");
+      clearTimeout(window._toastTimeout);
+      window._toastTimeout = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 4500);
+    }
+
+    function updateSyncBadge(text, type) {
+      const badge = document.getElementById("syncStatusBadge");
+      if (!badge) return;
+      badge.textContent = text;
+      if (type === "success") {
+        badge.style.background = "rgba(16, 185, 129, 0.2)";
+        badge.style.borderColor = "rgba(16, 185, 129, 0.4)";
+        badge.style.color = "#34d399";
+      } else if (type === "warning") {
+        badge.style.background = "rgba(245, 158, 11, 0.2)";
+        badge.style.borderColor = "rgba(245, 158, 11, 0.4)";
+        badge.style.color = "#fbbf24";
+      } else {
+        badge.style.background = "rgba(59, 130, 246, 0.2)";
+        badge.style.borderColor = "rgba(59, 130, 246, 0.4)";
+        badge.style.color = "#60a5fa";
+      }
+    }
+
+    async function pushToCloud() {
+      if (!activePIN) return;
+      try {
+        updateSyncBadge("⏳ Vistar í ský...", "warning");
+        const syncPayload = {
+          votes: allVotes,
+          customHouses: CUSTOM_HOUSES,
+          updatedAt: new Date().toISOString(),
+          updatedBy: currentPerson || "Fjölskylda"
+        };
+        const encrypted = await encryptPayload(activePIN, syncPayload);
+        const resp = await fetch(CLOUD_SYNC_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(encrypted)
+        });
+        if (resp.ok) {
+          updateSyncBadge("🟢 Samstillt við alla", "success");
+        } else {
+          updateSyncBadge("⚠️ Ekki tókst að vista í ský", "warning");
+        }
+      } catch (e) {
+        console.warn("Villa í pushToCloud:", e);
+        updateSyncBadge("⚠️ Staðbundið minni (ónettengt)", "warning");
+      }
+    }
+
+    async function pullFromCloud(silent = false) {
+      if (!activePIN) return;
+      try {
+        if (!silent) updateSyncBadge("⏳ Sækir nýjustu gögn...", "info");
+        const resp = await fetch(CLOUD_SYNC_URL + "?t=" + Date.now());
+        if (resp.ok) {
+          const encrypted = await resp.json();
+          if (encrypted && encrypted.data && encrypted.salt && encrypted.iv) {
+            const cloudData = await decryptPayload(activePIN, encrypted);
+            let hasChanges = false;
+
+            if (cloudData.votes && typeof cloudData.votes === "object") {
+              allVotes = { ...allVotes, ...cloudData.votes };
+              localStorage.setItem("sweeden_2027_votes", JSON.stringify(allVotes));
+              hasChanges = true;
+            }
+
+            if (cloudData.customHouses && Array.isArray(cloudData.customHouses)) {
+              cloudData.customHouses.forEach(ch => {
+                if (!CUSTOM_HOUSES.some(h => h.id === ch.id)) {
+                  CUSTOM_HOUSES.push(ch);
+                  if (!HOUSES.some(h => h.id === ch.id)) HOUSES.unshift(ch);
+                  hasChanges = true;
+                }
+              });
+              localStorage.setItem("sweeden_2027_custom_houses", JSON.stringify(CUSTOM_HOUSES));
+            }
+
+            if (hasChanges) {
+              renderPriorityHouses();
+              renderAllHouses(currentFilter || 'all');
+              updateHouseCounts();
+              renderResults();
+            }
+
+            const updatedInfo = cloudData.updatedBy ? ` (${cloudData.updatedBy})` : '';
+            updateSyncBadge(`🟢 Samstillt við alla${updatedInfo}`, "success");
+            const noticeEl = document.getElementById("cloudSyncStatusText");
+            if (noticeEl) {
+              const timeStr = new Date(cloudData.updatedAt || Date.now()).toLocaleTimeString('is-IS', {hour: '2-digit', minute:'2-digit'});
+              noticeEl.textContent = `Nýjustu gögn sótt! Síðasta uppfærsla frá ${cloudData.updatedBy || 'fjölskyldu'} kl. ${timeStr}.`;
+            }
+            return;
+          }
+        }
+        updateSyncBadge("🟢 Skýjasamstilling virk", "success");
+      } catch (e) {
+        console.warn("Villa í pullFromCloud:", e);
+        if (!silent) updateSyncBadge("🟢 Staðbundið minni", "info");
+      }
     }
 
     async function submitPIN() {
@@ -574,19 +773,19 @@
       document.getElementById("lockOverlay").style.display = "flex";
     }
 
-    function initApp() {
-      // Lesa custom hús
+    async function initApp() {
+      // Lesa custom hús staðbundið
       const storedCustom = localStorage.getItem("sweeden_2027_custom_houses");
       if (storedCustom) {
         try {
           CUSTOM_HOUSES = JSON.parse(storedCustom);
           CUSTOM_HOUSES.forEach(ch => {
-            if (!HOUSES.some(h => h.id === ch.id)) HOUSES.push(ch);
+            if (!HOUSES.some(h => h.id === ch.id)) HOUSES.unshift(ch);
           });
         } catch (e) {}
       }
 
-      // Lesa atkvæði
+      // Lesa atkvæði staðbundið
       const stored = localStorage.getItem("sweeden_2027_votes");
       if (stored) {
         try { allVotes = JSON.parse(stored); } catch (e) {}
@@ -602,6 +801,14 @@
       renderResults();
 
       selectPerson(FAMILY_MEMBERS[0]);
+
+      // Sækja sjálfkrafa úr skýi
+      await pullFromCloud(false);
+
+      // Athuga aftur á 30 sek fresti ef glugginn er opinn
+      if (!window._syncInterval) {
+        window._syncInterval = setInterval(() => pullFromCloud(true), 30000);
+      }
     }
 
     function checkUrlHashImport() {
@@ -744,6 +951,7 @@
     }
 
     function filterHouses(filter, btn) {
+      currentFilter = filter;
       document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
       renderAllHouses(filter);
@@ -838,15 +1046,17 @@
       document.getElementById("addHouseModal").style.display = "flex";
     }
 
-    function deleteCustomHouse(id) {
+    async function deleteCustomHouse(id) {
       if (!confirm("Ertu viss um að vilja eyða þessu húsi úr tillögum?")) return;
       HOUSES = HOUSES.filter(x => x.id !== id);
       CUSTOM_HOUSES = CUSTOM_HOUSES.filter(x => x.id !== id);
       localStorage.setItem("sweeden_2027_custom_houses", JSON.stringify(CUSTOM_HOUSES));
       renderPriorityHouses();
-      renderAllHouses('all');
+      renderAllHouses(currentFilter || 'all');
       updateHouseCounts();
       renderResults();
+      await pushToCloud();
+      showToast("🗑️ Húsi eytt úr tillögum og samstillt við alla.");
     }
 
     function closeAddHouseModal() {
@@ -854,7 +1064,7 @@
       editingHouseId = null;
     }
 
-    function submitNewHouse() {
+    async function submitNewHouse() {
       const url = document.getElementById("newHouseUrl").value.trim();
       const title = document.getElementById("newHouseTitle").value.trim();
       const region = document.getElementById("newHouseRegion").value.trim() || "Ótilgreint";
@@ -886,7 +1096,13 @@
         if (idxH !== -1) HOUSES[idxH] = updated;
         if (idxC !== -1) CUSTOM_HOUSES[idxC] = updated;
         localStorage.setItem("sweeden_2027_custom_houses", JSON.stringify(CUSTOM_HOUSES));
-        alert(`Breytingar á „${title}“ vistaðar!`);
+        closeAddHouseModal();
+        renderPriorityHouses();
+        renderAllHouses(currentFilter || 'all');
+        updateHouseCounts();
+        renderResults();
+        await pushToCloud();
+        showToast(`✏️ Breytingar á „${title}“ vistaðar og samstilltar!`);
       } else {
         // Bæta við nýju húsi
         const newId = "custom_" + Date.now();
@@ -911,14 +1127,14 @@
         HOUSES.unshift(newHouse);
         CUSTOM_HOUSES.unshift(newHouse);
         localStorage.setItem("sweeden_2027_custom_houses", JSON.stringify(CUSTOM_HOUSES));
-        alert(`Glæsilegt! „${title}“ hefur verið bætt við listann.`);
+        closeAddHouseModal();
+        renderPriorityHouses();
+        renderAllHouses(currentFilter || 'all');
+        updateHouseCounts();
+        renderResults();
+        await pushToCloud();
+        showToast(`🏡 Glæsilegt! „${title}“ hefur verið bætt við og samstillt við alla!`);
       }
-
-      closeAddHouseModal();
-      renderPriorityHouses();
-      renderAllHouses('all');
-      updateHouseCounts();
-      renderResults();
     }
 
     async function saveCurrentVote() {
@@ -942,17 +1158,10 @@
 
       renderResults();
 
-      // Deilihlekkur
-      const exportObj = {
-        person: currentPerson,
-        data: currentVote,
-        customHouses: CUSTOM_HOUSES
-      };
-      const b64 = btoa(unescape(encodeURIComponent(JSON.stringify(exportObj))));
-      const shareUrl = `${window.location.origin}${window.location.pathname}?pin=${activePIN}#import=${b64}`;
+      // Sjálfvirk skýjasamstilling
+      await pushToCloud();
 
-      document.getElementById("shareUrlInput").value = shareUrl;
-      document.getElementById("shareModal").style.display = "flex";
+      showToast(`🎉 Snilld, ${currentPerson}! Valið þitt hefur verið vistað og samstillt við alla í fjölskyldunni.`);
     }
 
     function copyShareUrl() {
