@@ -654,10 +654,22 @@
       }
     }
 
+    let cloudPushTimeout = null;
+    function scheduleCloudPush() {
+      if (cloudPushTimeout) clearTimeout(cloudPushTimeout);
+      updateSyncBadge("⏳ Vistar sjálfkrafa...", "warning");
+      cloudPushTimeout = setTimeout(async () => {
+        await pushToCloud();
+      }, 1200);
+    }
+
     async function pushToCloud() {
       if (!activePIN) return;
       try {
         updateSyncBadge("⏳ Vistar í ský...", "warning");
+        if (currentPerson && currentVote) {
+          allVotes[currentPerson] = currentVote;
+        }
         const syncPayload = {
           votes: allVotes,
           customHouses: CUSTOM_HOUSES,
@@ -692,32 +704,56 @@
             const cloudData = await decryptPayload(activePIN, encrypted);
 
             if (cloudData.votes && typeof cloudData.votes === "object") {
-              allVotes = { ...allVotes, ...cloudData.votes };
-              localStorage.setItem("sweeden_2027_votes", JSON.stringify(allVotes));
+              // Sameina atkvæði fyrir ALLA AÐRA í fjölskyldunni
+              for (const p in cloudData.votes) {
+                if (p !== currentPerson) {
+                  allVotes[p] = cloudData.votes[p];
+                }
+              }
 
-              // Uppfæra currentVote ef viðkomandi á svör í skýinu
-              if (currentPerson && allVotes[currentPerson]) {
+              // Fyrir núverandi notanda: AÐEINS taka úr skýi ef staðbundið er tómt (ekkert valið enn)
+              const hasLocalVotes = currentVote && (
+                (currentVote.weeks && Object.keys(currentVote.weeks).length > 0) ||
+                (currentVote.houseVotes && Object.keys(currentVote.houseVotes).length > 0)
+              );
+
+              if (currentPerson && !hasLocalVotes && cloudData.votes[currentPerson]) {
+                allVotes[currentPerson] = cloudData.votes[currentPerson];
                 currentVote = JSON.parse(JSON.stringify(allVotes[currentPerson]));
                 const cEl = document.getElementById("commentInput");
                 if (cEl && (!cEl.value || cEl.value.trim() === "")) {
                   cEl.value = currentVote.comment || "";
                 }
+              } else if (currentPerson && currentVote) {
+                allVotes[currentPerson] = currentVote;
               }
+
+              localStorage.setItem("sweeden_2027_votes", JSON.stringify(allVotes));
             }
 
             if (cloudData.customHouses && Array.isArray(cloudData.customHouses)) {
+              let addedHouse = false;
               cloudData.customHouses.forEach(ch => {
                 if (!CUSTOM_HOUSES.some(h => h.id === ch.id)) {
                   CUSTOM_HOUSES.push(ch);
                   if (!HOUSES.some(h => h.id === ch.id)) HOUSES.unshift(ch);
+                  addedHouse = true;
                 }
               });
-              localStorage.setItem("sweeden_2027_custom_houses", JSON.stringify(CUSTOM_HOUSES));
+              if (addedHouse) {
+                localStorage.setItem("sweeden_2027_custom_houses", JSON.stringify(CUSTOM_HOUSES));
+                renderAllHouses(currentFilter);
+              }
             }
 
-            // Uppfæra alltaf allt viðmót samstundis svo nöfn og svör sjáist strax
-            renderWeeks();
-            renderAllHouses(currentFilter);
+            // Uppfæra viðmót án þess að eyðileggja stöðu núverandi kjósanda eða láta spjöld hoppa
+            if (!silent || (typeof addedHouse !== 'undefined' && addedHouse)) {
+              renderWeeks();
+              renderAllHouses(currentFilter);
+            } else {
+              WEEKS.forEach(w => updateSingleWeekRow(w.id));
+              HOUSES.forEach(h => updateSingleHouseCard(h.id));
+            }
             updateWeeksUI();
             updateHouseVotesUI();
             updateHouseCounts();
@@ -940,28 +976,51 @@
       return sorted;
     }
 
+    function getWeekAttendeesHTML(weekId) {
+      const stats = getWeekStats(weekId);
+      if (stats.yes.length > 0 || stats.maybe.length > 0 || stats.no.length > 0) {
+        return `
+          <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 4px;">
+            ${stats.yes.length > 0 ? `<div><span class="mini-name-chip chip-yes">✅ <strong>Komast (${stats.yes.length}):</strong> ${stats.yes.join(", ")}</span></div>` : ''}
+            ${stats.maybe.length > 0 ? `<div><span class="mini-name-chip chip-maybe">🟡 <strong>Gætu (${stats.maybe.length}):</strong> ${stats.maybe.join(", ")}</span></div>` : ''}
+            ${stats.no.length > 0 ? `<div><span class="mini-name-chip chip-no">❌ <strong>Komast ekki (${stats.no.length}):</strong> ${stats.no.join(", ")}</span></div>` : ''}
+          </div>
+        `;
+      }
+      return `<span style="font-size: 0.75rem; color: var(--text-muted); font-style: italic;">Enginn búinn að merkja við þessa viku enn</span>`;
+    }
+
+    function getWeekRankBadgeHTML(weekId) {
+      const allStatsSorted = sortWeeksList(WEEKS, 'popularity');
+      const stats = getWeekStats(weekId);
+      if (stats.totalVotes > 0) {
+        const rankIdx = allStatsSorted.findIndex(x => x.id === weekId);
+        let badgeClass = "pop-mid";
+        if (rankIdx === 0 && stats.no.length === 0) badgeClass = "pop-good";
+        else if (stats.no.length > 0 && stats.yes.length === 0) badgeClass = "pop-bad";
+
+        let rankText = `#${rankIdx + 1} í vali`;
+        if (rankIdx === 0) rankText = "🥇 1. val";
+        else if (rankIdx === 1) rankText = "🥈 2. val";
+        else if (rankIdx === 2) rankText = "🥉 3. val";
+
+        return `<span class="week-pop-badge ${badgeClass}" title="${stats.yes.length} já, ${stats.maybe.length} gæti, ${stats.no.length} nei">${rankText} (${stats.yes.length} ✅${stats.no.length > 0 ? `, ${stats.no.length} ❌` : ''})</span>`;
+      }
+      return "";
+    }
+
+    function updateSingleWeekRow(weekId) {
+      const attendeesEl = document.getElementById(`week-attendees-${weekId}`);
+      if (attendeesEl) attendeesEl.innerHTML = getWeekAttendeesHTML(weekId);
+      const rankEl = document.getElementById(`week-rank-badge-${weekId}`);
+      if (rankEl) rankEl.innerHTML = getWeekRankBadgeHTML(weekId);
+    }
+
     function renderWeeks() {
       const grid = document.getElementById("weeksGrid");
       const sortedWeeks = sortWeeksList(WEEKS, tab1WeeksSort);
-      const allStatsSorted = sortWeeksList(WEEKS, 'popularity');
 
       grid.innerHTML = sortedWeeks.map(w => {
-        const stats = getWeekStats(w.id);
-        let rankBadge = "";
-        if (stats.totalVotes > 0) {
-          const rankIdx = allStatsSorted.findIndex(x => x.id === w.id);
-          let badgeClass = "pop-mid";
-          if (rankIdx === 0 && stats.no.length === 0) badgeClass = "pop-good";
-          else if (stats.no.length > 0 && stats.yes.length === 0) badgeClass = "pop-bad";
-
-          let rankText = `#${rankIdx + 1} í vali`;
-          if (rankIdx === 0) rankText = "🥇 1. val";
-          else if (rankIdx === 1) rankText = "🥈 2. val";
-          else if (rankIdx === 2) rankText = "🥉 3. val";
-
-          rankBadge = `<span class="week-pop-badge ${badgeClass}" title="${stats.yes.length} já, ${stats.maybe.length} gæti, ${stats.no.length} nei">${rankText} (${stats.yes.length} ✅${stats.no.length > 0 ? `, ${stats.no.length} ❌` : ''})</span>`;
-        }
-
         return `
           <div class="week-row" id="row-${w.id}">
             <div style="flex: 1; min-width: 240px;">
@@ -970,19 +1029,11 @@
                 <div class="week-dates">
                   ${w.dates}
                   ${w.tag ? `<span class="week-tag">${w.tag}</span>` : ""}
-                  ${rankBadge}
+                  <span id="week-rank-badge-${w.id}">${getWeekRankBadgeHTML(w.id)}</span>
                 </div>
               </div>
-              <div class="week-attendees-box">
-                ${(stats.yes.length > 0 || stats.maybe.length > 0 || stats.no.length > 0) ? `
-                  <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 4px;">
-                    ${stats.yes.length > 0 ? `<div><span class="mini-name-chip chip-yes">✅ <strong>Komast (${stats.yes.length}):</strong> ${stats.yes.join(", ")}</span></div>` : ''}
-                    ${stats.maybe.length > 0 ? `<div><span class="mini-name-chip chip-maybe">🟡 <strong>Gætu (${stats.maybe.length}):</strong> ${stats.maybe.join(", ")}</span></div>` : ''}
-                    ${stats.no.length > 0 ? `<div><span class="mini-name-chip chip-no">❌ <strong>Komast ekki (${stats.no.length}):</strong> ${stats.no.join(", ")}</span></div>` : ''}
-                  </div>
-                ` : `
-                  <span style="font-size: 0.75rem; color: var(--text-muted); font-style: italic;">Enginn búinn að merkja við þessa viku enn</span>
-                `}
+              <div class="week-attendees-box" id="week-attendees-${w.id}">
+                ${getWeekAttendeesHTML(w.id)}
               </div>
             </div>
             <div class="btn-group">
@@ -1012,8 +1063,9 @@
         allVotes[currentPerson] = currentVote;
         localStorage.setItem("sweeden_2027_votes", JSON.stringify(allVotes));
       }
-      renderWeeks();
-      renderResults();
+      updateWeeksUI();
+      updateSingleWeekRow(weekId);
+      scheduleCloudPush();
     }
 
     function updateWeeksUI() {
@@ -1117,30 +1169,76 @@
       renderAllHouses(filter);
     }
 
+    function getHouseBadgeHTML(h) {
+      const pop = getHousePopularity(h.id);
+      if (pop.totalVotes <= 0) return "";
+      let badgeStyle = "background: rgba(15, 23, 42, 0.88); color: #fbbf24; border-color: rgba(251, 191, 36, 0.4);";
+      let icon = "🔥";
+      if (pop.score < 0) {
+        badgeStyle = "background: #ef4444; color: white; border-color: #b91c1c;";
+        icon = "👎";
+      }
+      return `
+        <div class="house-badge-pop" style="${badgeStyle}">
+          ${icon} ${pop.score > 0 ? '+' : ''}${pop.score} stig (${pop.love.length} ❤️, ${pop.like.length} 👍${pop.dislike.length > 0 ? `, ${pop.dislike.length} 👎` : ''})
+        </div>
+      `;
+    }
+
+    function getHouseBreakdownHTML(h) {
+      const pop = getHousePopularity(h.id);
+      if (pop.love.length > 0 || pop.like.length > 0 || pop.dislike.length > 0) {
+        return `
+          <div class="house-votes-breakdown">
+            <div class="votes-breakdown-title">
+              <span>Hverjir kusu þetta hús:</span>
+              <span style="font-size:0.75rem; color:${pop.score > 0 ? '#15803d' : pop.score < 0 ? '#b91c1c' : '#475569'}; font-weight:800;">${pop.score > 0 ? '+' : ''}${pop.score} stig</span>
+            </div>
+            <div class="votes-breakdown-chips">
+              ${pop.love.length > 0 ? `<div class="vote-chip chip-love">❤️ <strong>Elska (${pop.love.length}):</strong> ${pop.love.join(", ")}</div>` : ''}
+              ${pop.like.length > 0 ? `<div class="vote-chip chip-like">👍 <strong>Líst vel (${pop.like.length}):</strong> ${pop.like.join(", ")}</div>` : ''}
+              ${pop.dislike.length > 0 ? `<div class="vote-chip chip-dislike">👎 <strong>Frekar ekki (${pop.dislike.length}):</strong> ${pop.dislike.join(", ")}</div>` : ''}
+            </div>
+          </div>
+        `;
+      } else {
+        return `<div class="house-votes-empty">Enginn búinn að gefa einkunn enn</div>`;
+      }
+    }
+
+    function updateSingleHouseCard(houseId) {
+      const h = HOUSES.find(x => x.id === houseId);
+      if (!h) return;
+
+      const badgeEl = document.getElementById(`pop-badge-${houseId}`);
+      if (badgeEl) badgeEl.innerHTML = getHouseBadgeHTML(h);
+
+      const breakdownEl = document.getElementById(`votes-breakdown-${houseId}`);
+      if (breakdownEl) breakdownEl.innerHTML = getHouseBreakdownHTML(h);
+
+      const card = document.getElementById(`house-card-${houseId}`);
+      if (card) {
+        const cur = (currentVote && currentVote.houseVotes) ? currentVote.houseVotes[houseId] : null;
+        card.querySelectorAll(".vote-btn").forEach(btn => {
+          const vote = btn.getAttribute("data-vote");
+          btn.classList.toggle("active-love", vote === 'love' && cur === 'love');
+          btn.classList.toggle("active-like", vote === 'like' && cur === 'like');
+          btn.classList.toggle("active-dislike", vote === 'dislike' && cur === 'dislike');
+        });
+      }
+    }
+
     function createHouseCardHTML(h) {
       const specsHTML = (h.specs || []).map(s => `<span>${s}</span>`).join("");
       const defaultImg = "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&auto=format&fit=crop&q=80";
-      const pop = getHousePopularity(h.id);
-      let popBadge = "";
-      if (pop.totalVotes > 0) {
-        let badgeStyle = "background: rgba(15, 23, 42, 0.88); color: #fbbf24; border-color: rgba(251, 191, 36, 0.4);";
-        let icon = "🔥";
-        if (pop.score < 0) {
-          badgeStyle = "background: #ef4444; color: white; border-color: #b91c1c;";
-          icon = "👎";
-        }
-        popBadge = `
-          <div class="house-badge-pop" style="${badgeStyle}">
-            ${icon} ${pop.score > 0 ? '+' : ''}${pop.score} stig (${pop.love.length} ❤️, ${pop.like.length} 👍${pop.dislike.length > 0 ? `, ${pop.dislike.length} 👎` : ''})
-          </div>
-        `;
-      }
+      const cur = (currentVote && currentVote.houseVotes) ? currentVote.houseVotes[h.id] : null;
+
       return `
-        <div class="house-card">
+        <div class="house-card" id="house-card-${h.id}">
           <div class="house-img-box">
             <img src="${h.photo || defaultImg}" alt="${h.title}" loading="lazy" onerror="this.src='${defaultImg}'" />
             <div class="house-badge-loc">${h.region}</div>
-            ${popBadge}
+            <div id="pop-badge-${h.id}" style="display:contents;">${getHouseBadgeHTML(h)}</div>
             ${h.isCustom ? `<div class="house-badge-custom">Tillaga: ${h.suggestedBy || 'Fjölskylda'}</div>` : ''}
             <div class="house-badge-price">${h.priceFormatted}</div>
           </div>
@@ -1151,21 +1249,9 @@
               ${specsHTML}
             </div>
 
-            ${(pop.love.length > 0 || pop.like.length > 0 || pop.dislike.length > 0) ? `
-              <div class="house-votes-breakdown">
-                <div class="votes-breakdown-title">
-                  <span>Hverjir kusu þetta hús:</span>
-                  <span style="font-size:0.75rem; color:${pop.score > 0 ? '#15803d' : pop.score < 0 ? '#b91c1c' : '#475569'}; font-weight:800;">${pop.score > 0 ? '+' : ''}${pop.score} stig</span>
-                </div>
-                <div class="votes-breakdown-chips">
-                  ${pop.love.length > 0 ? `<div class="vote-chip chip-love">❤️ <strong>Elska (${pop.love.length}):</strong> ${pop.love.join(", ")}</div>` : ''}
-                  ${pop.like.length > 0 ? `<div class="vote-chip chip-like">👍 <strong>Líst vel (${pop.like.length}):</strong> ${pop.like.join(", ")}</div>` : ''}
-                  ${pop.dislike.length > 0 ? `<div class="vote-chip chip-dislike">👎 <strong>Frekar ekki (${pop.dislike.length}):</strong> ${pop.dislike.join(", ")}</div>` : ''}
-                </div>
-              </div>
-            ` : `
-              <div class="house-votes-empty">Enginn búinn að gefa einkunn enn</div>
-            `}
+            <div id="votes-breakdown-${h.id}">
+              ${getHouseBreakdownHTML(h)}
+            </div>
 
             ${h.isCustom ? `
               <div style="display:flex; gap:10px; margin-bottom:10px;">
@@ -1176,9 +1262,9 @@
             <div class="house-actions">
               <a href="${h.url}" target="_blank" rel="noopener" class="airbnb-link">Skoða gististað ↗</a>
               <div class="vote-btns">
-                <button class="vote-btn" data-house="${h.id}" data-vote="love" title="Uppáhalds / 1. val ❤️" onclick="setHouseVote('${h.id}', 'love')">❤️</button>
-                <button class="vote-btn" data-house="${h.id}" data-vote="like" title="Líst vel á 👍" onclick="setHouseVote('${h.id}', 'like')">👍</button>
-                <button class="vote-btn" data-house="${h.id}" data-vote="dislike" title="Líst ekki á 👎" onclick="setHouseVote('${h.id}', 'dislike')">👎</button>
+                <button class="vote-btn ${cur === 'love' ? 'active-love' : ''}" data-house="${h.id}" data-vote="love" title="Uppáhalds / 1. val ❤️" onclick="setHouseVote('${h.id}', 'love')">❤️</button>
+                <button class="vote-btn ${cur === 'like' ? 'active-like' : ''}" data-house="${h.id}" data-vote="like" title="Líst vel á 👍" onclick="setHouseVote('${h.id}', 'like')">👍</button>
+                <button class="vote-btn ${cur === 'dislike' ? 'active-dislike' : ''}" data-house="${h.id}" data-vote="dislike" title="Líst ekki á 👎" onclick="setHouseVote('${h.id}', 'dislike')">👎</button>
               </div>
             </div>
           </div>
@@ -1187,6 +1273,7 @@
     }
 
     function setHouseVote(houseId, vote) {
+      if (!currentVote.houseVotes) currentVote.houseVotes = {};
       if (currentVote.houseVotes[houseId] === vote) {
         delete currentVote.houseVotes[houseId];
       } else {
@@ -1196,17 +1283,16 @@
         allVotes[currentPerson] = currentVote;
         localStorage.setItem("sweeden_2027_votes", JSON.stringify(allVotes));
       }
-      updateHouseVotesUI();
-      renderAllHouses(currentFilter);
+      updateSingleHouseCard(houseId);
       updateHouseCounts();
-      renderResults();
+      scheduleCloudPush();
     }
 
     function updateHouseVotesUI() {
       document.querySelectorAll(".vote-btn").forEach(btn => {
         const hid = btn.getAttribute("data-house");
         const vote = btn.getAttribute("data-vote");
-        const cur = currentVote.houseVotes[hid];
+        const cur = currentVote.houseVotes ? currentVote.houseVotes[hid] : null;
         btn.classList.toggle("active-love", vote === 'love' && cur === 'love');
         btn.classList.toggle("active-like", vote === 'like' && cur === 'like');
         btn.classList.toggle("active-dislike", vote === 'dislike' && cur === 'dislike');
@@ -1353,6 +1439,11 @@
         });
       } catch (e) {}
 
+      renderWeeks();
+      renderAllHouses(currentFilter);
+      updateWeeksUI();
+      updateHouseVotesUI();
+      updateHouseCounts();
       renderResults();
 
       // Sjálfvirk skýjasamstilling
