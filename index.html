@@ -232,6 +232,29 @@
     .house-specs { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
     .house-specs span { background: #f1f5f9; padding: 2px 7px; border-radius: 5px; }
 
+    .house-votes-breakdown {
+      margin-top: 4px; margin-bottom: 10px; padding: 8px 10px;
+      background: #f8fafc; border-radius: 8px; border: 1px solid var(--border);
+    }
+    .votes-breakdown-title {
+      font-size: 0.72rem; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;
+      text-transform: uppercase; letter-spacing: 0.4px;
+    }
+    .votes-breakdown-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+    .vote-chip { font-size: 0.78rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; }
+    .chip-love { background: #ffe4e6; color: #9f1239; }
+    .chip-like { background: #dcfce7; color: #166534; }
+    .chip-dislike { background: #fee2e2; color: #991b1b; }
+    .house-votes-empty { font-size: 0.75rem; color: var(--text-muted); margin: 6px 0 10px 0; font-style: italic; }
+
+    .week-attendees-box {
+      margin-top: 8px; padding-top: 8px; border-top: 1px dashed #e2e8f0; width: 100%;
+    }
+    .mini-name-chip { font-size: 0.74rem; font-weight: 600; padding: 2px 6px; border-radius: 4px; }
+    .chip-yes { background: #dcfce7; color: #15803d; }
+    .chip-maybe { background: #fef9c3; color: #854d0e; }
+    .chip-no { background: #fee2e2; color: #b91c1c; }
+
     .house-actions {
       margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border);
       display: flex; align-items: center; justify-content: space-between; gap: 10px;
@@ -1010,12 +1033,26 @@
 
         return `
           <div class="week-row" id="row-${w.id}">
-            <div class="week-info">
-              <div class="week-number">${w.num}</div>
-              <div class="week-dates">
-                ${w.dates}
-                ${w.tag ? `<span class="week-tag">${w.tag}</span>` : ""}
-                ${rankBadge}
+            <div style="flex: 1; min-width: 240px;">
+              <div class="week-info">
+                <div class="week-number">${w.num}</div>
+                <div class="week-dates">
+                  ${w.dates}
+                  ${w.tag ? `<span class="week-tag">${w.tag}</span>` : ""}
+                  ${rankBadge}
+                </div>
+              </div>
+              <div class="week-attendees-box">
+                ${(stats.yes.length > 0 || stats.maybe.length > 0 || stats.no.length > 0) ? `
+                  <div style="display: flex; flex-wrap: wrap; gap: 4px; align-items: center;">
+                    <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; margin-right: 2px;">Svör:</span>
+                    ${stats.yes.map(n => `<span class="mini-name-chip chip-yes">✅ ${n}</span>`).join("")}
+                    ${stats.maybe.map(n => `<span class="mini-name-chip chip-maybe">🟡 ${n}</span>`).join("")}
+                    ${stats.no.map(n => `<span class="mini-name-chip chip-no">❌ ${n}</span>`).join("")}
+                  </div>
+                ` : `
+                  <span style="font-size: 0.73rem; color: var(--text-muted); font-style: italic;">Enginn búinn að merkja við þessa viku enn</span>
+                `}
               </div>
             </div>
             <div class="btn-group">
@@ -1050,8 +1087,7 @@
         allVotes[currentPerson] = currentVote;
         localStorage.setItem("sweeden_2027_votes", JSON.stringify(allVotes));
       }
-      updateWeeksUI();
-      if (tab1WeeksSort === 'popularity') renderWeeks();
+      renderWeeks();
       renderResults();
     }
 
@@ -1068,19 +1104,19 @@
     let tab3Sort = "popularity";
 
     function getHousePopularity(houseId) {
-      let love = 0, like = 0, dislike = 0;
+      let love = [], like = [], dislike = [];
       const voters = new Set(Object.keys(allVotes));
       if (currentPerson) voters.add(currentPerson);
       voters.forEach(p => {
         const hv = (p === currentPerson && currentVote && currentVote.houseVotes)
           ? currentVote.houseVotes[houseId]
           : allVotes[p]?.houseVotes?.[houseId];
-        if (hv === 'love') love++;
-        else if (hv === 'like') like++;
-        else if (hv === 'dislike') dislike++;
+        if (hv === 'love') love.push(p);
+        else if (hv === 'like') like.push(p);
+        else if (hv === 'dislike') dislike.push(p);
       });
-      const score = (love * 3) + (like * 1) - (dislike * 2);
-      const totalVotes = love + like + dislike;
+      const score = (love.length * 3) + (like.length * 1) - (dislike.length * 2);
+      const totalVotes = love.length + like.length + dislike.length;
       return { love, like, dislike, score, totalVotes };
     }
 
@@ -1091,9 +1127,9 @@
           const popA = getHousePopularity(a.id);
           const popB = getHousePopularity(b.id);
           if (popB.score !== popA.score) return popB.score - popA.score;
-          if (popB.love !== popA.love) return popB.love - popA.love;
-          if (popB.like !== popA.like) return popB.like - popA.like;
-          if (popA.dislike !== popB.dislike) return popA.dislike - popB.dislike;
+          if (popB.love.length !== popA.love.length) return popB.love.length - popA.love.length;
+          if (popB.like.length !== popA.like.length) return popB.like.length - popA.like.length;
+          if (popA.dislike.length !== popB.dislike.length) return popA.dislike.length - popB.dislike.length;
           return (parseFloat(b.rating) || 0) - (parseFloat(a.rating) || 0);
         });
       } else if (sortKey === 'price-asc') {
@@ -1179,8 +1215,8 @@
           icon = "👎";
         }
         popBadge = `
-          <div class="house-badge-pop" style="${badgeStyle}" title="${pop.love} elskuðu ❤️, ${pop.like} líst vel á 👍${pop.dislike > 0 ? `, ${pop.dislike} frekar ekki 👎` : ''}">
-            ${icon} ${pop.score > 0 ? '+' : ''}${pop.score} stig (${pop.love} ❤️, ${pop.like} 👍${pop.dislike > 0 ? `, ${pop.dislike} 👎` : ''})
+          <div class="house-badge-pop" style="${badgeStyle}">
+            ${icon} ${pop.score > 0 ? '+' : ''}${pop.score} stig (${pop.love.length} ❤️, ${pop.like.length} 👍${pop.dislike.length > 0 ? `, ${pop.dislike.length} 👎` : ''})
           </div>
         `;
       }
@@ -1199,6 +1235,20 @@
               <span>⭐ ${h.rating}</span>
               ${specsHTML}
             </div>
+
+            ${(pop.love.length > 0 || pop.like.length > 0 || pop.dislike.length > 0) ? `
+              <div class="house-votes-breakdown">
+                <div class="votes-breakdown-title">Hverjir kusu þetta hús:</div>
+                <div class="votes-breakdown-chips">
+                  ${pop.love.length > 0 ? `<span class="vote-chip chip-love">❤️ ${pop.love.join(", ")}</span>` : ''}
+                  ${pop.like.length > 0 ? `<span class="vote-chip chip-like">👍 ${pop.like.join(", ")}</span>` : ''}
+                  ${pop.dislike.length > 0 ? `<span class="vote-chip chip-dislike">👎 ${pop.dislike.join(", ")}</span>` : ''}
+                </div>
+              </div>
+            ` : `
+              <div class="house-votes-empty">Enginn búinn að gefa einkunn enn</div>
+            `}
+
             ${h.isCustom ? `
               <div style="display:flex; gap:10px; margin-bottom:10px;">
                 <button onclick="editCustomHouse('${h.id}')" style="background:none; border:none; color:var(--primary); font-size:0.8rem; font-weight:700; cursor:pointer;">✏️ Breyta upplýsingum</button>
@@ -1229,9 +1279,8 @@
         localStorage.setItem("sweeden_2027_votes", JSON.stringify(allVotes));
       }
       updateHouseVotesUI();
-      // Ef raðað er eftir vinsældum, endurraða strax svo húsið færist samstundis!
-      if (tab1Sort === 'popularity') renderPriorityHouses();
-      if (tab3Sort === 'popularity' || currentFilter === 'popularity') renderAllHouses(currentFilter);
+      renderPriorityHouses();
+      renderAllHouses(currentFilter);
       updateHouseCounts();
       renderResults();
     }
@@ -1520,8 +1569,17 @@
       });
 
       const ranked = Object.values(houseScores)
+        .map(item => {
+          item.score = (item.love.length * 3) + (item.like.length * 1) - (item.dislike.length * 2);
+          return item;
+        })
         .filter(x => x.love.length + x.like.length + x.dislike.length > 0)
-        .sort((a, b) => ((b.love.length * 3 + b.like.length) - (a.love.length * 3 + a.like.length)));
+        .sort((a, b) => {
+          if (b.score !== a.score) return b.score - a.score;
+          if (b.love.length !== a.love.length) return b.love.length - a.love.length;
+          if (b.like.length !== a.like.length) return b.like.length - a.like.length;
+          return a.dislike.length - b.dislike.length;
+        });
 
       const podiumDiv = document.getElementById("housePodium");
       const listDiv = document.getElementById("houseVotesSummary");
@@ -1534,24 +1592,32 @@
         const medals = ["🥇 1. Sæti", "🥈 2. Sæti", "🥉 3. Sæti"];
         podiumDiv.innerHTML = ranked.slice(0, 3).map((item, idx) => `
           <div class="podium-item ${idx === 0 ? 'podium-gold' : ''}">
-            <div class="podium-rank">${medals[idx]}</div>
+            <div class="podium-rank">${medals[idx]} • ${item.score > 0 ? '+' : ''}${item.score} stig</div>
             <strong style="font-size:0.95rem;">${item.house.title}</strong>
             <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom: 6px;">${item.house.region} • ${item.house.priceFormatted}</div>
-            <div style="font-size:0.85rem; font-weight:700; color: #f43f5e;">❤️ ${item.love.length} elskuðu • 👍 ${item.like.length}</div>
+            <div style="margin-top: 8px; font-size: 0.82rem; text-align: left; display: flex; flex-direction: column; gap: 3px;">
+              ${item.love.length > 0 ? `<div style="color: #e11d48; font-weight:600;">❤️ <strong>Elska (${item.love.length}):</strong> ${item.love.join(", ")}</div>` : ''}
+              ${item.like.length > 0 ? `<div style="color: #16a34a; font-weight:600;">👍 <strong>Líst vel (${item.like.length}):</strong> ${item.like.join(", ")}</div>` : ''}
+              ${item.dislike.length > 0 ? `<div style="color: #dc2626; font-weight:600;">👎 <strong>Ekki (${item.dislike.length}):</strong> ${item.dislike.join(", ")}</div>` : ''}
+            </div>
           </div>
         `).join("");
 
-        listDiv.innerHTML = ranked.map(x => `
-          <div style="display:flex; justify-content:space-between; align-items:center; padding: 10px; border-bottom: 1px solid var(--border); gap: 10px; flex-wrap: wrap;">
-            <div>
+        listDiv.innerHTML = ranked.map((x, idx) => `
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; padding: 12px; border-bottom: 1px solid var(--border); gap: 12px; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 250px;">
+              <span style="font-weight:700; color:var(--text-muted); margin-right: 6px;">#${idx + 1}</span>
               <strong>${x.house.title}</strong> (${x.house.region}) – <span style="color:var(--text-muted); font-size:0.85rem;">${x.house.priceFormatted}</span>
+              <span style="display:inline-block; margin-left:6px; font-size:0.78rem; font-weight:700; padding:2px 7px; border-radius:10px; background:${x.score > 0 ? '#dcfce7' : x.score < 0 ? '#fee2e2' : '#f1f5f9'}; color:${x.score > 0 ? '#166534' : x.score < 0 ? '#991b1b' : '#475569'};">${x.score > 0 ? '+' : ''}${x.score} stig</span>
               ${x.house.isCustom ? `<span style="background:#fef3c7; color:#92400e; font-size:0.75rem; font-weight:700; padding:2px 6px; border-radius:4px; margin-left:6px;">Tillaga frá ${x.house.suggestedBy}</span>` : ''}
-              <br><small><a href="${x.house.url}" target="_blank" class="airbnb-link">Skoða gististað ↗</a></small>
+              <div style="margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px;">
+                ${x.love.length > 0 ? `<span style="background:#ffe4e6; color:#9f1239; font-size:0.78rem; font-weight:600; padding:3px 8px; border-radius:6px;">❤️ <strong>Elska (${x.love.length}):</strong> ${x.love.join(", ")}</span>` : ''}
+                ${x.like.length > 0 ? `<span style="background:#dcfce7; color:#166534; font-size:0.78rem; font-weight:600; padding:3px 8px; border-radius:6px;">👍 <strong>Líst vel (${x.like.length}):</strong> ${x.like.join(", ")}</span>` : ''}
+                ${x.dislike.length > 0 ? `<span style="background:#fee2e2; color:#991b1b; font-size:0.78rem; font-weight:600; padding:3px 8px; border-radius:6px;">👎 <strong>Ekki (${x.dislike.length}):</strong> ${x.dislike.join(", ")}</span>` : ''}
+              </div>
             </div>
-            <div style="display:flex; gap: 8px; font-size: 0.85rem;">
-              <span title="Uppáhalds: ${x.love.join(', ')}">❤️ ${x.love.length}</span>
-              <span title="Líst vel á: ${x.like.join(', ')}">👍 ${x.like.length}</span>
-              <span title="Frekar ekki: ${x.dislike.join(', ')}">👎 ${x.dislike.length}</span>
+            <div>
+              <a href="${x.house.url}" target="_blank" rel="noopener" class="airbnb-link" style="white-space:nowrap;">Skoða gististað ↗</a>
             </div>
           </div>
         `).join("");
