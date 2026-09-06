@@ -383,14 +383,6 @@
     </header>
 
     <main class="container">
-
-      <div class="nav-tabs">
-        <button class="nav-btn active" onclick="showTab('vote', this)">🗳️ 1. Kjósa (Vikur & Öll 13 húsin)</button>
-        <button class="nav-btn" onclick="showTab('results', this)">🏆 2. Niðurstöður & Vinsældalisti</button>
-      </div>
-
-      <!-- TAB 1: KOSNING -->
-      <div id="tab-vote">
         <div class="card">
           <div class="card-title">1. Hver ert þú?</div>
           <div class="card-desc">Veldu nafnið þitt úr hópnum til að skrá hvenær þú kemst:</div>
@@ -451,6 +443,11 @@
           <div class="card-title">4. Athugasemdir, hugmyndir & óskir</div>
           <div class="card-desc">Hvað skiptir þig mestu máli? (Sundlaug, stutt á strönd, golf/padel, nálægt flugvelli, bílaleiga, matur/grill o.s.frv.)</div>
           <textarea id="commentInput" rows="3" placeholder="Skrifaðu þínar pælingar eða óskir hér..."></textarea>
+
+          <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border);">
+            <div style="font-size: 0.9rem; font-weight: 700; color: var(--text); margin-bottom: 8px;">💬 Athugasemdir & hugmyndir frá fjölskyldunni:</div>
+            <div id="commentsList">Engar athugasemdir skráðar enn.</div>
+          </div>
         </div>
 
         <div class="save-bar">
@@ -460,61 +457,6 @@
           </div>
           <button class="save-btn" onclick="saveCurrentVote()">Vista mitt val ✅</button>
         </div>
-      </div>
-
-      <!-- TAB 2: NIÐURSTÖÐUR -->
-      <div id="tab-results" style="display: none;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: white; padding: 12px 18px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); flex-wrap: wrap; gap: 10px;">
-          <div>
-            <strong style="color: var(--primary);">☁️ Sjálfvirk rauntímasamstilling</strong>
-            <div style="font-size: 0.8rem; color: var(--text-muted);" id="cloudSyncStatusText">Öll atkvæði og ný hús samstillast sjálfkrafa við alla í fjölskyldunni.</div>
-          </div>
-          <button onclick="pullFromCloud()" style="background: var(--bg); border: 1px solid var(--border); padding: 8px 14px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 0.85rem;">
-            🔄 Sækja nýjustu svör
-          </button>
-        </div>
-
-        <div class="card">
-          <div class="card-title">🏆 Uppáhalds gististaðir fjölskyldunnar (Topplisti)</div>
-          <div class="card-desc">Hér sést hvaða hús hafa fengið flest ❤️ og 👍 frá hópnum:</div>
-          <div class="podium" id="housePodium"></div>
-          <div id="houseVotesSummary"></div>
-        </div>
-
-        <div class="card">
-          <div class="card-title" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-            <span>🏆 Bestu vikurnar fyrir ferðina (Vinsældalisti)</span>
-            <div style="display: flex; gap: 8px; align-items: center;">
-              <select id="sortResultsWeeksSelect" onchange="changeResultsWeeksSort(this.value)" style="padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 0.82rem; font-weight: 600; background: white; cursor: pointer;">
-                <option value="popularity">🔥 Vinsælustu vikur efst (flestir komast)</option>
-                <option value="chronological">📅 Í tímaröð (júní – ágúst)</option>
-              </select>
-            </div>
-          </div>
-          <div class="card-desc">Hér sést hvaða vikur henta hópnum best. Verðlaunapallur yfir vinsælustu vikurnar og nákvæm sundurliðun:</div>
-          <div class="podium" id="weekPodium"></div>
-          <div style="overflow-x: auto; margin-top: 15px;">
-            <table class="results-table" id="resultsWeeksTable">
-              <thead>
-                <tr>
-                  <th style="width: 50px; text-align: center;">Sæti</th>
-                  <th>Vika & Dagsetningar</th>
-                  <th>Kemst vel ✅</th>
-                  <th>Gæti gengið 🟡</th>
-                  <th>Kemst ekki ❌</th>
-                  <th>Hverjir komast / komast ekki</th>
-                </tr>
-              </thead>
-              <tbody id="resultsWeeksTbody"></tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-title">💬 Athugasemdir & Óskir frá hópnum</div>
-          <div id="commentsList">Engar athugasemdir komnar enn.</div>
-        </div>
-      </div>
 
     </main>
   </div>
@@ -963,7 +905,6 @@
     }
 
     let tab1WeeksSort = "popularity";
-    let resultsWeeksSort = "popularity";
 
     function getWeekStats(weekId) {
       let yes = [], maybe = [], no = [];
@@ -1059,11 +1000,6 @@
     function changeTab1WeeksSort(val) {
       tab1WeeksSort = val;
       renderWeeks();
-    }
-
-    function changeResultsWeeksSort(val) {
-      resultsWeeksSort = val;
-      renderResults();
     }
 
     function setWeekVote(weekId, val) {
@@ -1443,169 +1379,16 @@
     }
 
     function renderResults() {
-      const tbody = document.getElementById("resultsWeeksTbody");
-      const voters = Object.keys(allVotes);
+      renderComments();
+    }
 
-      // 1. Vikur
-      const weekPodiumDiv = document.getElementById("weekPodium");
-      if (voters.length === 0) {
-        if (weekPodiumDiv) weekPodiumDiv.innerHTML = "";
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color: var(--text-muted); padding: 20px;">Engin svör komin enn. Vertu fyrst(ur) til að kjósa!</td></tr>`;
-      } else {
-        const weekStats = WEEKS.map(w => {
-          let yes = [], maybe = [], no = [];
-          voters.forEach(p => {
-            const v = allVotes[p].weeks?.[w.id];
-            if (v === 'yes') yes.push(p);
-            else if (v === 'maybe') maybe.push(p);
-            else if (v === 'no') no.push(p);
-          });
-          const score = (yes.length * 3) + (maybe.length * 1) - (no.length * 4);
-          return { ...w, yes, maybe, no, score };
-        });
-
-        // Raða eftir vinsældum fyrir sæti og verðlaunapall
-        const rankedByPopularity = [...weekStats].sort((a, b) => {
-          if (b.score !== a.score) return b.score - a.score;
-          if (b.yes.length !== a.yes.length) return b.yes.length - a.yes.length;
-          return a.no.length - b.no.length;
-        });
-
-        // Verðlaunapallur (Podium) fyrir bestu vikurnar
-        if (weekPodiumDiv) {
-          const medals = ["🥇 1. Sæti", "🥈 2. Sæti", "🥉 3. Sæti"];
-          const validTop = rankedByPopularity.filter(w => w.yes.length > 0 || w.maybe.length > 0).slice(0, 3);
-          if (validTop.length > 0) {
-            weekPodiumDiv.innerHTML = validTop.map((w, idx) => `
-              <div class="podium-item ${idx === 0 ? 'podium-gold' : ''}">
-                <div class="podium-rank">${medals[idx]}</div>
-                <strong style="font-size:1.05rem;">${w.num}</strong>
-                <div style="font-size:0.82rem; color:var(--text-muted); margin-bottom: 6px;">${w.dates}</div>
-                ${w.tag ? `<div style="margin-bottom:6px;"><span class="week-tag">${w.tag}</span></div>` : ''}
-                <div style="font-size:0.88rem; font-weight:700; color: #16a34a;">
-                  ✅ ${w.yes.length} já ${w.maybe.length > 0 ? `• 🟡 ${w.maybe.length}` : ''}
-                </div>
-                ${w.no.length > 0 ? `<div style="font-size:0.8rem; color:#ef4444; font-weight:600; margin-top:2px;">❌ ${w.no.length} komast ekki</div>` : `<div style="font-size:0.8rem; color:#16a34a; font-weight:700; margin-top:2px;">🌟 Enginn með nei!</div>`}
-              </div>
-            `).join("");
-          } else {
-            weekPodiumDiv.innerHTML = "";
-          }
-        }
-
-        // Taflan sjálf raðast eftir vali notanda (resultsWeeksSort)
-        let displayWeeks = [...weekStats];
-        if (resultsWeeksSort === 'popularity') {
-          displayWeeks = rankedByPopularity;
-        }
-
-        tbody.innerHTML = displayWeeks.map(w => {
-          const rankIdx = rankedByPopularity.findIndex(x => x.id === w.id) + 1;
-          const allGood = w.no.length === 0 && w.yes.length > 0;
-          let rankBadge = `<span style="font-weight:700; color:var(--text-muted);">#${rankIdx}</span>`;
-          if (rankIdx === 1) rankBadge = `<span style="font-size:1.2rem;">🥇</span>`;
-          else if (rankIdx === 2) rankBadge = `<span style="font-size:1.2rem;">🥈</span>`;
-          else if (rankIdx === 3) rankBadge = `<span style="font-size:1.2rem;">🥉</span>`;
-
-          return `
-            <tr style="${allGood ? 'background: #f0fdf4;' : ''}">
-              <td style="text-align: center; vertical-align: middle;">${rankBadge}</td>
-              <td>
-                <strong>${w.num}</strong>: ${w.dates}
-                ${w.tag ? `<span class="week-tag">${w.tag}</span>` : ""}
-                ${allGood ? `<br><span style="color: #16a34a; font-weight:700; font-size:0.75rem;">🌟 Allir komast!</span>` : ""}
-              </td>
-              <td><span class="heat-pill heat-high">${w.yes.length}</span></td>
-              <td><span class="heat-pill heat-med">${w.maybe.length}</span></td>
-              <td><span class="heat-pill heat-low">${w.no.length}</span></td>
-              <td style="font-size: 0.85rem;">
-                ${w.yes.length > 0 ? `<div style="color:#15803d;"><strong>Já:</strong> ${w.yes.join(", ")}</div>` : ""}
-                ${w.maybe.length > 0 ? `<div style="color:#854d0e;"><strong>Gæti:</strong> ${w.maybe.join(", ")}</div>` : ""}
-                ${w.no.length > 0 ? `<div style="color:#b91c1c;"><strong>Nei:</strong> ${w.no.join(", ")}</div>` : ""}
-              </td>
-            </tr>
-          `;
-        }).join("");
-      }
-
-      // 2. Húsakosning & Verðlaunapallur (Podium)
-      const houseScores = {};
-      HOUSES.forEach(h => {
-        houseScores[h.id] = { house: h, love: [], like: [], dislike: [] };
-      });
-
-      voters.forEach(p => {
-        const hv = allVotes[p].houseVotes || {};
-        for (const hid in hv) {
-          if (houseScores[hid]) {
-            const v = hv[hid];
-            if (v === 'love') houseScores[hid].love.push(p);
-            else if (v === 'like') houseScores[hid].like.push(p);
-            else if (v === 'dislike') houseScores[hid].dislike.push(p);
-          }
-        }
-      });
-
-      const ranked = Object.values(houseScores)
-        .map(item => {
-          item.score = (item.love.length * 3) + (item.like.length * 1) - (item.dislike.length * 2);
-          return item;
-        })
-        .filter(x => x.love.length + x.like.length + x.dislike.length > 0)
-        .sort((a, b) => {
-          if (b.score !== a.score) return b.score - a.score;
-          if (b.love.length !== a.love.length) return b.love.length - a.love.length;
-          if (b.like.length !== a.like.length) return b.like.length - a.like.length;
-          return a.dislike.length - b.dislike.length;
-        });
-
-      const podiumDiv = document.getElementById("housePodium");
-      const listDiv = document.getElementById("houseVotesSummary");
-
-      if (ranked.length === 0) {
-        podiumDiv.innerHTML = "";
-        listDiv.innerHTML = `<p style="color: var(--text-muted); font-size: 0.9rem;">Engin húsakosning skráð enn. Merktu við ❤️ eða 👍 við þín uppáhalds hús!</p>`;
-      } else {
-        // Podium Top 3
-        const medals = ["🥇 1. Sæti", "🥈 2. Sæti", "🥉 3. Sæti"];
-        podiumDiv.innerHTML = ranked.slice(0, 3).map((item, idx) => `
-          <div class="podium-item ${idx === 0 ? 'podium-gold' : ''}">
-            <div class="podium-rank">${medals[idx]} • ${item.score > 0 ? '+' : ''}${item.score} stig</div>
-            <strong style="font-size:0.95rem;">${item.house.title}</strong>
-            <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom: 6px;">${item.house.region} • ${item.house.priceFormatted}</div>
-            <div style="margin-top: 8px; font-size: 0.82rem; text-align: left; display: flex; flex-direction: column; gap: 3px;">
-              ${item.love.length > 0 ? `<div style="color: #e11d48; font-weight:600;">❤️ <strong>Elska (${item.love.length}):</strong> ${item.love.join(", ")}</div>` : ''}
-              ${item.like.length > 0 ? `<div style="color: #16a34a; font-weight:600;">👍 <strong>Líst vel (${item.like.length}):</strong> ${item.like.join(", ")}</div>` : ''}
-              ${item.dislike.length > 0 ? `<div style="color: #dc2626; font-weight:600;">👎 <strong>Ekki (${item.dislike.length}):</strong> ${item.dislike.join(", ")}</div>` : ''}
-            </div>
-          </div>
-        `).join("");
-
-        listDiv.innerHTML = ranked.map((x, idx) => `
-          <div style="display:flex; justify-content:space-between; align-items:flex-start; padding: 12px; border-bottom: 1px solid var(--border); gap: 12px; flex-wrap: wrap;">
-            <div style="flex: 1; min-width: 250px;">
-              <span style="font-weight:700; color:var(--text-muted); margin-right: 6px;">#${idx + 1}</span>
-              <strong>${x.house.title}</strong> (${x.house.region}) – <span style="color:var(--text-muted); font-size:0.85rem;">${x.house.priceFormatted}</span>
-              <span style="display:inline-block; margin-left:6px; font-size:0.78rem; font-weight:700; padding:2px 7px; border-radius:10px; background:${x.score > 0 ? '#dcfce7' : x.score < 0 ? '#fee2e2' : '#f1f5f9'}; color:${x.score > 0 ? '#166534' : x.score < 0 ? '#991b1b' : '#475569'};">${x.score > 0 ? '+' : ''}${x.score} stig</span>
-              ${x.house.isCustom ? `<span style="background:#fef3c7; color:#92400e; font-size:0.75rem; font-weight:700; padding:2px 6px; border-radius:4px; margin-left:6px;">Tillaga frá ${x.house.suggestedBy}</span>` : ''}
-              <div style="margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px;">
-                ${x.love.length > 0 ? `<span style="background:#ffe4e6; color:#9f1239; font-size:0.78rem; font-weight:600; padding:3px 8px; border-radius:6px;">❤️ <strong>Elska (${x.love.length}):</strong> ${x.love.join(", ")}</span>` : ''}
-                ${x.like.length > 0 ? `<span style="background:#dcfce7; color:#166534; font-size:0.78rem; font-weight:600; padding:3px 8px; border-radius:6px;">👍 <strong>Líst vel (${x.like.length}):</strong> ${x.like.join(", ")}</span>` : ''}
-                ${x.dislike.length > 0 ? `<span style="background:#fee2e2; color:#991b1b; font-size:0.78rem; font-weight:600; padding:3px 8px; border-radius:6px;">👎 <strong>Ekki (${x.dislike.length}):</strong> ${x.dislike.join(", ")}</span>` : ''}
-              </div>
-            </div>
-            <div>
-              <a href="${x.house.url}" target="_blank" rel="noopener" class="airbnb-link" style="white-space:nowrap;">Skoða gististað ↗</a>
-            </div>
-          </div>
-        `).join("");
-      }
-
-      // 3. Athugasemdir
+    function renderComments() {
       const commentsDiv = document.getElementById("commentsList");
-      const withComments = voters.filter(p => allVotes[p].comment && allVotes[p].comment.trim());
+      if (!commentsDiv) return;
+      const voters = Object.keys(allVotes);
+      const withComments = voters.filter(p => allVotes[p] && allVotes[p].comment && allVotes[p].comment.trim());
       if (withComments.length === 0) {
-        commentsDiv.innerHTML = `<p style="color: var(--text-muted); font-size: 0.9rem;">Engar athugasemdir skráðar enn.</p>`;
+        commentsDiv.innerHTML = `<p style="color: var(--text-muted); font-size: 0.85rem; font-style: italic;">Engar athugasemdir skráðar enn.</p>`;
       } else {
         commentsDiv.innerHTML = withComments.map(p => `
           <div class="comment-item">
@@ -1614,16 +1397,6 @@
           </div>
         `).join("");
       }
-    }
-
-    function showTab(tab, btn) {
-      document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
-      if (btn) btn.classList.add("active");
-
-      document.getElementById("tab-vote").style.display = tab === 'vote' ? 'block' : 'none';
-      document.getElementById("tab-results").style.display = tab === 'results' ? 'block' : 'none';
-
-      if (tab === 'results') renderResults();
     }
 
     window.addEventListener("DOMContentLoaded", async () => {
