@@ -149,6 +149,21 @@
       font-size: 0.75rem; font-weight: 600; background: #fef08a; color: #854d0e;
       padding: 2px 7px; border-radius: 5px; margin-left: 6px;
     }
+    .week-pop-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 0.72rem; font-weight: 700; padding: 2px 7px;
+      border-radius: 6px; margin-left: 6px;
+      background: #f1f5f9; color: var(--text-muted); border: 1px solid var(--border);
+    }
+    .week-pop-badge.pop-good {
+      background: #dcfce7; color: #15803d; border-color: #86efac;
+    }
+    .week-pop-badge.pop-mid {
+      background: #fef9c3; color: #854d0e; border-color: #fde047;
+    }
+    .week-pop-badge.pop-bad {
+      background: #fee2e2; color: #b91c1c; border-color: #fca5a5;
+    }
 
     .btn-group { display: flex; gap: 6px; }
     .choice-btn {
@@ -364,8 +379,16 @@
         </div>
 
         <div class="card">
-          <div class="card-title">2. Hvenær kemstu milli 15. júní og loka ágúst 2027?</div>
-          <div class="card-desc">Merktu við allar vikur sem gætu hentað þér. Markmiðið er að finna viku sem allir komast!</div>
+          <div class="card-title" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <span>2. Hvenær kemstu milli 15. júní og loka ágúst 2027?</span>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <select id="sortTab1WeeksSelect" onchange="changeTab1WeeksSort(this.value)" style="padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border); font-size: 0.8rem; font-weight: 600; background: white; cursor: pointer;">
+                <option value="popularity">🔥 Vinsælustu vikur efst</option>
+                <option value="chronological">📅 Í tímaröð (júní – ágúst)</option>
+              </select>
+            </div>
+          </div>
+          <div class="card-desc">Merktu við allar vikur sem gætu hentað þér. Vikurnar raðast sjálfkrafa eftir því hvar flestir komast!</div>
           <div class="weeks-grid" id="weeksGrid"></div>
         </div>
 
@@ -421,12 +444,22 @@
         </div>
 
         <div class="card">
-          <div class="card-title">📊 Hvaða vika hentar best? (Yfirlit)</div>
-          <div class="card-desc">Hér sést samantekt á svörum allra. Vika með flest græn atkvæði er efst.</div>
-          <div style="overflow-x: auto;">
+          <div class="card-title" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <span>🏆 Bestu vikurnar fyrir ferðina (Vinsældalisti)</span>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <select id="sortResultsWeeksSelect" onchange="changeResultsWeeksSort(this.value)" style="padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 0.82rem; font-weight: 600; background: white; cursor: pointer;">
+                <option value="popularity">🔥 Vinsælustu vikur efst (flestir komast)</option>
+                <option value="chronological">📅 Í tímaröð (júní – ágúst)</option>
+              </select>
+            </div>
+          </div>
+          <div class="card-desc">Hér sést hvaða vikur henta hópnum best. Verðlaunapallur yfir vinsælustu vikurnar og nákvæm sundurliðun:</div>
+          <div class="podium" id="weekPodium"></div>
+          <div style="overflow-x: auto; margin-top: 15px;">
             <table class="results-table" id="resultsWeeksTable">
               <thead>
                 <tr>
+                  <th style="width: 50px; text-align: center;">Sæti</th>
                   <th>Vika & Dagsetningar</th>
                   <th>Kemst vel ✅</th>
                   <th>Gæti gengið 🟡</th>
@@ -916,29 +949,110 @@
       }
     }
 
+    let tab1WeeksSort = "popularity";
+    let resultsWeeksSort = "popularity";
+
+    function getWeekStats(weekId) {
+      let yes = [], maybe = [], no = [];
+      const voters = new Set(Object.keys(allVotes));
+      if (currentPerson) voters.add(currentPerson);
+
+      voters.forEach(p => {
+        const v = (p === currentPerson && currentVote && currentVote.weeks)
+          ? currentVote.weeks[weekId]
+          : allVotes[p]?.weeks?.[weekId];
+        if (v === 'yes') yes.push(p);
+        else if (v === 'maybe') maybe.push(p);
+        else if (v === 'no') no.push(p);
+      });
+
+      const score = (yes.length * 3) + (maybe.length * 1) - (no.length * 4);
+      const totalVotes = yes.length + maybe.length + no.length;
+      return { weekId, yes, maybe, no, score, totalVotes };
+    }
+
+    function sortWeeksList(list, sortKey) {
+      const sorted = [...list];
+      if (sortKey === 'popularity') {
+        sorted.sort((a, b) => {
+          const statsA = getWeekStats(a.id);
+          const statsB = getWeekStats(b.id);
+          if (statsB.score !== statsA.score) return statsB.score - statsA.score;
+          if (statsB.yes.length !== statsA.yes.length) return statsB.yes.length - statsA.yes.length;
+          if (statsA.no.length !== statsB.no.length) return statsA.no.length - statsB.no.length;
+          return WEEKS.findIndex(x => x.id === a.id) - WEEKS.findIndex(x => x.id === b.id);
+        });
+      }
+      return sorted;
+    }
+
     function renderWeeks() {
       const grid = document.getElementById("weeksGrid");
-      grid.innerHTML = WEEKS.map(w => `
-        <div class="week-row" id="row-${w.id}">
-          <div class="week-info">
-            <div class="week-number">${w.num}</div>
-            <div class="week-dates">
-              ${w.dates}
-              ${w.tag ? `<span class="week-tag">${w.tag}</span>` : ""}
+      const sortedWeeks = sortWeeksList(WEEKS, tab1WeeksSort);
+      const allStatsSorted = sortWeeksList(WEEKS, 'popularity');
+
+      grid.innerHTML = sortedWeeks.map(w => {
+        const stats = getWeekStats(w.id);
+        let rankBadge = "";
+        if (stats.totalVotes > 0) {
+          const rankIdx = allStatsSorted.findIndex(x => x.id === w.id);
+          let badgeClass = "pop-mid";
+          if (rankIdx === 0 && stats.no.length === 0) badgeClass = "pop-good";
+          else if (stats.no.length > 0 && stats.yes.length === 0) badgeClass = "pop-bad";
+
+          let rankText = `#${rankIdx + 1} í vali`;
+          if (rankIdx === 0) rankText = "🥇 1. val";
+          else if (rankIdx === 1) rankText = "🥈 2. val";
+          else if (rankIdx === 2) rankText = "🥉 3. val";
+
+          rankBadge = `<span class="week-pop-badge ${badgeClass}" title="${stats.yes.length} já, ${stats.maybe.length} gæti, ${stats.no.length} nei">${rankText} (${stats.yes.length} ✅${stats.no.length > 0 ? `, ${stats.no.length} ❌` : ''})</span>`;
+        }
+
+        return `
+          <div class="week-row" id="row-${w.id}">
+            <div class="week-info">
+              <div class="week-number">${w.num}</div>
+              <div class="week-dates">
+                ${w.dates}
+                ${w.tag ? `<span class="week-tag">${w.tag}</span>` : ""}
+                ${rankBadge}
+              </div>
+            </div>
+            <div class="btn-group">
+              <button class="choice-btn" data-week="${w.id}" data-val="yes" onclick="setWeekVote('${w.id}', 'yes')">✅ Kemst vel</button>
+              <button class="choice-btn" data-week="${w.id}" data-val="maybe" onclick="setWeekVote('${w.id}', 'maybe')">🟡 Gæti gengið</button>
+              <button class="choice-btn" data-week="${w.id}" data-val="no" onclick="setWeekVote('${w.id}', 'no')">❌ Kemst ekki</button>
             </div>
           </div>
-          <div class="btn-group">
-            <button class="choice-btn" data-week="${w.id}" data-val="yes" onclick="setWeekVote('${w.id}', 'yes')">✅ Kemst vel</button>
-            <button class="choice-btn" data-week="${w.id}" data-val="maybe" onclick="setWeekVote('${w.id}', 'maybe')">🟡 Gæti gengið</button>
-            <button class="choice-btn" data-week="${w.id}" data-val="no" onclick="setWeekVote('${w.id}', 'no')">❌ Kemst ekki</button>
-          </div>
-        </div>
-      `).join("");
+        `;
+      }).join("");
+
+      updateWeeksUI();
+    }
+
+    function changeTab1WeeksSort(val) {
+      tab1WeeksSort = val;
+      renderWeeks();
+    }
+
+    function changeResultsWeeksSort(val) {
+      resultsWeeksSort = val;
+      renderResults();
     }
 
     function setWeekVote(weekId, val) {
-      currentVote.weeks[weekId] = val;
+      if (currentVote.weeks[weekId] === val) {
+        delete currentVote.weeks[weekId];
+      } else {
+        currentVote.weeks[weekId] = val;
+      }
+      if (currentPerson) {
+        allVotes[currentPerson] = currentVote;
+        localStorage.setItem("sweeden_2027_votes", JSON.stringify(allVotes));
+      }
       updateWeeksUI();
+      if (tab1WeeksSort === 'popularity') renderWeeks();
+      renderResults();
     }
 
     function updateWeeksUI() {
@@ -1306,8 +1420,10 @@
       const voters = Object.keys(allVotes);
 
       // 1. Vikur
+      const weekPodiumDiv = document.getElementById("weekPodium");
       if (voters.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--text-muted); padding: 20px;">Engin svör komin enn. Vertu fyrst(ur) til að kjósa!</td></tr>`;
+        if (weekPodiumDiv) weekPodiumDiv.innerHTML = "";
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color: var(--text-muted); padding: 20px;">Engin svör komin enn. Vertu fyrst(ur) til að kjósa!</td></tr>`;
       } else {
         const weekStats = WEEKS.map(w => {
           let yes = [], maybe = [], no = [];
@@ -1317,16 +1433,56 @@
             else if (v === 'maybe') maybe.push(p);
             else if (v === 'no') no.push(p);
           });
-          const score = (yes.length * 2) + maybe.length - (no.length * 3);
+          const score = (yes.length * 3) + (maybe.length * 1) - (no.length * 4);
           return { ...w, yes, maybe, no, score };
         });
 
-        weekStats.sort((a, b) => b.score - a.score);
+        // Raða eftir vinsældum fyrir sæti og verðlaunapall
+        const rankedByPopularity = [...weekStats].sort((a, b) => {
+          if (b.score !== a.score) return b.score - a.score;
+          if (b.yes.length !== a.yes.length) return b.yes.length - a.yes.length;
+          return a.no.length - b.no.length;
+        });
 
-        tbody.innerHTML = weekStats.map(w => {
+        // Verðlaunapallur (Podium) fyrir bestu vikurnar
+        if (weekPodiumDiv) {
+          const medals = ["🥇 1. Sæti", "🥈 2. Sæti", "🥉 3. Sæti"];
+          const validTop = rankedByPopularity.filter(w => w.yes.length > 0 || w.maybe.length > 0).slice(0, 3);
+          if (validTop.length > 0) {
+            weekPodiumDiv.innerHTML = validTop.map((w, idx) => `
+              <div class="podium-item ${idx === 0 ? 'podium-gold' : ''}">
+                <div class="podium-rank">${medals[idx]}</div>
+                <strong style="font-size:1.05rem;">${w.num}</strong>
+                <div style="font-size:0.82rem; color:var(--text-muted); margin-bottom: 6px;">${w.dates}</div>
+                ${w.tag ? `<div style="margin-bottom:6px;"><span class="week-tag">${w.tag}</span></div>` : ''}
+                <div style="font-size:0.88rem; font-weight:700; color: #16a34a;">
+                  ✅ ${w.yes.length} já ${w.maybe.length > 0 ? `• 🟡 ${w.maybe.length}` : ''}
+                </div>
+                ${w.no.length > 0 ? `<div style="font-size:0.8rem; color:#ef4444; font-weight:600; margin-top:2px;">❌ ${w.no.length} komast ekki</div>` : `<div style="font-size:0.8rem; color:#16a34a; font-weight:700; margin-top:2px;">🌟 Enginn með nei!</div>`}
+              </div>
+            `).join("");
+          } else {
+            weekPodiumDiv.innerHTML = "";
+          }
+        }
+
+        // Taflan sjálf raðast eftir vali notanda (resultsWeeksSort)
+        let displayWeeks = [...weekStats];
+        if (resultsWeeksSort === 'popularity') {
+          displayWeeks = rankedByPopularity;
+        }
+
+        tbody.innerHTML = displayWeeks.map(w => {
+          const rankIdx = rankedByPopularity.findIndex(x => x.id === w.id) + 1;
           const allGood = w.no.length === 0 && w.yes.length > 0;
+          let rankBadge = `<span style="font-weight:700; color:var(--text-muted);">#${rankIdx}</span>`;
+          if (rankIdx === 1) rankBadge = `<span style="font-size:1.2rem;">🥇</span>`;
+          else if (rankIdx === 2) rankBadge = `<span style="font-size:1.2rem;">🥈</span>`;
+          else if (rankIdx === 3) rankBadge = `<span style="font-size:1.2rem;">🥉</span>`;
+
           return `
             <tr style="${allGood ? 'background: #f0fdf4;' : ''}">
+              <td style="text-align: center; vertical-align: middle;">${rankBadge}</td>
               <td>
                 <strong>${w.num}</strong>: ${w.dates}
                 ${w.tag ? `<span class="week-tag">${w.tag}</span>` : ""}
