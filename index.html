@@ -204,6 +204,13 @@
       position: absolute; bottom: 10px; right: 10px; background: rgba(255, 255, 255, 0.95);
       color: var(--text); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 700;
     }
+    .house-badge-pop {
+      position: absolute; bottom: 10px; left: 10px;
+      background: rgba(15, 23, 42, 0.88); color: #fbbf24;
+      backdrop-filter: blur(4px); padding: 4px 10px; border-radius: 20px;
+      font-size: 0.78rem; font-weight: 700; display: flex; align-items: center;
+      gap: 4px; border: 1px solid rgba(251, 191, 36, 0.4); z-index: 2;
+    }
 
     .house-body { padding: 16px; display: flex; flex-direction: column; flex: 1; }
     .house-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 6px; line-height: 1.3; }
@@ -363,9 +370,17 @@
         </div>
 
         <div class="card">
-          <div class="card-title">
+          <div class="card-title" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
             <span>3. Uppáhalds hús (Veldu þín uppáhalds eða bættu við)</span>
-            <button class="add-house-btn" onclick="openAddHouseModal()">➕ Leggja til nýtt hús</button>
+            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+              <select id="sortTab1Select" onchange="changeTab1Sort(this.value)" style="padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border); font-size: 0.8rem; font-weight: 600; background: white; cursor: pointer;">
+                <option value="default">Sjálfgefin röð</option>
+                <option value="popularity">🔥 Vinsælust hjá fjölskyldu</option>
+                <option value="price-asc">💰 Ódýrust fyrst</option>
+                <option value="rating">⭐ Hæst metin</option>
+              </select>
+              <button class="add-house-btn" onclick="openAddHouseModal()">➕ Leggja til hús</button>
+            </div>
           </div>
           <div class="card-desc">Gefðu húsunum einkunn: ❤️ (Uppáhalds / 1. val), 👍 (Líst vel á), 👎 (Frekar ekki):</div>
           <div class="houses-grid" id="priorityHousesGrid"></div>
@@ -439,13 +454,24 @@
           </div>
           <div class="card-desc">Hér eru öll hús á óskalistanum auk tillagna sem fjölskyldan hefur bætt við.</div>
 
-          <div class="houses-top-actions">
+          <div class="houses-top-actions" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
             <div class="houses-filter">
               <button class="filter-btn active" onclick="filterHouses('all', this)">Öll hús (<span id="countAll">0</span>)</button>
+              <button class="filter-btn" onclick="filterHouses('popularity', this)">🔥 Vinsælust (<span id="countPop">0</span>)</button>
               <button class="filter-btn" onclick="filterHouses('budget', this)">Bara ~$3.000 (<span id="countBudget">0</span>)</button>
               <button class="filter-btn" onclick="filterHouses('sweden', this)">Svíþjóð (<span id="countSwe">0</span>)</button>
               <button class="filter-btn" onclick="filterHouses('denmark', this)">Danmörk (<span id="countDen">0</span>)</button>
               <button class="filter-btn" onclick="filterHouses('custom', this)">Fjölskyldutillögur (<span id="countCustom">0</span>)</button>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span style="font-size: 0.82rem; color: var(--text-muted); font-weight: 600;">Raða eftir:</span>
+              <select id="sortHousesSelect" onchange="changeHousesSort(this.value)" style="padding: 7px 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 0.82rem; font-weight: 600; background: white; cursor: pointer;">
+                <option value="default">Sjálfgefin röð</option>
+                <option value="popularity">🔥 Vinsælust hjá fjölskyldu</option>
+                <option value="price-asc">💰 Ódýrust fyrst</option>
+                <option value="price-desc">💎 Dýrust fyrst</option>
+                <option value="rating">⭐ Hæst metin á Airbnb</option>
+              </select>
             </div>
           </div>
 
@@ -924,8 +950,49 @@
       });
     }
 
+    let tab1Sort = "default";
+    let tab3Sort = "default";
+
+    function getHousePopularity(houseId) {
+      let love = 0, like = 0, dislike = 0;
+      const voters = Object.keys(allVotes);
+      voters.forEach(p => {
+        const v = allVotes[p].houseVotes?.[houseId];
+        if (v === 'love') love++;
+        else if (v === 'like') like++;
+        else if (v === 'dislike') dislike++;
+      });
+      const score = (love * 3) + (like * 1) - (dislike * 2);
+      const totalVotes = love + like + dislike;
+      return { love, like, dislike, score, totalVotes };
+    }
+
+    function sortHousesList(list, sortKey) {
+      const sorted = [...list];
+      if (sortKey === 'popularity') {
+        sorted.sort((a, b) => {
+          const popA = getHousePopularity(a.id);
+          const popB = getHousePopularity(b.id);
+          if (popB.score !== popA.score) return popB.score - popA.score;
+          if (popB.love !== popA.love) return popB.love - popA.love;
+          if (popB.totalVotes !== popA.totalVotes) return popB.totalVotes - popA.totalVotes;
+          return (parseFloat(b.rating) || 0) - (parseFloat(a.rating) || 0);
+        });
+      } else if (sortKey === 'price-asc') {
+        sorted.sort((a, b) => (a.priceUsdApprox || 99999) - (b.priceUsdApprox || 99999));
+      } else if (sortKey === 'price-desc') {
+        sorted.sort((a, b) => (b.priceUsdApprox || 0) - (a.priceUsdApprox || 0));
+      } else if (sortKey === 'rating') {
+        sorted.sort((a, b) => (parseFloat(b.rating) || 0) - (parseFloat(a.rating) || 0));
+      }
+      return sorted;
+    }
+
     function updateHouseCounts() {
       document.getElementById("countAll").textContent = HOUSES.length;
+      const popCount = HOUSES.filter(h => getHousePopularity(h.id).totalVotes > 0).length;
+      const popEl = document.getElementById("countPop");
+      if (popEl) popEl.textContent = popCount;
       document.getElementById("countBudget").textContent = HOUSES.filter(h => h.isBudgetFit).length;
       document.getElementById("countSwe").textContent = HOUSES.filter(h => h.country === 'Svíþjóð').length;
       document.getElementById("countDen").textContent = HOUSES.filter(h => h.country === 'Danmörk').length;
@@ -934,20 +1001,44 @@
 
     function renderPriorityHouses() {
       const grid = document.getElementById("priorityHousesGrid");
-      const priority = HOUSES.filter(h => h.isBudgetFit || h.isCustom);
+      let priority = HOUSES.filter(h => h.isBudgetFit || h.isCustom);
+      priority = sortHousesList(priority, tab1Sort);
       grid.innerHTML = priority.map(h => createHouseCardHTML(h)).join("");
+      updateHouseVotesUI();
+    }
+
+    function changeTab1Sort(val) {
+      tab1Sort = val;
+      renderPriorityHouses();
     }
 
     function renderAllHouses(filter) {
+      currentFilter = filter || currentFilter || 'all';
       const grid = document.getElementById("allHousesGrid");
       let list = HOUSES;
-      if (filter === 'budget') list = HOUSES.filter(h => h.isBudgetFit);
-      else if (filter === 'sweden') list = HOUSES.filter(h => h.country === 'Svíþjóð');
-      else if (filter === 'denmark') list = HOUSES.filter(h => h.country === 'Danmörk');
-      else if (filter === 'custom') list = HOUSES.filter(h => h.isCustom);
+      if (currentFilter === 'popularity') {
+        list = HOUSES.filter(h => getHousePopularity(h.id).totalVotes > 0);
+        if (list.length === 0) list = HOUSES; // ef engin atkvæði enn, sýna öll
+      } else if (currentFilter === 'budget') {
+        list = HOUSES.filter(h => h.isBudgetFit);
+      } else if (currentFilter === 'sweden') {
+        list = HOUSES.filter(h => h.country === 'Svíþjóð');
+      } else if (currentFilter === 'denmark') {
+        list = HOUSES.filter(h => h.country === 'Danmörk');
+      } else if (currentFilter === 'custom') {
+        list = HOUSES.filter(h => h.isCustom);
+      }
+
+      const effectiveSort = (currentFilter === 'popularity' && tab3Sort === 'default') ? 'popularity' : tab3Sort;
+      list = sortHousesList(list, effectiveSort);
 
       grid.innerHTML = list.map(h => createHouseCardHTML(h)).join("");
       updateHouseVotesUI();
+    }
+
+    function changeHousesSort(val) {
+      tab3Sort = val;
+      renderAllHouses(currentFilter);
     }
 
     function filterHouses(filter, btn) {
@@ -960,11 +1051,21 @@
     function createHouseCardHTML(h) {
       const specsHTML = (h.specs || []).map(s => `<span>${s}</span>`).join("");
       const defaultImg = "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&auto=format&fit=crop&q=80";
+      const pop = getHousePopularity(h.id);
+      let popBadge = "";
+      if (pop.totalVotes > 0) {
+        popBadge = `
+          <div class="house-badge-pop" title="${pop.love} elskuðu ❤️, ${pop.like} líst vel á 👍${pop.dislike > 0 ? `, ${pop.dislike} frekar ekki 👎` : ''}">
+            🔥 ${pop.score > 0 ? '+' : ''}${pop.score} stig (${pop.love} ❤️, ${pop.like} 👍)
+          </div>
+        `;
+      }
       return `
         <div class="house-card">
           <div class="house-img-box">
             <img src="${h.photo || defaultImg}" alt="${h.title}" loading="lazy" onerror="this.src='${defaultImg}'" />
             <div class="house-badge-loc">${h.region}</div>
+            ${popBadge}
             ${h.isCustom ? `<div class="house-badge-custom">Tillaga: ${h.suggestedBy || 'Fjölskylda'}</div>` : ''}
             <div class="house-badge-price">${h.priceFormatted}</div>
           </div>
