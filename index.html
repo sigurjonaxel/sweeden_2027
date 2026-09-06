@@ -374,8 +374,8 @@
             <span>3. Uppáhalds hús (Veldu þín uppáhalds eða bættu við)</span>
             <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
               <select id="sortTab1Select" onchange="changeTab1Sort(this.value)" style="padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border); font-size: 0.8rem; font-weight: 600; background: white; cursor: pointer;">
-                <option value="default">Sjálfgefin röð</option>
                 <option value="popularity">🔥 Vinsælust hjá fjölskyldu</option>
+                <option value="default">Sjálfgefin röð</option>
                 <option value="price-asc">💰 Ódýrust fyrst</option>
                 <option value="rating">⭐ Hæst metin</option>
               </select>
@@ -466,8 +466,8 @@
             <div style="display: flex; align-items: center; gap: 6px;">
               <span style="font-size: 0.82rem; color: var(--text-muted); font-weight: 600;">Raða eftir:</span>
               <select id="sortHousesSelect" onchange="changeHousesSort(this.value)" style="padding: 7px 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 0.82rem; font-weight: 600; background: white; cursor: pointer;">
-                <option value="default">Sjálfgefin röð</option>
                 <option value="popularity">🔥 Vinsælust hjá fjölskyldu</option>
+                <option value="default">Sjálfgefin röð</option>
                 <option value="price-asc">💰 Ódýrust fyrst</option>
                 <option value="price-desc">💎 Dýrust fyrst</option>
                 <option value="rating">⭐ Hæst metin á Airbnb</option>
@@ -950,17 +950,20 @@
       });
     }
 
-    let tab1Sort = "default";
-    let tab3Sort = "default";
+    let tab1Sort = "popularity";
+    let tab3Sort = "popularity";
 
     function getHousePopularity(houseId) {
       let love = 0, like = 0, dislike = 0;
-      const voters = Object.keys(allVotes);
+      const voters = new Set(Object.keys(allVotes));
+      if (currentPerson) voters.add(currentPerson);
       voters.forEach(p => {
-        const v = allVotes[p].houseVotes?.[houseId];
-        if (v === 'love') love++;
-        else if (v === 'like') like++;
-        else if (v === 'dislike') dislike++;
+        const hv = (p === currentPerson && currentVote && currentVote.houseVotes)
+          ? currentVote.houseVotes[houseId]
+          : allVotes[p]?.houseVotes?.[houseId];
+        if (hv === 'love') love++;
+        else if (hv === 'like') like++;
+        else if (hv === 'dislike') dislike++;
       });
       const score = (love * 3) + (like * 1) - (dislike * 2);
       const totalVotes = love + like + dislike;
@@ -975,7 +978,8 @@
           const popB = getHousePopularity(b.id);
           if (popB.score !== popA.score) return popB.score - popA.score;
           if (popB.love !== popA.love) return popB.love - popA.love;
-          if (popB.totalVotes !== popA.totalVotes) return popB.totalVotes - popA.totalVotes;
+          if (popB.like !== popA.like) return popB.like - popA.like;
+          if (popA.dislike !== popB.dislike) return popA.dislike - popB.dislike;
           return (parseFloat(b.rating) || 0) - (parseFloat(a.rating) || 0);
         });
       } else if (sortKey === 'price-asc') {
@@ -1054,9 +1058,15 @@
       const pop = getHousePopularity(h.id);
       let popBadge = "";
       if (pop.totalVotes > 0) {
+        let badgeStyle = "background: rgba(15, 23, 42, 0.88); color: #fbbf24; border-color: rgba(251, 191, 36, 0.4);";
+        let icon = "🔥";
+        if (pop.score < 0) {
+          badgeStyle = "background: #ef4444; color: white; border-color: #b91c1c;";
+          icon = "👎";
+        }
         popBadge = `
-          <div class="house-badge-pop" title="${pop.love} elskuðu ❤️, ${pop.like} líst vel á 👍${pop.dislike > 0 ? `, ${pop.dislike} frekar ekki 👎` : ''}">
-            🔥 ${pop.score > 0 ? '+' : ''}${pop.score} stig (${pop.love} ❤️, ${pop.like} 👍)
+          <div class="house-badge-pop" style="${badgeStyle}" title="${pop.love} elskuðu ❤️, ${pop.like} líst vel á 👍${pop.dislike > 0 ? `, ${pop.dislike} frekar ekki 👎` : ''}">
+            ${icon} ${pop.score > 0 ? '+' : ''}${pop.score} stig (${pop.love} ❤️, ${pop.like} 👍${pop.dislike > 0 ? `, ${pop.dislike} 👎` : ''})
           </div>
         `;
       }
@@ -1100,7 +1110,16 @@
       } else {
         currentVote.houseVotes[houseId] = vote;
       }
+      if (currentPerson) {
+        allVotes[currentPerson] = currentVote;
+        localStorage.setItem("sweeden_2027_votes", JSON.stringify(allVotes));
+      }
       updateHouseVotesUI();
+      // Ef raðað er eftir vinsældum, endurraða strax svo húsið færist samstundis!
+      if (tab1Sort === 'popularity') renderPriorityHouses();
+      if (tab3Sort === 'popularity' || currentFilter === 'popularity') renderAllHouses(currentFilter);
+      updateHouseCounts();
+      renderResults();
     }
 
     function updateHouseVotesUI() {
