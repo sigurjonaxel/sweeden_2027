@@ -247,6 +247,54 @@
     .chip-dislike { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
     .house-votes-empty { font-size: 0.78rem; color: var(--text-muted); margin: 6px 0 10px 0; font-style: italic; }
 
+    /* House comments styles */
+    .house-comments-box {
+      margin-top: 4px; margin-bottom: 12px;
+      background: #f8fafc; border: 1.5px solid #e2e8f0;
+      border-radius: 10px; padding: 10px 12px;
+    }
+    .house-comments-title {
+      font-size: 0.74rem; font-weight: 800; color: #475569;
+      text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;
+    }
+    .house-comments-list {
+      display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px;
+    }
+    .house-comment-item {
+      background: white; border: 1px solid #e2e8f0; border-radius: 8px;
+      padding: 6px 10px; font-size: 0.8rem;
+    }
+    .house-comment-item.comment-item-me {
+      border-color: #93c5fd; background: #f0f9ff;
+    }
+    .house-comment-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 2px; font-size: 0.76rem; color: #334155;
+    }
+    .house-comment-actions { display: flex; gap: 6px; }
+    .comment-action-btn {
+      background: none; border: none; padding: 0; font-size: 0.72rem;
+      color: var(--primary); cursor: pointer; font-weight: 600;
+    }
+    .comment-action-btn.btn-danger-action { color: #ef4444; }
+    .house-comment-text { color: var(--text); line-height: 1.35; word-break: break-word; }
+    .house-comments-empty { font-size: 0.76rem; color: var(--text-muted); margin-bottom: 8px; font-style: italic; }
+    .house-comment-input-wrap { display: flex; gap: 6px; }
+    .house-comment-input {
+      flex: 1; padding: 7px 10px; border: 1px solid #cbd5e1;
+      border-radius: 6px; font-size: 0.8rem; background: white; font-family: inherit;
+    }
+    .house-comment-input:focus {
+      outline: none; border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.2);
+    }
+    .house-comment-submit-btn {
+      background: var(--primary); color: white; border: none;
+      border-radius: 6px; padding: 7px 12px; font-size: 0.78rem;
+      font-weight: 700; cursor: pointer; white-space: nowrap;
+    }
+    .house-comment-submit-btn:hover { background: #0284c7; }
+
     .week-attendees-box {
       margin-top: 8px; padding-top: 8px; border-top: 1px dashed #cbd5e1; width: 100%;
     }
@@ -547,7 +595,7 @@
     let CUSTOM_HOUSES = [];
 
     let currentPerson = "";
-    let currentVote = { weeks: {}, houseVotes: {}, comment: "" };
+    let currentVote = { weeks: {}, houseVotes: {}, houseComments: {}, comment: "" };
     let allVotes = {};
     let activePIN = "";
     let currentFilter = "all";
@@ -714,12 +762,16 @@
               // Fyrir núverandi notanda: AÐEINS taka úr skýi ef staðbundið er tómt (ekkert valið enn)
               const hasLocalVotes = currentVote && (
                 (currentVote.weeks && Object.keys(currentVote.weeks).length > 0) ||
-                (currentVote.houseVotes && Object.keys(currentVote.houseVotes).length > 0)
+                (currentVote.houseVotes && Object.keys(currentVote.houseVotes).length > 0) ||
+                (currentVote.houseComments && Object.keys(currentVote.houseComments).length > 0)
               );
 
               if (currentPerson && !hasLocalVotes && cloudData.votes[currentPerson]) {
                 allVotes[currentPerson] = cloudData.votes[currentPerson];
                 currentVote = JSON.parse(JSON.stringify(allVotes[currentPerson]));
+                if (!currentVote.houseVotes) currentVote.houseVotes = {};
+                if (!currentVote.houseComments) currentVote.houseComments = {};
+                if (!currentVote.weeks) currentVote.weeks = {};
                 const cEl = document.getElementById("commentInput");
                 if (cEl && (!cEl.value || cEl.value.trim() === "")) {
                   cEl.value = currentVote.comment || "";
@@ -906,8 +958,11 @@
 
       if (allVotes[name]) {
         currentVote = JSON.parse(JSON.stringify(allVotes[name]));
+        if (!currentVote.houseVotes) currentVote.houseVotes = {};
+        if (!currentVote.houseComments) currentVote.houseComments = {};
+        if (!currentVote.weeks) currentVote.weeks = {};
       } else {
-        currentVote = { weeks: {}, houseVotes: {}, comment: "" };
+        currentVote = { weeks: {}, houseVotes: {}, houseComments: {}, comment: "" };
       }
 
       document.getElementById("commentInput").value = currentVote.comment || "";
@@ -927,8 +982,11 @@
         document.getElementById("saveBarStatus").textContent = "Skráir svör fyrir " + currentPerson;
         if (allVotes[currentPerson]) {
           currentVote = JSON.parse(JSON.stringify(allVotes[currentPerson]));
+          if (!currentVote.houseVotes) currentVote.houseVotes = {};
+          if (!currentVote.houseComments) currentVote.houseComments = {};
+          if (!currentVote.weeks) currentVote.weeks = {};
         } else {
-          currentVote = { weeks: {}, houseVotes: {}, comment: "" };
+          currentVote = { weeks: {}, houseVotes: {}, houseComments: {}, comment: "" };
         }
         document.getElementById("commentInput").value = currentVote.comment || "";
         updateWeeksUI();
@@ -1169,6 +1227,16 @@
       renderAllHouses(filter);
     }
 
+    function escapeHtml(str) {
+      if (!str) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
     function getHouseBadgeHTML(h) {
       const pop = getHousePopularity(h.id);
       if (pop.totalVotes <= 0) return "";
@@ -1206,6 +1274,128 @@
       }
     }
 
+    function getHouseComments(houseId) {
+      const list = [];
+      const voters = new Set(Object.keys(allVotes));
+      if (currentPerson) voters.add(currentPerson);
+      voters.forEach(p => {
+        const c = (p === currentPerson && currentVote && currentVote.houseComments)
+          ? currentVote.houseComments[houseId]
+          : allVotes[p]?.houseComments?.[houseId];
+        if (c && typeof c === 'string' && c.trim()) {
+          list.push({ person: p, text: c.trim(), isMe: p === currentPerson });
+        }
+      });
+      return list;
+    }
+
+    function getHouseCommentsHTML(houseId) {
+      const comments = getHouseComments(houseId);
+      const myComment = (currentVote && currentVote.houseComments && currentVote.houseComments[houseId]) ? currentVote.houseComments[houseId] : "";
+      const hasMyComment = Boolean(myComment && myComment.trim());
+
+      return `
+        <div class="house-comments-box">
+          <div class="house-comments-title">
+            <span>💬 Athugasemdir (${comments.length})</span>
+          </div>
+
+          ${comments.length > 0 ? `
+            <div class="house-comments-list">
+              ${comments.map(c => `
+                <div class="house-comment-item ${c.isMe ? 'comment-item-me' : ''}">
+                  <div class="house-comment-header">
+                    <strong>${escapeHtml(c.person)}${c.isMe ? ' (þú)' : ''}:</strong>
+                    ${c.isMe ? `
+                      <div class="house-comment-actions">
+                        <button type="button" onclick="editHouseComment('${houseId}')" class="comment-action-btn" title="Breyta þinni athugasemd">✏️ Breyta</button>
+                        <button type="button" onclick="deleteHouseComment('${houseId}')" class="comment-action-btn btn-danger-action" title="Eyða þinni athugasemd">🗑️</button>
+                      </div>
+                    ` : ''}
+                  </div>
+                  <div class="house-comment-text">${escapeHtml(c.text)}</div>
+                </div>
+              `).join("")}
+            </div>
+          ` : `
+            <div class="house-comments-empty">Engin athugasemd enn við þetta hús</div>
+          `}
+
+          <div class="house-comment-input-wrap">
+            <input 
+              type="text" 
+              id="comment-input-${houseId}" 
+              class="house-comment-input" 
+              placeholder="${hasMyComment ? 'Breyta þinni athugasemd...' : (currentPerson ? `Athugasemd sem ${currentPerson}...` : 'Veldu nafn til að skrifa...')}" 
+              value="${escapeHtml(myComment)}"
+              onkeydown="if(event.key==='Enter') saveHouseComment('${houseId}')"
+            />
+            <button 
+              type="button"
+              class="house-comment-submit-btn" 
+              onclick="saveHouseComment('${houseId}')"
+              title="${hasMyComment ? 'Uppfæra athugasemd' : 'Vista athugasemd'}"
+            >
+              ${hasMyComment ? '💾 Vista' : '💬 Senda'}
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function saveHouseComment(houseId) {
+      if (!currentPerson) {
+        alert("Vinsamlegast veldu eða skrifaðu nafn áður en þú skrifar athugasemd.");
+        const nameSection = document.getElementById("personChips");
+        if (nameSection) nameSection.scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+      const input = document.getElementById(`comment-input-${houseId}`);
+      if (!input) return;
+      const val = input.value.trim();
+
+      if (!currentVote.houseComments) currentVote.houseComments = {};
+
+      if (val) {
+        currentVote.houseComments[houseId] = val;
+      } else {
+        delete currentVote.houseComments[houseId];
+      }
+
+      allVotes[currentPerson] = currentVote;
+      localStorage.setItem("sweeden_2027_votes", JSON.stringify(allVotes));
+
+      const commentsEl = document.getElementById(`house-comments-${houseId}`);
+      if (commentsEl) commentsEl.innerHTML = getHouseCommentsHTML(houseId);
+
+      renderResults();
+      scheduleCloudPush();
+      showToast(val ? "💬 Athugasemd vistuð!" : "🗑️ Athugasemd fjarlægð");
+    }
+
+    function editHouseComment(houseId) {
+      const input = document.getElementById(`comment-input-${houseId}`);
+      if (input) {
+        input.focus();
+        input.select();
+      }
+    }
+
+    function deleteHouseComment(houseId) {
+      if (!confirm("Viltu eyða þessari athugasemd?")) return;
+      if (!currentVote.houseComments) return;
+      delete currentVote.houseComments[houseId];
+      if (currentPerson) {
+        allVotes[currentPerson] = currentVote;
+        localStorage.setItem("sweeden_2027_votes", JSON.stringify(allVotes));
+      }
+      const commentsEl = document.getElementById(`house-comments-${houseId}`);
+      if (commentsEl) commentsEl.innerHTML = getHouseCommentsHTML(houseId);
+      renderResults();
+      scheduleCloudPush();
+      showToast("🗑️ Athugasemd eytt");
+    }
+
     function updateSingleHouseCard(houseId) {
       const h = HOUSES.find(x => x.id === houseId);
       if (!h) return;
@@ -1215,6 +1405,15 @@
 
       const breakdownEl = document.getElementById(`votes-breakdown-${houseId}`);
       if (breakdownEl) breakdownEl.innerHTML = getHouseBreakdownHTML(h);
+
+      const commentsEl = document.getElementById(`house-comments-${houseId}`);
+      if (commentsEl) {
+        const activeInput = document.activeElement;
+        const isFocused = activeInput && activeInput.id === `comment-input-${houseId}`;
+        if (!isFocused) {
+          commentsEl.innerHTML = getHouseCommentsHTML(houseId);
+        }
+      }
 
       const card = document.getElementById(`house-card-${houseId}`);
       if (card) {
@@ -1251,6 +1450,10 @@
 
             <div id="votes-breakdown-${h.id}">
               ${getHouseBreakdownHTML(h)}
+            </div>
+
+            <div id="house-comments-${h.id}">
+              ${getHouseCommentsHTML(h.id)}
             </div>
 
             ${h.isCustom ? `
@@ -1477,17 +1680,62 @@
       const commentsDiv = document.getElementById("commentsList");
       if (!commentsDiv) return;
       const voters = Object.keys(allVotes);
-      const withComments = voters.filter(p => allVotes[p] && allVotes[p].comment && allVotes[p].comment.trim());
-      if (withComments.length === 0) {
+      const withGeneralComments = voters.filter(p => allVotes[p] && allVotes[p].comment && allVotes[p].comment.trim());
+
+      const houseCommentsList = [];
+      HOUSES.forEach(h => {
+        const hc = getHouseComments(h.id);
+        if (hc.length > 0) {
+          houseCommentsList.push({ house: h, comments: hc });
+        }
+      });
+
+      if (withGeneralComments.length === 0 && houseCommentsList.length === 0) {
         commentsDiv.innerHTML = `<p style="color: var(--text-muted); font-size: 0.85rem; font-style: italic;">Engar athugasemdir skráðar enn.</p>`;
-      } else {
-        commentsDiv.innerHTML = withComments.map(p => `
-          <div class="comment-item">
-            <div class="comment-author">${p}</div>
-            <div class="comment-text">${allVotes[p].comment}</div>
-          </div>
-        `).join("");
+        return;
       }
+
+      let html = "";
+      if (withGeneralComments.length > 0) {
+        html += `
+          <h4 style="margin: 0 0 10px 0; font-size: 0.95rem; color: var(--primary);">📝 Almennar óskir & athugasemdir</h4>
+          <div style="display:flex; flex-direction:column; gap:8px; margin-bottom: 20px;">
+            ${withGeneralComments.map(p => `
+              <div class="comment-item">
+                <div class="comment-author">${escapeHtml(p)}</div>
+                <div class="comment-text">${escapeHtml(allVotes[p].comment)}</div>
+              </div>
+            `).join("")}
+          </div>
+        `;
+      }
+
+      if (houseCommentsList.length > 0) {
+        html += `
+          <h4 style="margin: 0 0 10px 0; font-size: 0.95rem; color: var(--primary);">🏡 Athugasemdir við einstök hús</h4>
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            ${houseCommentsList.map(item => `
+              <div style="background: white; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 12px;">
+                <div style="font-weight: 700; font-size: 0.9rem; margin-bottom: 8px; color: var(--text);">
+                  ${escapeHtml(item.house.title)} <span style="font-weight: normal; color: var(--text-muted); font-size: 0.8rem;">(${escapeHtml(item.house.region)})</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                  ${item.comments.map(c => `
+                    <div class="house-comment-item">
+                      <div class="house-comment-header">
+                        <strong>💬 ${escapeHtml(c.person)}:</strong>
+                      </div>
+                      <div class="house-comment-text">${escapeHtml(c.text)}</div>
+                    </div>
+                  `).join("")}
+                </div>
+              </div>
+            `).join("")}
+          </div>
+        `;
+      }
+
+      commentsDiv.innerHTML = html;
     }
 
     window.addEventListener("DOMContentLoaded", async () => {
