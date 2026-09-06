@@ -420,7 +420,7 @@
   <!-- Modal: Bæta við húsi -->
   <div class="modal-overlay" id="addHouseModal">
     <div class="modal-box">
-      <h3 style="margin-bottom: 6px; font-size: 1.25rem;">➕ Leggja til nýtt hús</h3>
+      <h3 id="addHouseModalTitle" style="margin-bottom: 6px; font-size: 1.25rem;">➕ Leggja til nýtt hús</h3>
       <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 18px;">
         Fannstu spennandi hús á Airbnb eða annars staðar? Bættu því við svo allir geti skoðað og kosið!
       </p>
@@ -469,7 +469,7 @@
 
         <div style="display:flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
           <button onclick="closeAddHouseModal()" style="padding: 10px 18px; border: 1px solid var(--border); background: white; border-radius: 8px; font-weight: 600; cursor: pointer;">Hætta við</button>
-          <button onclick="submitNewHouse()" style="padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">Bæta við húsi ➕</button>
+          <button id="addHouseSubmitBtn" onclick="submitNewHouse()" style="padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">Bæta við húsi ➕</button>
         </div>
       </div>
     </div>
@@ -766,6 +766,12 @@
               <span>⭐ ${h.rating}</span>
               ${specsHTML}
             </div>
+            ${h.isCustom ? `
+              <div style="display:flex; gap:10px; margin-bottom:10px;">
+                <button onclick="editCustomHouse('${h.id}')" style="background:none; border:none; color:var(--primary); font-size:0.8rem; font-weight:700; cursor:pointer;">✏️ Breyta upplýsingum</button>
+                <button onclick="deleteCustomHouse('${h.id}')" style="background:none; border:none; color:var(--danger); font-size:0.8rem; font-weight:700; cursor:pointer;">🗑️ Eyða húsi</button>
+              </div>
+            ` : ''}
             <div class="house-actions">
               <a href="${h.url}" target="_blank" rel="noopener" class="airbnb-link">Skoða gististað ↗</a>
               <div class="vote-btns">
@@ -799,13 +805,53 @@
       });
     }
 
-    // Modal: Bæta við húsi
+    // Modal: Bæta við / Breyta húsi
+    let editingHouseId = null;
+
     function openAddHouseModal() {
+      editingHouseId = null;
+      document.getElementById("addHouseModalTitle").textContent = "➕ Leggja til nýtt hús";
+      document.getElementById("addHouseSubmitBtn").textContent = "Bæta við húsi ➕";
+      document.getElementById("newHouseUrl").value = "";
+      document.getElementById("newHouseTitle").value = "";
+      document.getElementById("newHouseRegion").value = "";
+      document.getElementById("newHouseCountry").value = "Svíþjóð";
+      document.getElementById("newHousePrice").value = "";
+      document.getElementById("newHouseSpecs").value = "";
+      document.getElementById("newHousePhoto").value = "";
       document.getElementById("addHouseModal").style.display = "flex";
+    }
+
+    function editCustomHouse(id) {
+      const h = HOUSES.find(x => x.id === id);
+      if (!h) return;
+      editingHouseId = id;
+      document.getElementById("addHouseModalTitle").textContent = "✏️ Breyta húsi";
+      document.getElementById("addHouseSubmitBtn").textContent = "Vista breytingar 💾";
+      document.getElementById("newHouseUrl").value = h.url || "";
+      document.getElementById("newHouseTitle").value = h.title || "";
+      document.getElementById("newHouseRegion").value = h.city || "";
+      document.getElementById("newHouseCountry").value = h.country || "Svíþjóð";
+      document.getElementById("newHousePrice").value = h.priceFormatted || "";
+      document.getElementById("newHouseSpecs").value = (h.specs || []).join(", ") || "";
+      document.getElementById("newHousePhoto").value = h.photo || "";
+      document.getElementById("addHouseModal").style.display = "flex";
+    }
+
+    function deleteCustomHouse(id) {
+      if (!confirm("Ertu viss um að vilja eyða þessu húsi úr tillögum?")) return;
+      HOUSES = HOUSES.filter(x => x.id !== id);
+      CUSTOM_HOUSES = CUSTOM_HOUSES.filter(x => x.id !== id);
+      localStorage.setItem("sweeden_2027_custom_houses", JSON.stringify(CUSTOM_HOUSES));
+      renderPriorityHouses();
+      renderAllHouses('all');
+      updateHouseCounts();
+      renderResults();
     }
 
     function closeAddHouseModal() {
       document.getElementById("addHouseModal").style.display = "none";
+      editingHouseId = null;
     }
 
     function submitNewHouse() {
@@ -822,42 +868,57 @@
         return;
       }
 
-      const newId = "custom_" + Date.now();
-      const newHouse = {
-        id: newId,
-        title: title,
-        propertyType: "Tillaga frá fjölskyldu",
-        city: region,
-        region: `${region} (${country})`,
-        country: country,
-        specs: specs ? [specs] : ["Tillaga"],
-        rating: "Nýtt",
-        ratingLabel: "",
-        priceFormatted: price,
-        photo: photo,
-        url: url,
-        isBudgetFit: true,
-        isCustom: true,
-        suggestedBy: currentPerson || "Fjölskylda"
-      };
+      if (editingHouseId) {
+        // Breyta fyrirliggjandi húsi
+        const idxH = HOUSES.findIndex(x => x.id === editingHouseId);
+        const idxC = CUSTOM_HOUSES.findIndex(x => x.id === editingHouseId);
+        const updated = {
+          ...HOUSES[idxH],
+          title: title,
+          url: url,
+          city: region,
+          region: `${region} (${country})`,
+          country: country,
+          priceFormatted: price,
+          specs: specs ? [specs] : ["Tillaga"],
+          photo: photo || (HOUSES[idxH] ? HOUSES[idxH].photo : "")
+        };
+        if (idxH !== -1) HOUSES[idxH] = updated;
+        if (idxC !== -1) CUSTOM_HOUSES[idxC] = updated;
+        localStorage.setItem("sweeden_2027_custom_houses", JSON.stringify(CUSTOM_HOUSES));
+        alert(`Breytingar á „${title}“ vistaðar!`);
+      } else {
+        // Bæta við nýju húsi
+        const newId = "custom_" + Date.now();
+        const newHouse = {
+          id: newId,
+          title: title,
+          propertyType: "Tillaga frá fjölskyldu",
+          city: region,
+          region: `${region} (${country})`,
+          country: country,
+          specs: specs ? [specs] : ["Tillaga"],
+          rating: "Nýtt",
+          ratingLabel: "",
+          priceFormatted: price,
+          photo: photo,
+          url: url,
+          isBudgetFit: true,
+          isCustom: true,
+          suggestedBy: currentPerson || "Fjölskylda"
+        };
 
-      HOUSES.unshift(newHouse);
-      CUSTOM_HOUSES.unshift(newHouse);
-      localStorage.setItem("sweeden_2027_custom_houses", JSON.stringify(CUSTOM_HOUSES));
-
-      // Hreinsa form
-      document.getElementById("newHouseUrl").value = "";
-      document.getElementById("newHouseTitle").value = "";
-      document.getElementById("newHouseRegion").value = "";
-      document.getElementById("newHousePrice").value = "";
-      document.getElementById("newHouseSpecs").value = "";
-      document.getElementById("newHousePhoto").value = "";
+        HOUSES.unshift(newHouse);
+        CUSTOM_HOUSES.unshift(newHouse);
+        localStorage.setItem("sweeden_2027_custom_houses", JSON.stringify(CUSTOM_HOUSES));
+        alert(`Glæsilegt! „${title}“ hefur verið bætt við listann.`);
+      }
 
       closeAddHouseModal();
       renderPriorityHouses();
       renderAllHouses('all');
       updateHouseCounts();
-      alert(`Glæsilegt! „${title}“ hefur verið bætt við listann.`);
+      renderResults();
     }
 
     async function saveCurrentVote() {
