@@ -453,7 +453,8 @@
               </select>
             </div>
           </div>
-          <div class="card-desc">Merktu við allar vikur sem gætu hentað þér. Vikurnar raðast sjálfkrafa eftir því hvar flestir komast!</div>
+          <div class="card-desc">Merktu við allar vikur sem gætu hentað þér. Vikur þar sem allir komast raðast sjálfkrafa efst, en árekstrar (ef einhver kemst ekki) fá rauða viðvörun!</div>
+          <div id="weekConflictSummary"></div>
           <div class="weeks-grid" id="weeksGrid"></div>
         </div>
 
@@ -1101,7 +1102,9 @@
         else if (v === 'no') no.push(p);
       });
 
-      const score = (yes.length * 3) + (maybe.length * 1) - (no.length * 4);
+      // Ef einhver kemst EKKI (no), fær vikan mikinn mínus (-100 stig per nei)
+      // vegna þess að ef einhver í hópnum kemst ekki er það árekstur fyrir fjölskylduna!
+      const score = (yes.length * 5) + (maybe.length * 2) - (no.length * 100);
       const totalVotes = yes.length + maybe.length + no.length;
       return { weekId, yes, maybe, no, score, totalVotes };
     }
@@ -1112,9 +1115,26 @@
         sorted.sort((a, b) => {
           const statsA = getWeekStats(a.id);
           const statsB = getWeekStats(b.id);
-          if (statsB.score !== statsA.score) return statsB.score - statsA.score;
-          if (statsB.yes.length !== statsA.yes.length) return statsB.yes.length - statsA.yes.length;
+
+          // Vikur án atkvæða fara neðst
+          if (statsA.totalVotes === 0 && statsB.totalVotes > 0) return 1;
+          if (statsB.totalVotes === 0 && statsA.totalVotes > 0) return -1;
+
+          // 1. FORGANGUR: Vikur þar sem ALLIR komast (0 nei) fara ALLTAF á undan vikum þar sem einhver kemst ekki!
+          const hasNoA = statsA.no.length > 0;
+          const hasNoB = statsB.no.length > 0;
+          if (!hasNoA && hasNoB) return -1;
+          if (!hasNoB && hasNoA) return 1;
+
+          // 2. Færri sem komast ekki (ef báðar hafa nei)
           if (statsA.no.length !== statsB.no.length) return statsA.no.length - statsB.no.length;
+
+          // 3. Flestir sem komast vel (yes)
+          if (statsB.yes.length !== statsA.yes.length) return statsB.yes.length - statsA.yes.length;
+
+          // 4. Flestir sem geta (maybe)
+          if (statsB.maybe.length !== statsA.maybe.length) return statsB.maybe.length - statsA.maybe.length;
+
           return WEEKS.findIndex(x => x.id === a.id) - WEEKS.findIndex(x => x.id === b.id);
         });
       }
@@ -1140,18 +1160,70 @@
       const stats = getWeekStats(weekId);
       if (stats.totalVotes > 0) {
         const rankIdx = allStatsSorted.findIndex(x => x.id === weekId);
-        let badgeClass = "pop-mid";
-        if (rankIdx === 0 && stats.no.length === 0) badgeClass = "pop-good";
-        else if (stats.no.length > 0 && stats.yes.length === 0) badgeClass = "pop-bad";
 
-        let rankText = `#${rankIdx + 1} í vali`;
-        if (rankIdx === 0) rankText = "🥇 1. val";
-        else if (rankIdx === 1) rankText = "🥈 2. val";
-        else if (rankIdx === 2) rankText = "🥉 3. val";
+        if (stats.no.length > 0) {
+          // EINHVER KEMST EKKI - skýr viðvörun
+          const names = stats.no.length <= 2 ? stats.no.join(", ") : `${stats.no.length} manns`;
+          return `<span class="week-pop-badge pop-bad" title="Kemst ekki: ${stats.no.join(', ')}">⚠️ Árekstur: ${names} kemst ekki (❌ ${stats.no.length})</span>`;
+        }
 
-        return `<span class="week-pop-badge ${badgeClass}" title="${stats.yes.length} já, ${stats.maybe.length} gæti, ${stats.no.length} nei">${rankText} (${stats.yes.length} ✅${stats.no.length > 0 ? `, ${stats.no.length} ❌` : ''})</span>`;
+        // ALLIR SEM SVÖRUÐU KOMAST!
+        let badgeClass = "pop-good";
+        let rankText = "";
+        if (rankIdx === 0) {
+          rankText = "🥇 1. val (Allir komast!)";
+        } else if (rankIdx === 1) {
+          rankText = "🥈 2. val (Enginn árekstur)";
+        } else if (rankIdx === 2) {
+          rankText = "🥉 3. val (Enginn árekstur)";
+        } else {
+          badgeClass = "pop-mid";
+          rankText = `#${rankIdx + 1} í vali (0 árekstrar)`;
+        }
+
+        return `<span class="week-pop-badge ${badgeClass}" title="${stats.yes.length} komast vel, ${stats.maybe.length} geta">${rankText} (${stats.yes.length} ✅${stats.maybe.length > 0 ? `, ${stats.maybe.length} 🟡` : ''})</span>`;
       }
       return "";
+    }
+
+    function updateWeekConflictSummary() {
+      const el = document.getElementById("weekConflictSummary");
+      if (!el) return;
+
+      const activeWeeks = WEEKS.map(w => ({ ...w, stats: getWeekStats(w.id) })).filter(w => w.stats.totalVotes > 0);
+      if (activeWeeks.length === 0) {
+        el.innerHTML = "";
+        return;
+      }
+
+      // Vikur þar sem allir sem hafa svarað komast (enginn sagði 'no')
+      const zeroConflicts = activeWeeks
+        .filter(w => w.stats.no.length === 0 && w.stats.yes.length > 0)
+        .sort((a, b) => b.stats.yes.length - a.stats.yes.length);
+
+      if (zeroConflicts.length > 0) {
+        const bestList = zeroConflicts.map(w => `• <strong>${w.num} (${w.dates})</strong>: ${w.stats.yes.length} komast vel${w.stats.maybe.length > 0 ? `, ${w.stats.maybe.length} gætu` : ''} (0 komast ekki)`).join("<br>");
+        el.innerHTML = `
+          <div style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 12px; padding: 12px 16px; margin-bottom: 16px; font-size: 0.88rem; color: #166534;">
+            <div style="font-weight: 800; font-size: 0.95rem; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+              <span>🎉 Bestu vikurnar — ALLIR komast (0 árekstrar):</span>
+            </div>
+            <div style="line-height: 1.6; margin-bottom: 4px;">
+              ${bestList}
+            </div>
+            <div style="font-size: 0.78rem; opacity: 0.85; margin-top: 6px;">
+              ⭐ Enginn hefur merkt við ❌ Kemst ekki á þessum vikum!
+            </div>
+          </div>
+        `;
+      } else {
+        el.innerHTML = `
+          <div style="background: #fefce8; border: 1.5px solid #fde047; border-radius: 12px; padding: 12px 16px; margin-bottom: 16px; font-size: 0.88rem; color: #854d0e;">
+            <div style="font-weight: 800; margin-bottom: 4px;">⚠️ Athugið: Allar vikur sem kosið hefur verið um hafa að minnsta kosti einn árekstur.</div>
+            <div style="font-size: 0.82rem;">Skoðið vikurnar efst sem hafa fæsta sem komast ekki.</div>
+          </div>
+        `;
+      }
     }
 
     function updateSingleWeekRow(weekId) {
@@ -1159,6 +1231,7 @@
       if (attendeesEl) attendeesEl.innerHTML = getWeekAttendeesHTML(weekId);
       const rankEl = document.getElementById(`week-rank-badge-${weekId}`);
       if (rankEl) rankEl.innerHTML = getWeekRankBadgeHTML(weekId);
+      updateWeekConflictSummary();
     }
 
     function renderWeeks() {
@@ -1191,6 +1264,7 @@
       }).join("");
 
       updateWeeksUI();
+      updateWeekConflictSummary();
     }
 
     function changeTab1WeeksSort(val) {
