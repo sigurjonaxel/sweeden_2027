@@ -1,0 +1,35 @@
+name: Sync User Asks to GitHub Issues
+
+on:
+  schedule:
+    # Keyrir sjálfkrafa á 30 mínútna fresti
+    - cron: '*/30 * * * *'
+  workflow_dispatch: # Leyfir líka að keyra handvirkt hvenær sem er úr GitHub Actions flipanum
+
+jobs:
+  sync:
+    name: Check and Create GitHub Issues
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install cryptography
+
+      - name: Run Issue Sync Script
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          FAMILY_PIN: ${{ secrets.FAMILY_PIN || '2027' }}
+        run: |
+          python3 sync_requests_to_issues.py
