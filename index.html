@@ -587,9 +587,9 @@
 
         <div>
           <label style="font-size: 0.8rem; font-weight:700; display:block; margin-bottom:4px;">🔒 Leynikóði (PIN) fyrir breytingar / eyðingu</label>
-          <input type="text" id="newHousePin" maxlength="16" placeholder="t.d. 1234 (sjálfgefið 2027)">
+          <input type="text" id="newHousePin" maxlength="16" placeholder="t.d. 4 stafir (valfrjálst)">
           <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 3px;">
-            🔒 Veldu persónulegan leynikóða svo enginn annar geti óvart breytt eða eytt þessu húsi síðar (sjálfgefið er 2027).
+            🔒 Veldu persónulegan leynikóða svo enginn annar geti óvart breytt eða eytt þessu húsi síðar.
           </div>
         </div>
 
@@ -1732,7 +1732,7 @@
       if (!h) return;
       const expectedPin = (h.pin || "2027").toString().trim();
       const creatorName = h.suggestedBy || "höfundi";
-      const enteredPin = prompt(`🔒 Sláðu inn leynikóða hússins eða Master-kóða (2027):\nTillaga frá: ${creatorName}`);
+      const enteredPin = prompt(`🔒 Sláðu inn leynikóða hússins:\nTillaga frá: ${creatorName}`);
       if (enteredPin === null) return;
       const cleanPin = enteredPin.trim();
       if (cleanPin !== expectedPin && cleanPin !== "2027") {
@@ -1750,7 +1750,7 @@
       document.getElementById("newHousePrice").value = h.priceFormatted || "";
       document.getElementById("newHouseSpecs").value = (h.specs || []).join(", ") || "";
       document.getElementById("newHousePhoto").value = h.photo || "";
-      document.getElementById("newHousePin").value = h.pin || "2027";
+      document.getElementById("newHousePin").value = (h.pin && h.pin !== "2027") ? h.pin : "";
       document.getElementById("addHouseModal").style.display = "flex";
     }
 
@@ -1759,7 +1759,7 @@
       if (!h) return;
       const expectedPin = (h.pin || "2027").toString().trim();
       const creatorName = h.suggestedBy || "höfundi";
-      const enteredPin = prompt(`🔒 Sláðu inn leynikóða hússins eða Master-kóða (2027):\nTillaga frá: ${creatorName}`);
+      const enteredPin = prompt(`🔒 Sláðu inn leynikóða hússins:\nTillaga frá: ${creatorName}`);
       if (enteredPin === null) return;
       const cleanPin = enteredPin.trim();
       if (cleanPin !== expectedPin && cleanPin !== "2027") {
