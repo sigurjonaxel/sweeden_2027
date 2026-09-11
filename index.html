@@ -436,10 +436,10 @@
     <main class="container">
         <div class="card">
           <div class="card-title">1. Hver ert þú?</div>
-          <div class="card-desc">Veldu nafnið þitt úr hópnum (eða Gestur) til að skrá hvenær þú kemst, leggja til hús og kjósa:</div>
+          <div class="card-desc">Veldu nafnið þitt úr hópnum eða skrifaðu nafn til að skrá hvenær þú kemst, leggja til hús og kjósa:</div>
           <div class="person-chips" id="personChips"></div>
           <div style="max-width: 420px;">
-            <input type="text" id="customNameInput" placeholder="Eða skrifaðu annað nafn (t.d. maki / gestur)..." oninput="onCustomNameInput(this.value)">
+            <input type="text" id="customNameInput" placeholder="Eða skrifaðu annað nafn (t.d. maki)..." oninput="onCustomNameInput(this.value)">
           </div>
         </div>
 
@@ -678,15 +678,15 @@
       <div style="font-size: 2.8rem; margin-bottom: 8px;">👋</div>
       <h3 style="margin-bottom: 6px; font-size: 1.45rem; font-weight: 800; color: var(--text);">Hver ert þú?</h3>
       <p style="font-size: 0.92rem; color: var(--text-muted); margin-bottom: 22px;">
-        Vinsamlegast veldu hver þú ert úr hópnum (eða Gestur) til að opna síðuna:
+        Vinsamlegast veldu nafnið þitt úr fjölskyldunni eða skrifaðu nafn til að opna síðuna:
       </p>
 
       <div id="welcomeUserChips" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 22px;">
-        <!-- Fyllt út sjálfkrafa með fjölskyldumeðlimum + Gestur -->
+        <!-- Fyllt út sjálfkrafa með fjölskyldumeðlimum -->
       </div>
 
       <div style="border-top: 1px solid var(--border); padding-top: 18px; margin-top: 10px;">
-        <label style="font-size: 0.8rem; font-weight: 700; display: block; margin-bottom: 8px; color: var(--text-muted);">Eða skrifaðu annað nafn (t.d. maki / annar gestur):</label>
+        <label style="font-size: 0.8rem; font-weight: 700; display: block; margin-bottom: 8px; color: var(--text-muted);">Eða skrifaðu annað nafn (t.d. maki):</label>
         <div style="display: flex; gap: 8px; max-width: 360px; margin: 0 auto;">
           <input type="text" id="welcomeCustomName" placeholder="Nafn þitt..." style="flex: 1; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border);" onkeydown="if(event.key==='Enter') submitWelcomeCustomName()">
           <button onclick="submitWelcomeCustomName()" style="padding: 10px 18px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">Áfram ➔</button>
@@ -1061,11 +1061,7 @@
         <button class="person-chip" onclick="chooseWelcomeUser('${name}')" style="font-size: 0.95rem; padding: 10px 18px; border-radius: 20px; font-weight: 600;">
           ${name}
         </button>
-      `).join("") + `
-        <button class="person-chip" onclick="chooseWelcomeUser('Gestur')" style="font-size: 0.95rem; padding: 10px 18px; border-radius: 20px; border: 1.5px dashed var(--border); font-weight: 700;">
-          👤 Gestur
-        </button>
-      `;
+      `).join("");
 
       modal.style.display = "flex";
     }
@@ -1126,31 +1122,25 @@
       if (currentPerson && currentPerson.trim() !== "") {
         return true;
       }
-      const entered = prompt(`👤 Hver ert þú?\nSláðu inn nafn þitt eða skrifaðu „Gestur“ til að ${actionDescription}:`);
+      const entered = prompt(`👤 Hver ert þú?\nSláðu inn nafnið þitt til að ${actionDescription}:`);
       if (entered && entered.trim() !== "") {
         selectPerson(entered.trim());
         return true;
       }
       const chipsEl = document.getElementById("personChips");
       if (chipsEl) chipsEl.scrollIntoView({ behavior: "smooth", block: "center" });
-      alert(`⚠️ Vinsamlegast veldu nafn í lið 1 (eða Gestur) til að ${actionDescription}.`);
+      alert(`⚠️ Vinsamlegast veldu nafnið þitt í lið 1 (eða skrifaðu nafn) til að ${actionDescription}.`);
       return false;
     }
 
     function renderPersonChips() {
       const c = document.getElementById("personChips");
       if (!c) return;
-      const chips = FAMILY_MEMBERS.map(name => `
+      c.innerHTML = FAMILY_MEMBERS.map(name => `
         <button class="person-chip ${currentPerson === name ? 'active' : ''}" onclick="selectPerson('${name}')" id="chip-${name.replace(/[^a-zA-Z0-9]/g, '')}">
           ${name}
         </button>
       `).join("");
-      const guestActive = currentPerson === 'Gestur' ? 'active' : '';
-      c.innerHTML = chips + `
-        <button class="person-chip ${guestActive}" onclick="selectPerson('Gestur')" id="chip-Gestur" style="border: 1.5px dashed var(--border); font-weight: 700;">
-          👤 Gestur
-        </button>
-      `;
     }
 
     function selectPerson(name) {
@@ -1173,7 +1163,7 @@
       }
 
       currentPerson = name.trim();
-      document.getElementById("customNameInput").value = (FAMILY_MEMBERS.includes(currentPerson) || currentPerson === "Gestur") ? "" : currentPerson;
+      document.getElementById("customNameInput").value = FAMILY_MEMBERS.includes(currentPerson) ? "" : currentPerson;
       document.querySelectorAll(".person-chip").forEach(el => el.classList.remove("active"));
       const safeId = "chip-" + currentPerson.replace(/[^a-zA-Z0-9]/g, '');
       const activeEl = document.getElementById(safeId);
