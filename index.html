@@ -574,7 +574,10 @@
 
         <div>
           <label style="font-size: 0.8rem; font-weight:700; display:block; margin-bottom:4px;">Myndaslóð (valfrjálst)</label>
-          <input type="url" id="newHousePhoto" placeholder="https://... mynd af húsinu (má sleppa)">
+          <input type="url" id="newHousePhoto" placeholder="https://... bein myndaslóð (endar á .jpg/.png) eða má sleppa">
+          <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 3px;">
+            💡 Hægri-smelltu á mynd á Airbnb &gt; <em>Afrita myndaslóð (Copy image address)</em>. Ekki líma vefslóðina á herberginu hér.
+          </div>
         </div>
 
         <div style="display:flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
@@ -854,15 +857,24 @@
             }
 
             if (cloudData.customHouses && Array.isArray(cloudData.customHouses)) {
-              let addedHouse = false;
+              let changedHouse = false;
               cloudData.customHouses.forEach(ch => {
-                if (!CUSTOM_HOUSES.some(h => h.id === ch.id)) {
+                const cIdx = CUSTOM_HOUSES.findIndex(h => h.id === ch.id);
+                if (cIdx === -1) {
                   CUSTOM_HOUSES.push(ch);
                   if (!HOUSES.some(h => h.id === ch.id)) HOUSES.unshift(ch);
-                  addedHouse = true;
+                  changedHouse = true;
+                } else {
+                  // Uppfæra ef breytingar eru í skýinu (t.d. mynd eða lýsing löguð)
+                  if (JSON.stringify(CUSTOM_HOUSES[cIdx]) !== JSON.stringify(ch)) {
+                    CUSTOM_HOUSES[cIdx] = { ...CUSTOM_HOUSES[cIdx], ...ch };
+                    const hIdx = HOUSES.findIndex(h => h.id === ch.id);
+                    if (hIdx !== -1) HOUSES[hIdx] = { ...HOUSES[hIdx], ...ch };
+                    changedHouse = true;
+                  }
                 }
               });
-              if (addedHouse) {
+              if (changedHouse) {
                 localStorage.setItem("sweeden_2027_custom_houses", JSON.stringify(CUSTOM_HOUSES));
                 renderAllHouses(currentFilter);
               }
@@ -1591,12 +1603,16 @@
     function createHouseCardHTML(h) {
       const specsHTML = (h.specs || []).map(s => `<span>${s}</span>`).join("");
       const defaultImg = "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&auto=format&fit=crop&q=80";
+      let cardPhoto = (h.photo && h.photo.trim()) ? h.photo.trim() : defaultImg;
+      if (cardPhoto.includes("airbnb.") && !cardPhoto.includes("muscache.com") && !cardPhoto.match(/\.(jpeg|jpg|png|webp)/i)) {
+        cardPhoto = defaultImg;
+      }
       const cur = (currentVote && currentVote.houseVotes) ? currentVote.houseVotes[h.id] : null;
 
       return `
         <div class="house-card" id="house-card-${h.id}">
           <div class="house-img-box">
-            <img src="${h.photo || defaultImg}" alt="${h.title}" loading="lazy" onerror="this.src='${defaultImg}'" />
+            <img src="${cardPhoto}" alt="${h.title}" loading="lazy" onerror="this.src='${defaultImg}'" />
             <div class="house-badge-loc">${h.region}</div>
             <div id="pop-badge-${h.id}" style="display:contents;">${getHouseBadgeHTML(h)}</div>
             ${h.isCustom ? `<div class="house-badge-custom">Tillaga: ${h.suggestedBy || 'Fjölskylda'}</div>` : ''}
@@ -1720,7 +1736,12 @@
       const country = document.getElementById("newHouseCountry").value;
       const price = document.getElementById("newHousePrice").value.trim() || "Verð ótilgreint";
       const specs = document.getElementById("newHouseSpecs").value.trim();
-      const photo = document.getElementById("newHousePhoto").value.trim();
+      let photo = document.getElementById("newHousePhoto").value.trim();
+
+      // Ef notandi límdi síðuslóð en ekki beina myndaslóð (t.d. airbnb.is/rooms/...)
+      if (photo && (photo.includes("airbnb.") || photo.includes("booking.")) && !photo.includes("muscache.com") && !photo.match(/\.(jpeg|jpg|png|webp)/i)) {
+        photo = "";
+      }
 
       if (!url || !title) {
         alert("Vinsamlegast fylltu út slóð og heiti hússins.");
