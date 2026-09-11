@@ -585,6 +585,14 @@
           </div>
         </div>
 
+        <div>
+          <label style="font-size: 0.8rem; font-weight:700; display:block; margin-bottom:4px;">🔒 Leynikóði (PIN) fyrir breytingar / eyðingu</label>
+          <input type="text" id="newHousePin" maxlength="16" placeholder="t.d. 1234 (sjálfgefið 2027)">
+          <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 3px;">
+            🔒 Veldu persónulegan leynikóða svo enginn annar geti óvart breytt eða eytt þessu húsi síðar (sjálfgefið er 2027).
+          </div>
+        </div>
+
         <div style="display:flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
           <button onclick="closeAddHouseModal()" style="padding: 10px 18px; border: 1px solid var(--border); background: white; border-radius: 8px; font-weight: 600; cursor: pointer;">Hætta við</button>
           <button id="addHouseSubmitBtn" onclick="submitNewHouse()" style="padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">Bæta við húsi ➕</button>
@@ -1715,14 +1723,19 @@
       document.getElementById("newHousePrice").value = "";
       document.getElementById("newHouseSpecs").value = "";
       document.getElementById("newHousePhoto").value = "";
+      document.getElementById("newHousePin").value = "";
       document.getElementById("addHouseModal").style.display = "flex";
     }
 
     function editCustomHouse(id) {
       const h = HOUSES.find(x => x.id === id);
       if (!h) return;
-      if (h.suggestedBy && h.suggestedBy !== currentPerson) {
-        alert(`Aðeins ${h.suggestedBy} getur breytt þessari tillögu.`);
+      const expectedPin = (h.pin || "2027").toString().trim();
+      const creatorName = h.suggestedBy || "höfundi";
+      const enteredPin = prompt(`🔒 Sláðu inn leynikóða hússins (valinn af ${creatorName}) til að breyta:\n(Sjálfgefið 2027 ef enginn sérstakur kóði var valinn)`);
+      if (enteredPin === null) return;
+      if (enteredPin.trim() !== expectedPin) {
+        alert("❌ Rangur leynikóði! Þú hefur ekki heimild til að breyta þessu húsi.");
         return;
       }
       editingHouseId = id;
@@ -1736,16 +1749,22 @@
       document.getElementById("newHousePrice").value = h.priceFormatted || "";
       document.getElementById("newHouseSpecs").value = (h.specs || []).join(", ") || "";
       document.getElementById("newHousePhoto").value = h.photo || "";
+      document.getElementById("newHousePin").value = h.pin || "2027";
       document.getElementById("addHouseModal").style.display = "flex";
     }
 
     async function deleteCustomHouse(id) {
       const h = HOUSES.find(x => x.id === id);
-      if (h && h.suggestedBy && h.suggestedBy !== currentPerson) {
-        alert(`Aðeins ${h.suggestedBy} getur eytt þessari tillögu.`);
+      if (!h) return;
+      const expectedPin = (h.pin || "2027").toString().trim();
+      const creatorName = h.suggestedBy || "höfundi";
+      const enteredPin = prompt(`🔒 Sláðu inn leynikóða hússins (valinn af ${creatorName}) til að eyða:\n(Sjálfgefið 2027 ef enginn sérstakur kóði var valinn)`);
+      if (enteredPin === null) return;
+      if (enteredPin.trim() !== expectedPin) {
+        alert("❌ Rangur leynikóði! Þú hefur ekki heimild til að eyða þessu húsi.");
         return;
       }
-      if (!confirm("Ertu viss um að vilja eyða þessu húsi úr tillögum?")) return;
+      if (!confirm(`Ertu alveg viss um að vilja eyða „${h.title}“ úr tillögum?`)) return;
       HOUSES = HOUSES.filter(x => x.id !== id);
       CUSTOM_HOUSES = CUSTOM_HOUSES.filter(x => x.id !== id);
       localStorage.setItem("sweeden_2027_custom_houses", JSON.stringify(CUSTOM_HOUSES));
@@ -1769,6 +1788,7 @@
       const price = document.getElementById("newHousePrice").value.trim() || "Verð ótilgreint";
       const person = document.getElementById("newHousePerson").value.trim() || currentPerson || "Fjölskylda";
       const specs = document.getElementById("newHouseSpecs").value.trim();
+      const pin = document.getElementById("newHousePin").value.trim() || "2027";
       let photo = document.getElementById("newHousePhoto").value.trim();
 
       // Ef notandi límdi síðuslóð en ekki beina myndaslóð (t.d. airbnb.is/rooms/...)
@@ -1795,6 +1815,7 @@
           priceFormatted: price,
           specs: specs ? [specs] : ["Tillaga"],
           suggestedBy: person,
+          pin: pin,
           photo: photo || (HOUSES[idxH] ? HOUSES[idxH].photo : "")
         };
         if (idxH !== -1) HOUSES[idxH] = updated;
@@ -1824,7 +1845,8 @@
           url: url,
           isBudgetFit: true,
           isCustom: true,
-          suggestedBy: person
+          suggestedBy: person,
+          pin: pin
         };
 
         HOUSES.unshift(newHouse);
