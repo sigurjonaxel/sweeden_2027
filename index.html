@@ -1662,7 +1662,7 @@
               ${getHouseCommentsHTML(h.id)}
             </div>
 
-            ${h.isCustom && h.suggestedBy === currentPerson ? `
+            ${h.isCustom && (h.suggestedBy === currentPerson || currentPerson === "Sigurjón Axel") ? `
               <div style="display:flex; gap:10px; margin-bottom:10px;">
                 <button onclick="editCustomHouse('${h.id}')" style="background:none; border:none; color:var(--primary); font-size:0.8rem; font-weight:700; cursor:pointer;">✏️ Breyta upplýsingum</button>
                 <button onclick="deleteCustomHouse('${h.id}')" style="background:none; border:none; color:var(--danger); font-size:0.8rem; font-weight:700; cursor:pointer;">🗑️ Eyða húsi</button>
@@ -1732,9 +1732,10 @@
       if (!h) return;
       const expectedPin = (h.pin || "2027").toString().trim();
       const creatorName = h.suggestedBy || "höfundi";
-      const enteredPin = prompt(`🔒 Sláðu inn leynikóða hússins (valinn af ${creatorName}) til að breyta:\n(Sjálfgefið 2027 ef enginn sérstakur kóði var valinn)`);
+      const enteredPin = prompt(`🔒 Sláðu inn leynikóða hússins eða Master-kóða (2027):\nTillaga frá: ${creatorName}`);
       if (enteredPin === null) return;
-      if (enteredPin.trim() !== expectedPin) {
+      const cleanPin = enteredPin.trim();
+      if (cleanPin !== expectedPin && cleanPin !== "2027") {
         alert("❌ Rangur leynikóði! Þú hefur ekki heimild til að breyta þessu húsi.");
         return;
       }
@@ -1758,9 +1759,10 @@
       if (!h) return;
       const expectedPin = (h.pin || "2027").toString().trim();
       const creatorName = h.suggestedBy || "höfundi";
-      const enteredPin = prompt(`🔒 Sláðu inn leynikóða hússins (valinn af ${creatorName}) til að eyða:\n(Sjálfgefið 2027 ef enginn sérstakur kóði var valinn)`);
+      const enteredPin = prompt(`🔒 Sláðu inn leynikóða hússins eða Master-kóða (2027):\nTillaga frá: ${creatorName}`);
       if (enteredPin === null) return;
-      if (enteredPin.trim() !== expectedPin) {
+      const cleanPin = enteredPin.trim();
+      if (cleanPin !== expectedPin && cleanPin !== "2027") {
         alert("❌ Rangur leynikóði! Þú hefur ekki heimild til að eyða þessu húsi.");
         return;
       }
