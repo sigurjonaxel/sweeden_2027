@@ -903,7 +903,7 @@
             }
 
             // Uppfæra viðmót án þess að eyðileggja stöðu núverandi kjósanda eða láta spjöld hoppa
-            if (!silent || (typeof addedHouse !== 'undefined' && addedHouse)) {
+            if (!silent || changedHouse) {
               renderWeeks();
               renderAllHouses(currentFilter);
             } else {
