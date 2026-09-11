@@ -586,10 +586,10 @@
         </div>
 
         <div>
-          <label style="font-size: 0.8rem; font-weight:700; display:block; margin-bottom:4px;">🔒 Leynikóði (PIN) fyrir breytingar / eyðingu</label>
-          <input type="text" id="newHousePin" maxlength="16" placeholder="t.d. 4 stafir (valfrjálst)">
+          <label style="font-size: 0.8rem; font-weight:700; display:block; margin-bottom:4px;">🔒 4 stafa leynikóði (PIN) *</label>
+          <input type="text" id="newHousePin" maxlength="4" pattern="[0-9]{4}" inputmode="numeric" placeholder="4 tölustafir (t.d. 1234)" required oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 4);">
           <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 3px;">
-            🔒 Veldu persónulegan leynikóða svo enginn annar geti óvart breytt eða eytt þessu húsi síðar.
+            🔒 Veldu 4 tölustafi svo aðeins þú getir breytt eða eytt þessari tillögu síðar.
           </div>
         </div>
 
@@ -1750,7 +1750,7 @@
       document.getElementById("newHousePrice").value = h.priceFormatted || "";
       document.getElementById("newHouseSpecs").value = (h.specs || []).join(", ") || "";
       document.getElementById("newHousePhoto").value = h.photo || "";
-      document.getElementById("newHousePin").value = (h.pin && h.pin !== "2027") ? h.pin : "";
+      document.getElementById("newHousePin").value = h.pin || "2027";
       document.getElementById("addHouseModal").style.display = "flex";
     }
 
@@ -1790,7 +1790,7 @@
       const price = document.getElementById("newHousePrice").value.trim() || "Verð ótilgreint";
       const person = document.getElementById("newHousePerson").value.trim() || currentPerson || "Fjölskylda";
       const specs = document.getElementById("newHouseSpecs").value.trim();
-      const pin = document.getElementById("newHousePin").value.trim() || "2027";
+      const pin = document.getElementById("newHousePin").value.trim();
       let photo = document.getElementById("newHousePhoto").value.trim();
 
       // Ef notandi límdi síðuslóð en ekki beina myndaslóð (t.d. airbnb.is/rooms/...)
@@ -1800,6 +1800,12 @@
 
       if (!url || !title) {
         alert("Vinsamlegast fylltu út slóð og heiti hússins.");
+        return;
+      }
+
+      if (!/^\d{4}$/.test(pin)) {
+        alert("Vinsamlegast veldu 4 tölustafi sem leynikóða (t.d. 1234).");
+        document.getElementById("newHousePin").focus();
         return;
       }
 
