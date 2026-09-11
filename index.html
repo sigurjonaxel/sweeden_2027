@@ -974,8 +974,18 @@
         try {
           CUSTOM_HOUSES = JSON.parse(storedCustom);
           CUSTOM_HOUSES.forEach(ch => {
+            if (ch.id === "custom_1789167354094" || (ch.title && ch.title.toLowerCase().includes("kalkstad"))) {
+              ch.photo = "https://a0.muscache.com/im/pictures/miso/Hosting-1345467752786154505/original/bc532404-9972-489a-aa2e-dd53c0b16019.jpeg?im_w=1200";
+              ch.specs = ["10 svefnherb", "20 rúm", "5 baðherb"];
+              ch.rating = "4.83";
+            }
+            if (ch.id === "custom_1788693956916" || (ch.title && ch.title.toLowerCase().includes("tennisvelli"))) {
+              ch.photo = "https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6OTU5Mjg5MDg4MjQwMzc3Njg4/original/084e72be-77e0-45f3-944c-0b94fbbcdd9e.jpeg?im_w=1200";
+              ch.specs = ["10 svefnherb", "16 rúm", "9 baðherb"];
+            }
             if (!HOUSES.some(h => h.id === ch.id)) HOUSES.unshift(ch);
           });
+          localStorage.setItem("sweeden_2027_custom_houses", JSON.stringify(CUSTOM_HOUSES));
         } catch (e) {}
       }
 
@@ -1604,7 +1614,11 @@
       const specsHTML = (h.specs || []).map(s => `<span>${s}</span>`).join("");
       const defaultImg = "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&auto=format&fit=crop&q=80";
       let cardPhoto = (h.photo && h.photo.trim()) ? h.photo.trim() : defaultImg;
-      if (cardPhoto.includes("airbnb.") && !cardPhoto.includes("muscache.com") && !cardPhoto.match(/\.(jpeg|jpg|png|webp)/i)) {
+      if (h.id === "custom_1789167354094" || (h.title && h.title.toLowerCase().includes("kalkstad"))) {
+        cardPhoto = "https://a0.muscache.com/im/pictures/miso/Hosting-1345467752786154505/original/bc532404-9972-489a-aa2e-dd53c0b16019.jpeg?im_w=1200";
+      } else if (h.id === "custom_1788693956916" || (h.title && h.title.toLowerCase().includes("tennisvelli"))) {
+        cardPhoto = "https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6OTU5Mjg5MDg4MjQwMzc3Njg4/original/084e72be-77e0-45f3-944c-0b94fbbcdd9e.jpeg?im_w=1200";
+      } else if (cardPhoto.includes("airbnb.") && !cardPhoto.includes("muscache.com") && !cardPhoto.match(/\.(jpeg|jpg|png|webp)/i)) {
         cardPhoto = defaultImg;
       }
       const cur = (currentVote && currentVote.houseVotes) ? currentVote.houseVotes[h.id] : null;
