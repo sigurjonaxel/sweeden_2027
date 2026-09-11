@@ -672,6 +672,35 @@
     </div>
   </div>
 
+  <!-- Modal: Velja notanda í byrjun -->
+  <div class="modal-overlay" id="welcomeUserModal" style="display: none; z-index: 10000; backdrop-filter: blur(6px);">
+    <div class="modal-box" style="max-width: 520px; text-align: center; border: 2px solid var(--primary-light);">
+      <div style="font-size: 2.6rem; margin-bottom: 8px;">👋</div>
+      <h3 style="margin-bottom: 6px; font-size: 1.4rem; font-weight: 800; color: var(--text);">Hver ert þú?</h3>
+      <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 22px;">
+        Veldu nafnið þitt úr hópnum til að skrá hvenær þú kemst, leggja til hús og kjósa:
+      </p>
+
+      <div id="welcomeUserChips" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 22px;">
+        <!-- Fyllt út sjálfkrafa með fjölskyldumeðlimum + Gestur -->
+      </div>
+
+      <div style="border-top: 1px solid var(--border); padding-top: 18px; margin-top: 10px;">
+        <label style="font-size: 0.8rem; font-weight: 700; display: block; margin-bottom: 8px; color: var(--text-muted);">Eða skrifaðu annað nafn (t.d. maki / annar gestur):</label>
+        <div style="display: flex; gap: 8px; max-width: 360px; margin: 0 auto;">
+          <input type="text" id="welcomeCustomName" placeholder="Nafn þitt..." style="flex: 1; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border);" onkeydown="if(event.key==='Enter') submitWelcomeCustomName()">
+          <button onclick="submitWelcomeCustomName()" style="padding: 10px 18px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">Áfram ➔</button>
+        </div>
+      </div>
+
+      <div style="margin-top: 16px;">
+        <button onclick="closeWelcomeModal()" style="background: none; border: none; color: var(--text-muted); font-size: 0.82rem; cursor: pointer; text-decoration: underline;">
+          Skoða síðuna fyrst án þess að velja (lestrarhamur)
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script>
     let FAMILY_MEMBERS = [];
     let WEEKS = [];
@@ -1018,6 +1047,7 @@
 
       renderPersonChips();
       selectPerson(null);
+      openWelcomeUserModal();
 
       // Sækja sjálfkrafa nýjustu gögn úr skýi
       await pullFromCloud(false);
@@ -1026,6 +1056,45 @@
       if (!window._syncInterval) {
         window._syncInterval = setInterval(() => pullFromCloud(true), 20000);
       }
+    }
+
+    function openWelcomeUserModal() {
+      const modal = document.getElementById("welcomeUserModal");
+      const chipsEl = document.getElementById("welcomeUserChips");
+      if (!modal || !chipsEl) return;
+
+      chipsEl.innerHTML = FAMILY_MEMBERS.map(name => `
+        <button class="person-chip" onclick="chooseWelcomeUser('${name}')" style="font-size: 0.95rem; padding: 10px 18px; border-radius: 20px; font-weight: 600;">
+          ${name}
+        </button>
+      `).join("") + `
+        <button class="person-chip" onclick="chooseWelcomeUser('Gestur')" style="font-size: 0.95rem; padding: 10px 18px; border-radius: 20px; border: 1.5px dashed var(--border); font-weight: 700;">
+          👤 Gestur
+        </button>
+      `;
+
+      modal.style.display = "flex";
+    }
+
+    function chooseWelcomeUser(name) {
+      selectPerson(name);
+      closeWelcomeModal();
+      showToast(`👋 Velkomin(n) ${name}! Svörin þín eru nú virk.`);
+    }
+
+    function submitWelcomeCustomName() {
+      const input = document.getElementById("welcomeCustomName");
+      const val = input ? input.value.trim() : "";
+      if (!val) {
+        alert("Vinsamlegast sláðu inn nafn eða veldu úr hópnum.");
+        return;
+      }
+      chooseWelcomeUser(val);
+    }
+
+    function closeWelcomeModal() {
+      const modal = document.getElementById("welcomeUserModal");
+      if (modal) modal.style.display = "none";
     }
 
     function checkUrlHashImport() {
