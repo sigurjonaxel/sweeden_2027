@@ -1654,7 +1654,7 @@
               ${getHouseCommentsHTML(h.id)}
             </div>
 
-            ${h.isCustom && (h.suggestedBy === currentPerson || currentPerson === 'Sigurjón Axel' || !h.suggestedBy) ? `
+            ${h.isCustom && h.suggestedBy === currentPerson ? `
               <div style="display:flex; gap:10px; margin-bottom:10px;">
                 <button onclick="editCustomHouse('${h.id}')" style="background:none; border:none; color:var(--primary); font-size:0.8rem; font-weight:700; cursor:pointer;">✏️ Breyta upplýsingum</button>
                 <button onclick="deleteCustomHouse('${h.id}')" style="background:none; border:none; color:var(--danger); font-size:0.8rem; font-weight:700; cursor:pointer;">🗑️ Eyða húsi</button>
@@ -1721,8 +1721,8 @@
     function editCustomHouse(id) {
       const h = HOUSES.find(x => x.id === id);
       if (!h) return;
-      if (h.suggestedBy && h.suggestedBy !== currentPerson && currentPerson !== "Sigurjón Axel") {
-        alert(`Aðeins ${h.suggestedBy} (eða Sigurjón Axel) getur breytt þessu húsi.`);
+      if (h.suggestedBy && h.suggestedBy !== currentPerson) {
+        alert(`Aðeins ${h.suggestedBy} getur breytt þessari tillögu.`);
         return;
       }
       editingHouseId = id;
@@ -1741,8 +1741,8 @@
 
     async function deleteCustomHouse(id) {
       const h = HOUSES.find(x => x.id === id);
-      if (h && h.suggestedBy && h.suggestedBy !== currentPerson && currentPerson !== "Sigurjón Axel") {
-        alert(`Aðeins ${h.suggestedBy} (eða Sigurjón Axel) getur eytt þessu húsi.`);
+      if (h && h.suggestedBy && h.suggestedBy !== currentPerson) {
+        alert(`Aðeins ${h.suggestedBy} getur eytt þessari tillögu.`);
         return;
       }
       if (!confirm("Ertu viss um að vilja eyða þessu húsi úr tillögum?")) return;
