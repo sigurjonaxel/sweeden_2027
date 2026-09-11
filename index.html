@@ -460,11 +460,11 @@
 
         <div class="card">
           <div class="card-title" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-            <span>3. Gististaðir & Hús (Öll 13 húsin á listanum)</span>
+            <span>3. Gististaðir & Hús (<span id="totalHousesHeaderCount">0</span> hús á listanum)</span>
             <button class="add-house-btn" onclick="openAddHouseModal()">➕ Leggja til nýtt hús</button>
           </div>
           <div class="card-desc">
-            Skoðaðu öll 13 húsin á listanum, síaðu eftir landi eða verði, og veldu þín uppáhalds: ❤️ (Elska / 1. val), 👍 (Líst vel á), 👎 (Frekar ekki):
+            Skoðaðu öll húsin á listanum, síaðu eftir landi eða verði, og veldu þín uppáhalds: ❤️ (Elska / 1. val), 👍 (Líst vel á), 👎 (Frekar ekki):
           </div>
 
           <div class="houses-top-actions" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
@@ -536,6 +536,11 @@
       </p>
 
       <div style="display:flex; flex-direction:column; gap: 12px;">
+        <div>
+          <label style="font-size: 0.8rem; font-weight:700; display:block; margin-bottom:4px;">Tillaga frá (þitt nafn) *</label>
+          <input type="text" id="newHousePerson" placeholder="Nafn þitt..." required>
+        </div>
+
         <div>
           <label style="font-size: 0.8rem; font-weight:700; display:block; margin-bottom:4px;">Airbnb eða vefslóð *</label>
           <input type="url" id="newHouseUrl" placeholder="https://www.airbnb.com/rooms/..." required>
@@ -1360,6 +1365,8 @@
     }
 
     function updateHouseCounts() {
+      const hCountEl = document.getElementById("totalHousesHeaderCount");
+      if (hCountEl) hCountEl.textContent = HOUSES.length;
       const countAll = document.getElementById("countAll");
       if (countAll) countAll.textContent = HOUSES.length;
       const popCount = HOUSES.filter(h => getHousePopularity(h.id).totalVotes > 0).length;
@@ -1700,6 +1707,7 @@
       editingHouseId = null;
       document.getElementById("addHouseModalTitle").textContent = "➕ Leggja til nýtt hús";
       document.getElementById("addHouseSubmitBtn").textContent = "Bæta við húsi ➕";
+      document.getElementById("newHousePerson").value = currentPerson || "";
       document.getElementById("newHouseUrl").value = "";
       document.getElementById("newHouseTitle").value = "";
       document.getElementById("newHouseRegion").value = "";
@@ -1720,6 +1728,7 @@
       editingHouseId = id;
       document.getElementById("addHouseModalTitle").textContent = "✏️ Breyta húsi";
       document.getElementById("addHouseSubmitBtn").textContent = "Vista breytingar 💾";
+      document.getElementById("newHousePerson").value = h.suggestedBy || currentPerson || "";
       document.getElementById("newHouseUrl").value = h.url || "";
       document.getElementById("newHouseTitle").value = h.title || "";
       document.getElementById("newHouseRegion").value = h.city || "";
@@ -1758,6 +1767,7 @@
       const region = document.getElementById("newHouseRegion").value.trim() || "Ótilgreint";
       const country = document.getElementById("newHouseCountry").value;
       const price = document.getElementById("newHousePrice").value.trim() || "Verð ótilgreint";
+      const person = document.getElementById("newHousePerson").value.trim() || currentPerson || "Fjölskylda";
       const specs = document.getElementById("newHouseSpecs").value.trim();
       let photo = document.getElementById("newHousePhoto").value.trim();
 
@@ -1784,6 +1794,7 @@
           country: country,
           priceFormatted: price,
           specs: specs ? [specs] : ["Tillaga"],
+          suggestedBy: person,
           photo: photo || (HOUSES[idxH] ? HOUSES[idxH].photo : "")
         };
         if (idxH !== -1) HOUSES[idxH] = updated;
@@ -1813,7 +1824,7 @@
           url: url,
           isBudgetFit: true,
           isCustom: true,
-          suggestedBy: currentPerson || "Fjölskylda"
+          suggestedBy: person
         };
 
         HOUSES.unshift(newHouse);
