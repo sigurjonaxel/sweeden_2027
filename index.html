@@ -857,7 +857,15 @@
             }
 
             if (cloudData.customHouses && Array.isArray(cloudData.customHouses)) {
-              let changedHouse = false;
+              const cloudIds = new Set(cloudData.customHouses.map(ch => ch.id));
+              const prevCustomLen = CUSTOM_HOUSES.length;
+              
+              // Ef húsi var eytt í skýinu, fjarlægja það staðbundið hjá öllum
+              CUSTOM_HOUSES = CUSTOM_HOUSES.filter(h => cloudIds.has(h.id));
+              HOUSES = HOUSES.filter(h => !h.isCustom || cloudIds.has(h.id));
+              
+              let changedHouse = (CUSTOM_HOUSES.length !== prevCustomLen);
+
               cloudData.customHouses.forEach(ch => {
                 const cIdx = CUSTOM_HOUSES.findIndex(h => h.id === ch.id);
                 if (cIdx === -1) {
@@ -877,6 +885,8 @@
               if (changedHouse) {
                 localStorage.setItem("sweeden_2027_custom_houses", JSON.stringify(CUSTOM_HOUSES));
                 renderAllHouses(currentFilter);
+                updateHouseCounts();
+                renderResults();
               }
             }
 
@@ -974,18 +984,8 @@
         try {
           CUSTOM_HOUSES = JSON.parse(storedCustom);
           CUSTOM_HOUSES.forEach(ch => {
-            if (ch.id === "custom_1789167354094" || (ch.title && ch.title.toLowerCase().includes("kalkstad"))) {
-              ch.photo = "https://a0.muscache.com/im/pictures/miso/Hosting-1345467752786154505/original/bc532404-9972-489a-aa2e-dd53c0b16019.jpeg?im_w=1200";
-              ch.specs = ["10 svefnherb", "20 rúm", "5 baðherb"];
-              ch.rating = "4.83";
-            }
-            if (ch.id === "custom_1788693956916" || (ch.title && ch.title.toLowerCase().includes("tennisvelli"))) {
-              ch.photo = "https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6OTU5Mjg5MDg4MjQwMzc3Njg4/original/084e72be-77e0-45f3-944c-0b94fbbcdd9e.jpeg?im_w=1200";
-              ch.specs = ["10 svefnherb", "16 rúm", "9 baðherb"];
-            }
             if (!HOUSES.some(h => h.id === ch.id)) HOUSES.unshift(ch);
           });
-          localStorage.setItem("sweeden_2027_custom_houses", JSON.stringify(CUSTOM_HOUSES));
         } catch (e) {}
       }
 
@@ -1647,7 +1647,7 @@
               ${getHouseCommentsHTML(h.id)}
             </div>
 
-            ${h.isCustom ? `
+            ${h.isCustom && (h.suggestedBy === currentPerson || currentPerson === 'Sigurjón Axel' || !h.suggestedBy) ? `
               <div style="display:flex; gap:10px; margin-bottom:10px;">
                 <button onclick="editCustomHouse('${h.id}')" style="background:none; border:none; color:var(--primary); font-size:0.8rem; font-weight:700; cursor:pointer;">✏️ Breyta upplýsingum</button>
                 <button onclick="deleteCustomHouse('${h.id}')" style="background:none; border:none; color:var(--danger); font-size:0.8rem; font-weight:700; cursor:pointer;">🗑️ Eyða húsi</button>
@@ -1713,6 +1713,10 @@
     function editCustomHouse(id) {
       const h = HOUSES.find(x => x.id === id);
       if (!h) return;
+      if (h.suggestedBy && h.suggestedBy !== currentPerson && currentPerson !== "Sigurjón Axel") {
+        alert(`Aðeins ${h.suggestedBy} (eða Sigurjón Axel) getur breytt þessu húsi.`);
+        return;
+      }
       editingHouseId = id;
       document.getElementById("addHouseModalTitle").textContent = "✏️ Breyta húsi";
       document.getElementById("addHouseSubmitBtn").textContent = "Vista breytingar 💾";
@@ -1727,6 +1731,11 @@
     }
 
     async function deleteCustomHouse(id) {
+      const h = HOUSES.find(x => x.id === id);
+      if (h && h.suggestedBy && h.suggestedBy !== currentPerson && currentPerson !== "Sigurjón Axel") {
+        alert(`Aðeins ${h.suggestedBy} (eða Sigurjón Axel) getur eytt þessu húsi.`);
+        return;
+      }
       if (!confirm("Ertu viss um að vilja eyða þessu húsi úr tillögum?")) return;
       HOUSES = HOUSES.filter(x => x.id !== id);
       CUSTOM_HOUSES = CUSTOM_HOUSES.filter(x => x.id !== id);
