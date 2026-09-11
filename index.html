@@ -436,7 +436,7 @@
     <main class="container">
         <div class="card">
           <div class="card-title">1. Hver ert þú?</div>
-          <div class="card-desc">Veldu nafnið þitt úr hópnum til að skrá hvenær þú kemst:</div>
+          <div class="card-desc">Veldu nafnið þitt úr hópnum (eða Gestur) til að skrá hvenær þú kemst, leggja til hús og kjósa:</div>
           <div class="person-chips" id="personChips"></div>
           <div style="max-width: 420px;">
             <input type="text" id="customNameInput" placeholder="Eða skrifaðu annað nafn (t.d. maki / gestur)..." oninput="onCustomNameInput(this.value)">
@@ -1017,7 +1017,7 @@
       checkUrlHashImport();
 
       renderPersonChips();
-      selectPerson(FAMILY_MEMBERS[0]);
+      selectPerson(null);
 
       // Sækja sjálfkrafa nýjustu gögn úr skýi
       await pullFromCloud(false);
@@ -1059,28 +1059,68 @@
       }
     }
 
+    function ensureUserSelected(actionDescription = "halda áfram") {
+      if (currentPerson && currentPerson.trim() !== "") {
+        return true;
+      }
+      const entered = prompt(`👤 Hver ert þú?\nSláðu inn nafn þitt eða skrifaðu „Gestur“ til að ${actionDescription}:`);
+      if (entered && entered.trim() !== "") {
+        selectPerson(entered.trim());
+        return true;
+      }
+      const chipsEl = document.getElementById("personChips");
+      if (chipsEl) chipsEl.scrollIntoView({ behavior: "smooth", block: "center" });
+      alert(`⚠️ Vinsamlegast veldu nafn í lið 1 (eða Gestur) til að ${actionDescription}.`);
+      return false;
+    }
+
     function renderPersonChips() {
       const c = document.getElementById("personChips");
-      c.innerHTML = FAMILY_MEMBERS.map(name => `
-        <button class="person-chip" onclick="selectPerson('${name}')" id="chip-${name.replace(/[^a-zA-Z0-9]/g, '')}">
+      if (!c) return;
+      const chips = FAMILY_MEMBERS.map(name => `
+        <button class="person-chip ${currentPerson === name ? 'active' : ''}" onclick="selectPerson('${name}')" id="chip-${name.replace(/[^a-zA-Z0-9]/g, '')}">
           ${name}
         </button>
       `).join("");
+      const guestActive = currentPerson === 'Gestur' ? 'active' : '';
+      c.innerHTML = chips + `
+        <button class="person-chip ${guestActive}" onclick="selectPerson('Gestur')" id="chip-Gestur" style="border: 1.5px dashed var(--border); font-weight: 700;">
+          👤 Gestur
+        </button>
+      `;
     }
 
     function selectPerson(name) {
-      currentPerson = name;
-      document.getElementById("customNameInput").value = FAMILY_MEMBERS.includes(name) ? "" : name;
+      if (!name || name === currentPerson) {
+        currentPerson = null;
+        document.getElementById("customNameInput").value = "";
+        document.querySelectorAll(".person-chip").forEach(el => el.classList.remove("active"));
+        document.getElementById("saveBarName").textContent = "Enginn valinn";
+        document.getElementById("saveBarStatus").textContent = "Veldu nafn hér að ofan til að skrá svör";
+        currentVote = { weeks: {}, houseVotes: {}, houseComments: {}, comment: "" };
+        const cEl = document.getElementById("commentInput");
+        if (cEl) cEl.value = "";
+        updateWeeksUI();
+        updateHouseVotesUI();
+        renderWeeks();
+        renderAllHouses(currentFilter || 'all');
+        updateHouseCounts();
+        renderResults();
+        return;
+      }
+
+      currentPerson = name.trim();
+      document.getElementById("customNameInput").value = (FAMILY_MEMBERS.includes(currentPerson) || currentPerson === "Gestur") ? "" : currentPerson;
       document.querySelectorAll(".person-chip").forEach(el => el.classList.remove("active"));
-      const safeId = "chip-" + name.replace(/[^a-zA-Z0-9]/g, '');
+      const safeId = "chip-" + currentPerson.replace(/[^a-zA-Z0-9]/g, '');
       const activeEl = document.getElementById(safeId);
       if (activeEl) activeEl.classList.add("active");
 
-      document.getElementById("saveBarName").textContent = name;
-      document.getElementById("saveBarStatus").textContent = "Skráir svör fyrir " + name;
+      document.getElementById("saveBarName").textContent = currentPerson;
+      document.getElementById("saveBarStatus").textContent = "Skráir svör fyrir " + currentPerson;
 
-      if (allVotes[name]) {
-        currentVote = JSON.parse(JSON.stringify(allVotes[name]));
+      if (allVotes[currentPerson]) {
+        currentVote = JSON.parse(JSON.stringify(allVotes[currentPerson]));
         if (!currentVote.houseVotes) currentVote.houseVotes = {};
         if (!currentVote.houseComments) currentVote.houseComments = {};
         if (!currentVote.weeks) currentVote.weeks = {};
@@ -1088,36 +1128,21 @@
         currentVote = { weeks: {}, houseVotes: {}, houseComments: {}, comment: "" };
       }
 
-      document.getElementById("commentInput").value = currentVote.comment || "";
+      const cEl = document.getElementById("commentInput");
+      if (cEl) cEl.value = currentVote.comment || "";
       updateWeeksUI();
       updateHouseVotesUI();
       renderWeeks();
-      renderAllHouses(currentFilter);
+      renderAllHouses(currentFilter || 'all');
       updateHouseCounts();
       renderResults();
     }
 
     function onCustomNameInput(val) {
       if (val.trim()) {
-        document.querySelectorAll(".person-chip").forEach(el => el.classList.remove("active"));
-        currentPerson = val.trim();
-        document.getElementById("saveBarName").textContent = currentPerson;
-        document.getElementById("saveBarStatus").textContent = "Skráir svör fyrir " + currentPerson;
-        if (allVotes[currentPerson]) {
-          currentVote = JSON.parse(JSON.stringify(allVotes[currentPerson]));
-          if (!currentVote.houseVotes) currentVote.houseVotes = {};
-          if (!currentVote.houseComments) currentVote.houseComments = {};
-          if (!currentVote.weeks) currentVote.weeks = {};
-        } else {
-          currentVote = { weeks: {}, houseVotes: {}, houseComments: {}, comment: "" };
-        }
-        document.getElementById("commentInput").value = currentVote.comment || "";
-        updateWeeksUI();
-        updateHouseVotesUI();
-        renderWeeks();
-        renderAllHouses(currentFilter);
-        updateHouseCounts();
-        renderResults();
+        selectPerson(val.trim());
+      } else {
+        selectPerson(null);
       }
     }
 
@@ -1308,6 +1333,7 @@
     }
 
     function setWeekVote(weekId, val) {
+      if (!ensureUserSelected("skrá vikur")) return;
       if (currentVote.weeks[weekId] === val) {
         delete currentVote.weeks[weekId];
       } else {
@@ -1682,6 +1708,7 @@
     }
 
     function setHouseVote(houseId, vote) {
+      if (!ensureUserSelected("kjósa um hús")) return;
       if (!currentVote.houseVotes) currentVote.houseVotes = {};
       if (currentVote.houseVotes[houseId] === vote) {
         delete currentVote.houseVotes[houseId];
@@ -1712,6 +1739,7 @@
     let editingHouseId = null;
 
     function openAddHouseModal() {
+      if (!ensureUserSelected("leggja til nýtt hús")) return;
       editingHouseId = null;
       document.getElementById("addHouseModalTitle").textContent = "➕ Leggja til nýtt hús";
       document.getElementById("addHouseSubmitBtn").textContent = "Bæta við húsi ➕";
@@ -1728,6 +1756,7 @@
     }
 
     function editCustomHouse(id) {
+      if (!ensureUserSelected("breyta húsi")) return;
       const h = HOUSES.find(x => x.id === id);
       if (!h) return;
       const expectedPin = (h.pin || "2027").toString().trim();
@@ -1755,6 +1784,7 @@
     }
 
     async function deleteCustomHouse(id) {
+      if (!ensureUserSelected("eyða húsi")) return;
       const h = HOUSES.find(x => x.id === id);
       if (!h) return;
       const expectedPin = (h.pin || "2027").toString().trim();
@@ -1870,10 +1900,7 @@
     }
 
     async function saveCurrentVote() {
-      if (!currentPerson) {
-        alert("Vinsamlegast veldu eða skrifaðu nafn áður en þú vistar.");
-        return;
-      }
+      if (!ensureUserSelected("vista svör")) return;
 
       currentVote.comment = document.getElementById("commentInput").value;
       allVotes[currentPerson] = currentVote;
@@ -1888,20 +1915,23 @@
         });
       } catch (e) {}
 
-      renderWeeks();
-      renderAllHouses(currentFilter);
-      updateWeeksUI();
-      updateHouseVotesUI();
-      updateHouseCounts();
-      renderResults();
-
-      // Sjálfvirk skýjasamstilling
+      // Samstilla við dulkóðaða skýið
       await pushToCloud();
-
-      showToast(`🎉 Snilld, ${currentPerson}! Valið þitt hefur verið vistað og samstillt við alla í fjölskyldunni.`);
+      showToast("💾 Svör vistuð og samstillt við alla!");
+      renderResults();
     }
 
-    function copyShareUrl() {
+    function shareMyAnswers() {
+      if (!ensureUserSelected("deila svörum")) return;
+      const payload = { person: currentPerson, data: currentVote, customHouses: CUSTOM_HOUSES };
+      const jsonStr = JSON.stringify(payload);
+      const b64 = btoa(unescape(encodeURIComponent(jsonStr)));
+      const shareUrl = window.location.origin + window.location.pathname + "#import=" + b64;
+      document.getElementById("shareUrlInput").value = shareUrl;
+      document.getElementById("shareModal").style.display = "flex";
+    }
+
+    function copyShareLink() {
       const input = document.getElementById("shareUrlInput");
       input.select();
       navigator.clipboard.writeText(input.value);
@@ -1924,6 +1954,7 @@
     }
 
     function openFeedbackModal() {
+      if (!ensureUserSelected("senda inn ábendingu")) return;
       const nameInput = document.getElementById("feedbackPerson");
       if (nameInput) nameInput.value = currentPerson || "";
       const titleInput = document.getElementById("feedbackTitle");
