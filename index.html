@@ -235,6 +235,26 @@
       cursor: help;
       display: inline-block;
     }
+    .th-events-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      margin: 2px 0 3px;
+      min-height: 20px;
+    }
+    .th-event-badge {
+      font-size: 0.95rem;
+      cursor: help;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      transition: transform 0.15s ease;
+    }
+    .th-event-badge:hover {
+      transform: scale(1.35);
+    }
     .th-rank-row {
       display: flex;
       align-items: center;
@@ -529,10 +549,16 @@
     @media (min-width: 768px) { .houses-grid { grid-template-columns: repeat(2, 1fr); } }
 
     .house-card {
-      border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
-      background: white; display: flex; flex-direction: column; box-shadow: var(--shadow-sm);
+      border: 2px solid #94a3b8; border-radius: 14px; overflow: hidden;
+      background: white; display: flex; flex-direction: column;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+      transition: all 0.2s ease;
     }
-    .house-card:hover { box-shadow: var(--shadow-lg); }
+    .house-card:hover {
+      border-color: #2563eb;
+      box-shadow: 0 12px 28px -6px rgba(15, 23, 42, 0.16), 0 8px 12px -6px rgba(15, 23, 42, 0.1);
+      transform: translateY(-2px);
+    }
     .house-img-box { position: relative; width: 100%; height: 210px; background: #cbd5e1; overflow: hidden; }
     .house-img-box img { width: 100%; height: 100%; object-fit: cover; }
     .house-badge-loc {
@@ -914,7 +940,7 @@
           <span class="header-info-sep">·</span>
           <span>💰 ~$3.000 / vika</span>
           <span class="header-info-sep">·</span>
-          <span>📅 19. jún – 04. sep 2027 (Lau–Lau)</span>
+          <span>📅 19. jún – 28. ágú 2027 (Lau–Lau)</span>
           <span class="header-info-sep">·</span>
           <span>📍 Suður-Svíþjóð eða Danmörk</span>
         </div>
@@ -994,9 +1020,13 @@
             <span class="legend-item"><span class="legend-icon">🌟</span> Bestu vikur (0 nei)</span>
             <span class="legend-item"><span class="legend-icon">⛔</span> Stoppar á 1</span>
             <span class="legend-item"><span class="legend-icon">❌</span> Árekstur</span>
-            <span class="legend-item"><span class="legend-icon">🎂</span> Afmæli í vikunni</span>
-            <span class="legend-item"><span class="legend-icon">🥇🥈🥉</span> Röðun hópsins</span>
-            <span class="legend-item" style="color: var(--primary);"><span class="legend-icon">ℹ️</span> Smelltu á vikuhaus eða rank fyrir tölur & hús</span>
+            <span class="legend-item"><span class="legend-icon">🇸🇪</span> Midsommar</span>
+            <span class="legend-item"><span class="legend-icon">🎒</span> Skólalok / Sumarfrí</span>
+            <span class="legend-item"><span class="legend-icon">🔥</span> Háönn (Júlí)</span>
+            <span class="legend-item"><span class="legend-icon">⛺</span> Verslunarmannahelgi</span>
+            <span class="legend-item"><span class="legend-icon">🎂</span> Afmæli</span>
+            <span class="legend-item"><span class="legend-icon">🥇🥈🥉</span> Röðun</span>
+            <span class="legend-item" style="color: var(--primary);"><span class="legend-icon">ℹ️</span> Smelltu á vikuhaus eða rank fyrir nánar</span>
           </div>
 
           <div id="familyAvailabilityOverview"></div>
@@ -1131,7 +1161,7 @@
 
         <div>
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-            <label style="font-size: 0.8rem; font-weight:700;">📅 Lausar vikur á tímabilinu (19. jún – 04. sep · Lau–Lau):</label>
+            <label style="font-size: 0.8rem; font-weight:700;">📅 Lausar vikur á tímabilinu (19. jún – 28. ágú · Lau–Lau):</label>
             <div style="display: flex; gap: 6px;">
               <button type="button" onclick="setAllModalWeeks(true)" style="font-size: 0.72rem; padding: 2px 7px; border: 1px solid var(--border); border-radius: 4px; background: #eff6ff; color: #1d4ed8; cursor: pointer; font-weight: 600;">Allar</button>
               <button type="button" onclick="setAllModalWeeks(false)" style="font-size: 0.72rem; padding: 2px 7px; border: 1px solid var(--border); border-radius: 4px; background: white; color: var(--text-muted); cursor: pointer;">Hreinsa</button>
@@ -1165,7 +1195,7 @@
         <button onclick="closeEditAvailabilityModal()" style="background:none; border:none; font-size: 1.4rem; cursor:pointer; color:var(--text-muted); padding: 0 4px;">&times;</button>
       </div>
       <p id="editAvailModalSubtitle" style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px;">
-        Merktu við þær vikur sem húsið er laust til leigu á tímabilinu (19. jún – 04. sep 2027 · Lau–Lau):
+        Merktu við þær vikur sem húsið er laust til leigu á tímabilinu (19. jún – 28. ágú 2027 · Lau–Lau):
       </p>
 
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
@@ -1961,11 +1991,11 @@
       if (storedCustom) {
         try {
           CUSTOM_HOUSES = JSON.parse(storedCustom);
-          const allWeekIds = (WEEKS && WEEKS.length > 0) ? WEEKS.map(w => w.id) : ["w25","w26","w27","w28","w29","w30","w31","w32","w33","w34","w35"];
+          const allWeekIds = (WEEKS && WEEKS.length > 0) ? WEEKS.map(w => w.id) : ["w25","w26","w27","w28","w29","w30","w31","w32","w33","w34"];
           CUSTOM_HOUSES.forEach(ch => {
             if (!ch.availableWeeks || !Array.isArray(ch.availableWeeks) || ch.availableWeeks.length === 0) {
               ch.availableWeeks = allWeekIds;
-              ch.availabilitySummary = "Laust allar vikur (15. jún – 31. ágúst 2027)";
+              ch.availabilitySummary = "Laust allar vikur (19. jún – 28. ágú 2027)";
             }
             if (!HOUSES.some(h => h.id === ch.id)) HOUSES.unshift(ch);
           });
@@ -2785,8 +2815,109 @@
       if (weekId === "w25") return { name: "Axel Bjarkar", day: "22. júní", age: 24, text: "Axel á afmæli 22. júní (verður 24 ára)" };
       if (weekId === "w29") return { name: "Sara Kristín", day: "18. júlí", age: 17, text: "Sara á afmæli 18. júlí (verður 17 ára)" };
       if (weekId === "w32") return { name: "Þórhildur Soffía", day: "10. ágúst", age: 17, text: "Þórhildur á afmæli 10. ágúst (verður 17 ára)" };
-      if (weekId === "w35") return { name: "Rannveig Arna", day: "5. september", age: 22, text: "Rannveig á afmæli 5. september (verður 22 ára)" };
       return null;
+    }
+
+    function getWeekSpecialEvents(weekId) {
+      const events = [];
+
+      if (weekId === "w25") {
+        events.push({
+          icon: "🇸🇪",
+          name: "Midsommar",
+          shortDesc: "🇸🇪 Midsommar (25. jún) – mikilvægasta hátíð Svía, maístöng og fjör",
+          fullDesc: "🇸🇪 <strong>Midsommar (25. júní):</strong> Stærsta hátíð Svía! Maístöng, síld, dans og mikil stemning um allt land."
+        });
+        events.push({
+          icon: "🎒",
+          name: "Skólalok",
+          shortDesc: "🎒 Skólalok – allir skólar búnir og sumarfrí hafið",
+          fullDesc: "🎒 <strong>Skólalok:</strong> Grunn- og framhaldsskólar komnir í sumarfrí og sumarleyfi fjölskyldunnar hafið."
+        });
+        events.push({
+          icon: "🎂",
+          name: "Afmæli Axels",
+          shortDesc: "🎂 Axel á afmæli 22. júní (verður 24 ára)",
+          fullDesc: "🎂 <strong>Afmælisdagur:</strong> Axel Bjarkar á afmæli 22. júní (verður 24 ára)."
+        });
+      } else if (weekId === "w26") {
+        events.push({
+          icon: "🎒",
+          name: "Skólafrí / Sumarbyrjun",
+          shortDesc: "🎒 Skólafrí í gangi – frábær vika rétt fyrir háönn",
+          fullDesc: "🎒 <strong>Sumarbyrjun:</strong> Skólafrí í fullum gangi, frábær vika rétt áður en mesta álagið í júlí hefst."
+        });
+      } else if (weekId === "w27") {
+        events.push({
+          icon: "🔥",
+          name: "Háönn",
+          shortDesc: "🔥 Háönn í júlí – heitasti mánuðurinn og mikið líf",
+          fullDesc: "🔥 <strong>Háönn í júlí:</strong> Háannatími í Svíþjóð og Danmörku. Skemmtigarðar, strendur og bæir í fullu fjöri."
+        });
+      } else if (weekId === "w28") {
+        events.push({
+          icon: "🔥",
+          name: "Háönn",
+          shortDesc: "🔥 Háönn í júlí – sólríkt og besti strandartíminn",
+          fullDesc: "🔥 <strong>Háönn í júlí:</strong> Vinsælasti ferðatími Norðurlanda, besti hitinn og bestu strandardagarnir."
+        });
+      } else if (weekId === "w29") {
+        events.push({
+          icon: "🔥",
+          name: "Háönn",
+          shortDesc: "🔥 Háönn í júlí",
+          fullDesc: "🔥 <strong>Háönn í júlí:</strong> Háannatími í fullum blóma."
+        });
+        events.push({
+          icon: "🎂",
+          name: "Afmæli Söru",
+          shortDesc: "🎂 Sara á afmæli 18. júlí (verður 17 ára)",
+          fullDesc: "🎂 <strong>Afmælisdagur:</strong> Sara Kristín á afmæli 18. júlí (verður 17 ára)."
+        });
+      } else if (weekId === "w30") {
+        events.push({
+          icon: "🔥",
+          name: "Háönn",
+          shortDesc: "🔥 Háönn – síðasta vikan í júlí",
+          fullDesc: "🔥 <strong>Háönn:</strong> Síðasta vikan í júlí, hlýr sjór og frábært veður."
+        });
+      } else if (weekId === "w31") {
+        events.push({
+          icon: "⛺",
+          name: "Verslunarmannahelgi",
+          shortDesc: "⛺ Verslunarmannahelgi á Íslandi (frídagur mánudaginn 2. ágúst)",
+          fullDesc: "⛺ <strong>Verslunarmannahelgi:</strong> Frídagur verslunarmanna mánudaginn 2. ágúst á Íslandi – löng helgi og enginn vinnudagur týndur!"
+        });
+      } else if (weekId === "w32") {
+        events.push({
+          icon: "🎂",
+          name: "Afmæli Þórhildar",
+          shortDesc: "🎂 Þórhildur á afmæli 10. ágúst (verður 17 ára)",
+          fullDesc: "🎂 <strong>Afmælisdagur:</strong> Þórhildur Soffía á afmæli 10. ágúst (verður 17 ára)."
+        });
+        events.push({
+          icon: "🏖️",
+          name: "Ágúst-blíða",
+          shortDesc: "🏖️ Ágúst-blíða – hlýr sjór og rólegri bæir",
+          fullDesc: "🏖️ <strong>Ágúst-blíða:</strong> Hlýr sjór, rólegri stemning en í júlí og frábært sumarveður."
+        });
+      } else if (weekId === "w33") {
+        events.push({
+          icon: "🏖️",
+          name: "Síðsumar",
+          shortDesc: "🏖️ Síðsumar – ferðamannastraumur byrjar að minnka",
+          fullDesc: "🏖️ <strong>Síðsumar:</strong> Ferðamannastraumur fer minnkandi, notalegt og rólegt."
+        });
+      } else if (weekId === "w34") {
+        events.push({
+          icon: "🏖️",
+          name: "Lokavika sumarfrís",
+          shortDesc: "🏖️ Lokavika sumarfrís áður en skólar byrja aftur",
+          fullDesc: "🏖️ <strong>Lokavika sumarfrís:</strong> Síðasta tækifærið til að njóta áður en skólar og háskólar hefjast aftur."
+        });
+      }
+
+      return events;
     }
 
     function getWeekRankData(weekId) {
@@ -2920,7 +3051,8 @@
       const rankData = getWeekRankData(weekId);
       const stats = rankData.stats;
       const bday = getWeekBirthdayInfo(weekId);
-      const availHouses = HOUSES.filter(h => (h.availableWeeks || ["w25","w26","w27","w28","w29","w30","w31","w32","w33","w34","w35"]).includes(weekId));
+      const events = getWeekSpecialEvents(weekId);
+      const availHouses = HOUSES.filter(h => (h.availableWeeks || ["w25","w26","w27","w28","w29","w30","w31","w32","w33","w34"]).includes(weekId));
       const topHouses = sortHousesList(availHouses, 'popularity').slice(0, 3);
       const myVote = (currentVote && currentVote.weeks) ? currentVote.weeks[weekId] : null;
 
@@ -2945,6 +3077,22 @@
           </div>
           <button type="button" onclick="closeWeekDetailsModal()" style="background:none; border:none; font-size: 1.6rem; cursor:pointer; color:var(--text-muted); padding: 0 4px; line-height: 1;">&times;</button>
         </div>
+
+        ${events.length > 0 ? `
+          <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 12px 14px; margin-bottom: 14px;">
+            <div style="font-weight: 800; font-size: 0.86rem; color: #1e293b; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+              <span>✨ Viðburðir og einkenni ${w.num}:</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              ${events.map(ev => `
+                <div style="display: flex; align-items: flex-start; gap: 8px; font-size: 0.82rem; color: #334155; line-height: 1.4;">
+                  <span style="font-size: 1.15rem; line-height: 1.2;">${ev.icon}</span>
+                  <div>${ev.fullDesc}</div>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        ` : ''}
 
         ${bday ? `
           <div style="background: #fffbeb; border: 1.5px solid #fde047; border-radius: 12px; padding: 10px 14px; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; gap: 8px;">
@@ -3230,17 +3378,19 @@
                 </th>
                 ${WEEKS.map(w => {
                   const rankData = getWeekRankData(w.id);
-                  const bday = getWeekBirthdayInfo(w.id);
+                  const events = getWeekSpecialEvents(w.id);
                   const isTop1 = rankData.rankIdx === 0;
-                  const shortDate = `${w.dates.split("–")[0].trim()}–${w.dates.split("–")[1].trim().split(" ")[0]}`;
+                  const shortDate = w.dates.split(" 2027")[0] || w.dates;
                   const stats = rankData.stats;
 
                   return `
-                    <th class="matrix-th-week ${isTop1 ? 'th-week-top1' : ''}" onclick="openWeekDetailsModal('${w.id}')" title="Smelltu til að skoða nánar um ${w.num} (tölur, hverjir komast og laus hús)">
+                    <th class="matrix-th-week ${isTop1 ? 'th-week-top1' : ''}" onclick="openWeekDetailsModal('${w.id}')" title="Smelltu til að skoða nánar um ${w.num} (tölur, viðburði og laus hús)">
                       <div class="th-week-num-row">
                         <span class="th-week-num">${w.num.replace("Vika ", "V")}</span>
-                        ${bday ? `<span class="th-bday-badge" title="${escapeHtml(bday.text)}">🎂</span>` : ''}
                         ${rankData.statusIcon ? `<span class="th-status-badge" title="${escapeHtml(rankData.statusText)}">${rankData.statusIcon}</span>` : ''}
+                      </div>
+                      <div class="th-events-row">
+                        ${events.map(ev => `<span class="th-event-badge" title="${escapeHtml(ev.shortDesc)}">${ev.icon}</span>`).join("")}
                       </div>
                       <div class="th-rank-row">
                         <span class="th-medal">${rankData.medal}</span>
@@ -3546,10 +3696,10 @@
         const activeWeeksSorted = sortWeeksList(WEEKS, 'popularity').filter(w => getWeekStats(w.id).totalVotes > 0);
         const topW = activeWeeksSorted.length > 0 ? activeWeeksSorted[0] : null;
         if (topW) {
-          list = list.filter(h => (h.availableWeeks || ["w25","w26","w27","w28","w29","w30","w31","w32","w33","w34","w35"]).includes(topW.id));
+          list = list.filter(h => (h.availableWeeks || ["w25","w26","w27","w28","w29","w30","w31","w32","w33","w34"]).includes(topW.id));
         }
       } else if (houseWeekFilter && houseWeekFilter !== 'all') {
-        list = list.filter(h => (h.availableWeeks || ["w25","w26","w27","w28","w29","w30","w31","w32","w33","w34","w35"]).includes(houseWeekFilter));
+        list = list.filter(h => (h.availableWeeks || ["w25","w26","w27","w28","w29","w30","w31","w32","w33","w34"]).includes(houseWeekFilter));
       }
 
       list = sortHousesList(list, housesSort);
@@ -3810,7 +3960,7 @@
     function getHouseAvailabilityHTML(h) {
       const availWeeks = (Array.isArray(h.availableWeeks) && h.availableWeeks.length > 0)
         ? h.availableWeeks
-        : (WEEKS && WEEKS.length > 0 ? WEEKS.map(w => w.id) : ["w25","w26","w27","w28","w29","w30","w31","w32","w33","w34","w35"]);
+        : (WEEKS && WEEKS.length > 0 ? WEEKS.map(w => w.id) : ["w25","w26","w27","w28","w29","w30","w31","w32","w33","w34"]);
 
       // Finna 3 efstu vikur fjölskyldunnar út frá atkvæðum
       let topWeeks = [];
@@ -3821,7 +3971,7 @@
 
       const isTopWeekAvail = topWeek ? availWeeks.includes(topWeek.id) : false;
       const isAllAvail = WEEKS && WEEKS.length > 0 && WEEKS.every(w => availWeeks.includes(w.id));
-      const totalWeeksCount = WEEKS && WEEKS.length > 0 ? WEEKS.length : 11;
+      const totalWeeksCount = WEEKS && WEEKS.length > 0 ? WEEKS.length : 10;
 
       // Samræmi við efstu vikur fjölskyldunnar
       let groupMatchHtml = "";
@@ -3888,10 +4038,10 @@
         <div class="house-availability-box">
           <div class="house-avail-header">
             <div class="house-avail-title">
-              <span>📅 Bókunarstaða (Laugardagur – Laugardagur · 19. jún – 04. sep 2027)</span>
+              <span>📅 Bókunarstaða (Laugardagur – Laugardagur · 19. jún – 28. ágú 2027)</span>
             </div>
             <span class="house-avail-status-pill ${isAllAvail ? 'pill-green' : 'pill-yellow'}">
-              ${isAllAvail ? '🟢 Laust allar 11 vikurnar' : `🟡 Laust í ${availWeeks.length}/${totalWeeksCount} vikum`}
+              ${isAllAvail ? `🟢 Laust allar ${totalWeeksCount} vikurnar` : `🟡 Laust í ${availWeeks.length}/${totalWeeksCount} vikum`}
             </span>
           </div>
           ${groupMatchHtml}
