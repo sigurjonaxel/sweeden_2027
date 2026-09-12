@@ -24,10 +24,8 @@
     "isBudgetFit": false,
     "availableWeeks": [
       "w25",
-      "w26",
       "w27",
       "w28",
-      "w29",
       "w30",
       "w31",
       "w32",
@@ -35,7 +33,7 @@
       "w34",
       "w35"
     ],
-    "availabilitySummary": "Laust allar vikur (15. jún – 31. ágúst 2027)"
+    "availabilitySummary": "Laust í 9 af 11 vikum (Uppbókað í V26 Midsommar & V29 háönn)"
   },
   {
     "id": "1626731935043177678",
@@ -65,7 +63,6 @@
       "w26",
       "w27",
       "w28",
-      "w29",
       "w30",
       "w31",
       "w32",
@@ -73,7 +70,7 @@
       "w34",
       "w35"
     ],
-    "availabilitySummary": "Laust allar vikur (15. jún – 31. ágúst 2027)"
+    "availabilitySummary": "Laust í 10 af 11 vikum (Uppbókað í V29 háönn)"
   },
   {
     "id": "1327640733143373140",
@@ -104,14 +101,11 @@
       "w27",
       "w28",
       "w29",
-      "w30",
-      "w31",
-      "w32",
       "w33",
       "w34",
       "w35"
     ],
-    "availabilitySummary": "Laust allar vikur (15. jún – 31. ágúst 2027)"
+    "availabilitySummary": "Laust í 8 af 11 vikum (Uppbókað í vikum 30–32)"
   },
   {
     "id": "1689999064583921885",
@@ -141,7 +135,6 @@
       "w26",
       "w27",
       "w28",
-      "w29",
       "w30",
       "w31",
       "w32",
@@ -149,7 +142,7 @@
       "w34",
       "w35"
     ],
-    "availabilitySummary": "Laust allar vikur (15. jún – 31. ágúst 2027)"
+    "availabilitySummary": "Laust í 10 af 11 vikum (Uppbókað í V29 háönn)"
   },
   {
     "id": "1735771750873059110",
@@ -178,16 +171,13 @@
       "w25",
       "w26",
       "w27",
-      "w28",
-      "w29",
-      "w30",
       "w31",
       "w32",
       "w33",
       "w34",
       "w35"
     ],
-    "availabilitySummary": "Laust allar vikur (15. jún – 31. ágúst 2027)"
+    "availabilitySummary": "Laust í 8 af 11 vikum (Uppbókað í júlí V28–V30)"
   },
   {
     "id": "1090334101923876759",
@@ -213,7 +203,6 @@
     },
     "isBudgetFit": true,
     "availableWeeks": [
-      "w25",
       "w26",
       "w27",
       "w28",
@@ -222,10 +211,9 @@
       "w31",
       "w32",
       "w33",
-      "w34",
-      "w35"
+      "w34"
     ],
-    "availabilitySummary": "Laust allar vikur (15. jún – 31. ágúst 2027)"
+    "availabilitySummary": "Laust í 9 af 11 vikum (V26–V34 · Uppbókað í V25 og V35)"
   },
   {
     "id": "683762981373209125",
@@ -254,16 +242,13 @@
       "w25",
       "w26",
       "w27",
-      "w28",
-      "w29",
-      "w30",
       "w31",
       "w32",
       "w33",
       "w34",
       "w35"
     ],
-    "availabilitySummary": "Laust allar vikur (15. jún – 31. ágúst 2027)"
+    "availabilitySummary": "Laust í 8 af 11 vikum (Uppbókað í júlí V28–V30)"
   },
   {
     "id": "1125419478579319668",
@@ -293,15 +278,13 @@
       "w26",
       "w27",
       "w28",
-      "w29",
       "w30",
       "w31",
       "w32",
       "w33",
-      "w34",
-      "w35"
+      "w34"
     ],
-    "availabilitySummary": "Laust allar vikur (15. jún – 31. ágúst 2027)"
+    "availabilitySummary": "Laust í 9 af 11 vikum (Laust í 1. vali V27 & Midsommar V26 · Uppbókað í V29)"
   },
   {
     "id": "1619593928568816076",
@@ -327,19 +310,17 @@
     },
     "isBudgetFit": true,
     "availableWeeks": [
-      "w25",
       "w26",
       "w27",
       "w28",
       "w29",
-      "w30",
       "w31",
       "w32",
       "w33",
       "w34",
       "w35"
     ],
-    "availabilitySummary": "Laust allar vikur (15. jún – 31. ágúst 2027)"
+    "availabilitySummary": "Laust í 9 af 11 vikum (Laust í V26 Midsommar, V27 & V28 · Uppbókað í V25, V30)"
   },
   {
     "id": "7838623",
@@ -369,15 +350,13 @@
       "w26",
       "w27",
       "w28",
-      "w29",
-      "w30",
       "w31",
       "w32",
       "w33",
       "w34",
       "w35"
     ],
-    "availabilitySummary": "Laust allar vikur (15. jún – 31. ágúst 2027)"
+    "availabilitySummary": "Laust í 9 af 11 vikum (Laust í V26 Midsommar, V27 & V28 · Uppbókað í V29–V30)"
   },
   {
     "id": "959289088240377688",
@@ -406,10 +385,7 @@
     "isBudgetFit": false,
     "availableWeeks": [
       "w25",
-      "w26",
       "w27",
-      "w28",
-      "w29",
       "w30",
       "w31",
       "w32",
@@ -417,7 +393,7 @@
       "w34",
       "w35"
     ],
-    "availabilitySummary": "Laust allar vikur (15. jún – 31. ágúst 2027)"
+    "availabilitySummary": "Laust í 8 af 11 vikum (Laust í 1. vali V27! Uppbókað í V26 Midsommar & V28–V29)"
   },
   {
     "id": "1671670810787993416",
@@ -447,14 +423,12 @@
       "w26",
       "w27",
       "w28",
-      "w29",
-      "w30",
       "w31",
       "w32",
       "w33",
       "w34",
       "w35"
     ],
-    "availabilitySummary": "Laust allar vikur (15. jún – 31. ágúst 2027)"
+    "availabilitySummary": "Laust í 9 af 11 vikum (Uppbókað í V29–V30 háönn)"
   }
 ]

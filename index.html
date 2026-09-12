@@ -890,6 +890,40 @@
     </div>
   </div>
 
+  <!-- Modal: Breyta bókunarstöðu húss -->
+  <div class="modal-overlay" id="editAvailabilityModal" style="display: none;">
+    <div class="modal-box">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+        <h3 id="editAvailModalTitle" style="font-size: 1.15rem; margin: 0; color: var(--text);">📅 Breyta bókunarstöðu</h3>
+        <button onclick="closeEditAvailabilityModal()" style="background:none; border:none; font-size: 1.4rem; cursor:pointer; color:var(--text-muted); padding: 0 4px;">&times;</button>
+      </div>
+      <p id="editAvailModalSubtitle" style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px;">
+        Merktu við þær vikur sem húsið er laust til leigu á tímabilinu (15. jún – 31. ágúst 2027):
+      </p>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <span style="font-size: 0.8rem; font-weight: 700;">Lausar vikur:</span>
+        <div style="display: flex; gap: 6px;">
+          <button type="button" onclick="setAllEditAvailWeeks(true)" style="font-size: 0.72rem; padding: 2px 7px; border: 1px solid var(--border); border-radius: 4px; background: #eff6ff; color: #1d4ed8; cursor: pointer; font-weight: 600;">Allar lausar</button>
+          <button type="button" onclick="setAllEditAvailWeeks(false)" style="font-size: 0.72rem; padding: 2px 7px; border: 1px solid var(--border); border-radius: 4px; background: white; color: var(--text-muted); cursor: pointer;">Hreinsa allar</button>
+        </div>
+      </div>
+
+      <div id="editAvailWeeksCheckboxes" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); gap: 6px; background: #f8fafc; padding: 10px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 12px; max-height: 180px; overflow-y: auto;">
+      </div>
+
+      <div style="margin-bottom: 14px;">
+        <label style="font-size: 0.8rem; font-weight: 700; display: block; margin-bottom: 4px;">Skýring / stöðutexti (valfrjálst):</label>
+        <input type="text" id="editAvailSummaryInput" placeholder="t.d. Uppbókað í Midsommar eða Laust í júlí..." style="width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.82rem;" />
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px;">
+        <button type="button" onclick="closeEditAvailabilityModal()" style="padding: 9px 16px; border: 1px solid var(--border); background: white; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.85rem;">Hætta við</button>
+        <button type="button" onclick="saveHouseAvailabilityModal()" style="padding: 9px 20px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.85rem;">Vista stöðu 💾</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Modal: Senda inn ábendingu / beiðni -->
   <div class="modal-overlay" id="feedbackModal" style="display: none;">
     <div class="modal-box">
@@ -3522,6 +3556,12 @@
               ${getHouseAvailabilityHTML(h)}
             </div>
 
+            <div style="display: flex; justify-content: flex-end; margin-top: -6px; margin-bottom: 8px;">
+              <button type="button" onclick="openEditAvailabilityModal('${h.id}')" style="background: none; border: none; color: #0284c7; font-size: 0.74rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; padding: 2px 4px;">
+                ✏️ Breyta bókunarstöðu húss
+              </button>
+            </div>
+
             <div id="votes-breakdown-${h.id}">
               ${getHouseBreakdownHTML(h)}
             </div>
@@ -3576,6 +3616,92 @@
         btn.classList.toggle("active-like", vote === 'like' && cur === 'like');
         btn.classList.toggle("active-dislike", vote === 'dislike' && cur === 'dislike');
       });
+    }
+
+    // Modal: Breyta bókunarstöðu fyrir hvaða hús sem er
+    let editingAvailHouseId = null;
+
+    function openEditAvailabilityModal(houseId) {
+      if (!ensureUserSelected("breyta bókunarstöðu")) return;
+      const h = HOUSES.find(x => x.id === houseId);
+      if (!h) return;
+      editingAvailHouseId = houseId;
+
+      const titleEl = document.getElementById("editAvailModalTitle");
+      if (titleEl) titleEl.textContent = `📅 Breyta bókunarstöðu: ${h.title}`;
+      const summaryEl = document.getElementById("editAvailSummaryInput");
+      if (summaryEl) summaryEl.value = h.availabilitySummary || "";
+
+      const container = document.getElementById("editAvailWeeksCheckboxes");
+      const availWeeks = h.availableWeeks || (WEEKS || []).map(w => w.id);
+      if (container) {
+        container.innerHTML = (WEEKS || []).map(w => {
+          const isChecked = availWeeks.includes(w.id);
+          const shortNum = w.num.replace("Vika ", "V");
+          const isMid = w.tag && w.tag.includes("Midsommar") ? " 🇸🇪" : "";
+          return `
+            <label style="display: flex; align-items: center; gap: 5px; font-size: 0.76rem; font-weight: 600; cursor: pointer; background: white; padding: 4px 6px; border-radius: 6px; border: 1px solid #e2e8f0;">
+              <input type="checkbox" name="editAvailWeekCheck" value="${w.id}" ${isChecked ? 'checked' : ''} />
+              <span>${shortNum}${isMid}</span>
+            </label>
+          `;
+        }).join("");
+      }
+
+      document.getElementById("editAvailabilityModal").style.display = "flex";
+    }
+
+    function closeEditAvailabilityModal() {
+      document.getElementById("editAvailabilityModal").style.display = "none";
+      editingAvailHouseId = null;
+    }
+
+    function setAllEditAvailWeeks(check) {
+      document.querySelectorAll("input[name='editAvailWeekCheck']").forEach(cb => {
+        cb.checked = check;
+      });
+    }
+
+    async function saveHouseAvailabilityModal() {
+      if (!editingAvailHouseId) return;
+      const h = HOUSES.find(x => x.id === editingAvailHouseId);
+      if (!h) return;
+
+      const checked = [];
+      document.querySelectorAll("input[name='editAvailWeekCheck']:checked").forEach(cb => {
+        checked.push(cb.value);
+      });
+
+      const customSummary = document.getElementById("editAvailSummaryInput").value.trim();
+      const isAll = WEEKS && WEEKS.length > 0 && checked.length === WEEKS.length;
+      const autoSummary = isAll ? "Laust allar vikur (15. jún – 31. ágúst 2027)" : `Laust í ${checked.length} af ${WEEKS.length} vikum`;
+
+      h.availableWeeks = checked;
+      h.availabilitySummary = customSummary || autoSummary;
+
+      // Vista í staðbundið minni
+      const storedOverrides = JSON.parse(localStorage.getItem("sweeden_2027_house_availability") || "{}");
+      storedOverrides[editingAvailHouseId] = {
+        availableWeeks: checked,
+        availabilitySummary: h.availabilitySummary
+      };
+      localStorage.setItem("sweeden_2027_house_availability", JSON.stringify(storedOverrides));
+
+      if (h.isCustom) {
+        const cIdx = CUSTOM_HOUSES.findIndex(x => x.id === editingAvailHouseId);
+        if (cIdx !== -1) {
+          CUSTOM_HOUSES[cIdx].availableWeeks = checked;
+          CUSTOM_HOUSES[cIdx].availabilitySummary = h.availabilitySummary;
+          localStorage.setItem("sweeden_2027_custom_houses", JSON.stringify(CUSTOM_HOUSES));
+        }
+      }
+
+      closeEditAvailabilityModal();
+      updateSingleHouseCard(editingAvailHouseId);
+      renderWeeksVsHousesAlignment();
+      renderAllHouses(currentFilter);
+      await pushToCloud();
+      showToast(`📅 Bókunarstaða fyrir „${h.title}“ uppfærð og samstillt!`);
     }
 
     // Modal: Bæta við / Breyta húsi
