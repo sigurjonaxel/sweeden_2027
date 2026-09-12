@@ -1072,11 +1072,22 @@
       showToast(`👋 Velkomin(n) ${name}! Svörin þín eru nú virk.`);
     }
 
+    function isDisallowedName(name) {
+      if (!name) return true;
+      const lower = name.trim().toLowerCase();
+      return lower === "gestur" || lower === "gest" || lower === "guest" || lower === "gestir" || lower === "guests" || lower === "gesti";
+    }
+
     function submitWelcomeCustomName() {
       const input = document.getElementById("welcomeCustomName");
       const val = input ? input.value.trim() : "";
       if (!val) {
         alert("Vinsamlegast sláðu inn nafn eða veldu úr hópnum.");
+        return;
+      }
+      if (isDisallowedName(val)) {
+        alert("Ekki er leyfilegt að nota „Gestur“ sem nafn. Vinsamlegast sláðu inn raunverulegt nafn.");
+        if (input) input.focus();
         return;
       }
       chooseWelcomeUser(val);
@@ -1124,6 +1135,10 @@
       }
       const entered = prompt(`👤 Hver ert þú?\nSláðu inn nafnið þitt til að ${actionDescription}:`);
       if (entered && entered.trim() !== "") {
+        if (isDisallowedName(entered)) {
+          alert("Ekki er leyfilegt að nota „Gestur“ sem nafn. Vinsamlegast sláðu inn raunverulegt nafn.");
+          return false;
+        }
         selectPerson(entered.trim());
         return true;
       }
@@ -1162,6 +1177,12 @@
         return;
       }
 
+      if (isDisallowedName(name)) {
+        alert("Ekki er leyfilegt að nota „Gestur“ sem nafn.");
+        selectPerson(null);
+        return;
+      }
+
       currentPerson = name.trim();
       document.getElementById("customNameInput").value = FAMILY_MEMBERS.includes(currentPerson) ? "" : currentPerson;
       document.querySelectorAll(".person-chip").forEach(el => el.classList.remove("active"));
@@ -1192,8 +1213,13 @@
     }
 
     function onCustomNameInput(val) {
-      if (val.trim()) {
-        selectPerson(val.trim());
+      const clean = val.trim();
+      if (clean) {
+        if (isDisallowedName(clean)) {
+          document.getElementById("saveBarName").textContent = "Ógilt nafn (Gestur er ekki leyft)";
+          return;
+        }
+        selectPerson(clean);
       } else {
         selectPerson(null);
       }
