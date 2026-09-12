@@ -21,7 +21,21 @@
       "lat": 56.87619,
       "lng": 16.71966
     },
-    "isBudgetFit": false
+    "isBudgetFit": false,
+    "availableWeeks": [
+      "w25",
+      "w26",
+      "w27",
+      "w28",
+      "w29",
+      "w30",
+      "w31",
+      "w32",
+      "w33",
+      "w34",
+      "w35"
+    ],
+    "availabilitySummary": "Laust allar vikur (15. jún – 31. ágúst 2027)"
   },
   {
     "id": "1626731935043177678",
@@ -45,7 +59,21 @@
       "lat": 56.51059723927931,
       "lng": 10.611496631931587
     },
-    "isBudgetFit": true
+    "isBudgetFit": true,
+    "availableWeeks": [
+      "w25",
+      "w26",
+      "w27",
+      "w28",
+      "w29",
+      "w30",
+      "w31",
+      "w32",
+      "w33",
+      "w34",
+      "w35"
+    ],
+    "availabilitySummary": "Laust allar vikur (15. jún – 31. ágúst 2027)"
   },
   {
     "id": "1327640733143373140",
@@ -69,7 +97,21 @@
       "lat": 57.51506,
       "lng": 11.95076
     },
-    "isBudgetFit": false
+    "isBudgetFit": false,
+    "availableWeeks": [
+      "w25",
+      "w26",
+      "w27",
+      "w28",
+      "w29",
+      "w30",
+      "w31",
+      "w32",
+      "w33",
+      "w34",
+      "w35"
+    ],
+    "availabilitySummary": "Laust allar vikur (15. jún – 31. ágúst 2027)"
   },
   {
     "id": "1689999064583921885",
@@ -93,7 +135,21 @@
       "lat": 57.426053828458244,
       "lng": 9.767596212206824
     },
-    "isBudgetFit": true
+    "isBudgetFit": true,
+    "availableWeeks": [
+      "w25",
+      "w26",
+      "w27",
+      "w28",
+      "w29",
+      "w30",
+      "w31",
+      "w32",
+      "w33",
+      "w34",
+      "w35"
+    ],
+    "availabilitySummary": "Laust allar vikur (15. jún – 31. ágúst 2027)"
   },
   {
     "id": "1735771750873059110",
@@ -117,7 +173,21 @@
       "lat": 57.75351523974993,
       "lng": 13.37295621171522
     },
-    "isBudgetFit": false
+    "isBudgetFit": false,
+    "availableWeeks": [
+      "w25",
+      "w26",
+      "w27",
+      "w28",
+      "w29",
+      "w30",
+      "w31",
+      "w32",
+      "w33",
+      "w34",
+      "w35"
+    ],
+    "availabilitySummary": "Laust allar vikur (15. jún – 31. ágúst 2027)"
   },
   {
     "id": "1090334101923876759",
@@ -141,7 +211,21 @@
       "lat": 55.56264,
       "lng": 10.44925
     },
-    "isBudgetFit": true
+    "isBudgetFit": true,
+    "availableWeeks": [
+      "w25",
+      "w26",
+      "w27",
+      "w28",
+      "w29",
+      "w30",
+      "w31",
+      "w32",
+      "w33",
+      "w34",
+      "w35"
+    ],
+    "availabilitySummary": "Laust allar vikur (15. jún – 31. ágúst 2027)"
   },
   {
     "id": "683762981373209125",
@@ -165,7 +249,21 @@
       "lat": 55.4400819,
       "lng": 14.2375684
     },
-    "isBudgetFit": false
+    "isBudgetFit": false,
+    "availableWeeks": [
+      "w25",
+      "w26",
+      "w27",
+      "w28",
+      "w29",
+      "w30",
+      "w31",
+      "w32",
+      "w33",
+      "w34",
+      "w35"
+    ],
+    "availabilitySummary": "Laust allar vikur (15. jún – 31. ágúst 2027)"
   },
   {
     "id": "1125419478579319668",
@@ -189,7 +287,21 @@
       "lat": 55.440062556509666,
       "lng": 14.238186168786617
     },
-    "isBudgetFit": true
+    "isBudgetFit": true,
+    "availableWeeks": [
+      "w25",
+      "w26",
+      "w27",
+      "w28",
+      "w29",
+      "w30",
+      "w31",
+      "w32",
+      "w33",
+      "w34",
+      "w35"
+    ],
+    "availabilitySummary": "Laust allar vikur (15. jún – 31. ágúst 2027)"
   },
   {
     "id": "1619593928568816076",
@@ -213,7 +325,21 @@
       "lat": 55.44000936873349,
       "lng": 14.239736579578762
     },
-    "isBudgetFit": true
+    "isBudgetFit": true,
+    "availableWeeks": [
+      "w25",
+      "w26",
+      "w27",
+      "w28",
+      "w29",
+      "w30",
+      "w31",
+      "w32",
+      "w33",
+      "w34",
+      "w35"
+    ],
+    "availabilitySummary": "Laust allar vikur (15. jún – 31. ágúst 2027)"
   },
   {
     "id": "7838623",
@@ -237,7 +363,21 @@
       "lat": 55.43968,
       "lng": 14.2343
     },
-    "isBudgetFit": true
+    "isBudgetFit": true,
+    "availableWeeks": [
+      "w25",
+      "w26",
+      "w27",
+      "w28",
+      "w29",
+      "w30",
+      "w31",
+      "w32",
+      "w33",
+      "w34",
+      "w35"
+    ],
+    "availabilitySummary": "Laust allar vikur (15. jún – 31. ágúst 2027)"
   },
   {
     "id": "959289088240377688",
@@ -263,7 +403,21 @@
       "lat": 55.399716099266826,
       "lng": 14.060958358197023
     },
-    "isBudgetFit": false
+    "isBudgetFit": false,
+    "availableWeeks": [
+      "w25",
+      "w26",
+      "w27",
+      "w28",
+      "w29",
+      "w30",
+      "w31",
+      "w32",
+      "w33",
+      "w34",
+      "w35"
+    ],
+    "availabilitySummary": "Laust allar vikur (15. jún – 31. ágúst 2027)"
   },
   {
     "id": "1671670810787993416",
@@ -287,6 +441,20 @@
       "lat": 55.51186,
       "lng": 13.1367
     },
-    "isBudgetFit": false
+    "isBudgetFit": false,
+    "availableWeeks": [
+      "w25",
+      "w26",
+      "w27",
+      "w28",
+      "w29",
+      "w30",
+      "w31",
+      "w32",
+      "w33",
+      "w34",
+      "w35"
+    ],
+    "availabilitySummary": "Laust allar vikur (15. jún – 31. ágúst 2027)"
   }
 ]

@@ -372,6 +372,59 @@
     }
     .house-comment-submit-btn:hover { background: #0284c7; }
 
+    /* House availability styles */
+    .house-availability-box {
+      margin-top: 6px; margin-bottom: 12px;
+      padding: 10px 12px; background: #f0fdf4;
+      border: 1.5px solid #86efac; border-radius: 10px;
+    }
+    .house-avail-header {
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 6px; margin-bottom: 4px;
+    }
+    .house-avail-title {
+      font-size: 0.74rem; font-weight: 800; color: #166534;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .house-avail-status-pill {
+      font-size: 0.72rem; font-weight: 700; padding: 2px 8px;
+      border-radius: 999px; display: inline-flex; align-items: center; gap: 4px;
+    }
+    .house-avail-status-pill.pill-green {
+      background: #dcfce7; color: #15803d; border: 1px solid #86efac;
+    }
+    .house-avail-status-pill.pill-yellow {
+      background: #fef9c3; color: #854d0e; border: 1px solid #fef08a;
+    }
+    .house-avail-top-match {
+      background: #fef08a; color: #854d0e; border: 1px solid #eab308;
+      font-size: 0.76rem; font-weight: 700; padding: 4px 8px;
+      border-radius: 6px; margin-bottom: 6px; display: flex; align-items: center; gap: 5px;
+    }
+    .house-avail-summary-line {
+      font-size: 0.78rem; color: #166534; font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .house-avail-pills-row {
+      display: flex; flex-wrap: wrap; gap: 4px;
+    }
+    .avail-pill {
+      font-size: 0.7rem; font-weight: 700; padding: 2px 6px;
+      border-radius: 5px; display: inline-flex; align-items: center;
+      gap: 3px; cursor: default;
+    }
+    .avail-pill.pill-avail {
+      background: white; color: #15803d; border: 1px solid #bbf7d0;
+    }
+    .avail-pill.pill-top-week {
+      background: #fef08a; color: #854d0e; border: 1.5px solid #eab308; font-weight: 800;
+    }
+    .avail-pill.pill-booked {
+      background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5;
+      text-decoration: line-through; opacity: 0.7;
+    }
+
     .week-attendees-box {
       margin-top: 8px; padding-top: 8px; border-top: 1px dashed #cbd5e1; width: 100%;
     }
@@ -611,15 +664,24 @@
               <button class="filter-btn" onclick="filterHouses('budget', this)">Bara ~$3.000 (<span id="countBudget">0</span>)</button>
               <button class="filter-btn" onclick="filterHouses('custom', this)">Fjölskyldutillögur (<span id="countCustom">0</span>)</button>
             </div>
-            <div style="display: flex; align-items: center; gap: 6px;">
-              <span style="font-size: 0.82rem; color: var(--text-muted); font-weight: 600;">Raða:</span>
-              <select id="sortHousesSelect" onchange="changeHousesSort(this.value)" style="padding: 7px 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 0.82rem; font-weight: 600; background: white; cursor: pointer;">
-                <option value="popularity">🔥 Vinsælust hjá fjölskyldu</option>
-                <option value="default">Sjálfgefin röð</option>
-                <option value="price-asc">💰 Ódýrust fyrst</option>
-                <option value="price-desc">💎 Dýrust fyrst</option>
-                <option value="rating">⭐ Hæst metin á Airbnb</option>
-              </select>
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+              <div style="display: flex; align-items: center; gap: 4px;">
+                <span style="font-size: 0.82rem; color: var(--text-muted); font-weight: 600;">Laust í viku:</span>
+                <select id="filterHouseWeekSelect" onchange="changeHouseWeekFilter(this.value)" style="padding: 7px 10px; border-radius: 8px; border: 1px solid var(--border); font-size: 0.82rem; font-weight: 600; background: white; cursor: pointer;">
+                  <option value="all">📅 Allar vikur lausar</option>
+                  <option value="top">⭐ 1. val hópsins</option>
+                </select>
+              </div>
+              <div style="display: flex; align-items: center; gap: 4px;">
+                <span style="font-size: 0.82rem; color: var(--text-muted); font-weight: 600;">Raða:</span>
+                <select id="sortHousesSelect" onchange="changeHousesSort(this.value)" style="padding: 7px 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 0.82rem; font-weight: 600; background: white; cursor: pointer;">
+                  <option value="popularity">🔥 Vinsælust hjá fjölskyldu</option>
+                  <option value="default">Sjálfgefin röð</option>
+                  <option value="price-asc">💰 Ódýrust fyrst</option>
+                  <option value="price-desc">💎 Dýrust fyrst</option>
+                  <option value="rating">⭐ Hæst metin á Airbnb</option>
+                </select>
+              </div>
             </div>
           </div>
 
@@ -702,6 +764,18 @@
           <input type="url" id="newHousePhoto" placeholder="https://... bein myndaslóð (endar á .jpg/.png) eða má sleppa">
           <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 3px;">
             💡 Hægri-smelltu á mynd á Airbnb &gt; <em>Afrita myndaslóð (Copy image address)</em>. Ekki líma vefslóðina á herberginu hér.
+          </div>
+        </div>
+
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <label style="font-size: 0.8rem; font-weight:700;">📅 Lausar vikur á tímabilinu (15. jún – 31. ágúst):</label>
+            <div style="display: flex; gap: 6px;">
+              <button type="button" onclick="setAllModalWeeks(true)" style="font-size: 0.72rem; padding: 2px 7px; border: 1px solid var(--border); border-radius: 4px; background: #eff6ff; color: #1d4ed8; cursor: pointer; font-weight: 600;">Allar</button>
+              <button type="button" onclick="setAllModalWeeks(false)" style="font-size: 0.72rem; padding: 2px 7px; border: 1px solid var(--border); border-radius: 4px; background: white; color: var(--text-muted); cursor: pointer;">Hreinsa</button>
+            </div>
+          </div>
+          <div id="modalWeeksCheckboxes" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); gap: 6px; background: #f8fafc; padding: 8px; border: 1px solid var(--border); border-radius: 8px; max-height: 120px; overflow-y: auto;">
           </div>
         </div>
 
@@ -1384,11 +1458,17 @@
       if (storedCustom) {
         try {
           CUSTOM_HOUSES = JSON.parse(storedCustom);
+          const allWeekIds = (WEEKS && WEEKS.length > 0) ? WEEKS.map(w => w.id) : ["w25","w26","w27","w28","w29","w30","w31","w32","w33","w34","w35"];
           CUSTOM_HOUSES.forEach(ch => {
+            if (!ch.availableWeeks || !Array.isArray(ch.availableWeeks) || ch.availableWeeks.length === 0) {
+              ch.availableWeeks = allWeekIds;
+              ch.availabilitySummary = "Laust allar vikur (15. jún – 31. ágúst 2027)";
+            }
             if (!HOUSES.some(h => h.id === ch.id)) HOUSES.unshift(ch);
           });
         } catch (e) {}
       }
+      populateHouseWeekFilterSelect();
 
       // Lesa atkvæði staðbundið
       const stored = localStorage.getItem("sweeden_2027_votes");
@@ -2686,6 +2766,7 @@
       }
       updateWeeksUI();
       updateSingleWeekRow(weekId);
+      updateAllHouseAvailabilityBadges();
       pushToCloud();
     }
 
@@ -2699,6 +2780,24 @@
     }
 
     let housesSort = "popularity";
+    let houseWeekFilter = "all";
+
+    function changeHouseWeekFilter(val) {
+      houseWeekFilter = val;
+      renderAllHouses(currentFilter);
+    }
+
+    function populateHouseWeekFilterSelect() {
+      const sel = document.getElementById("filterHouseWeekSelect");
+      if (!sel || !WEEKS || WEEKS.length === 0) return;
+      const curVal = sel.value || "all";
+      sel.innerHTML = `
+        <option value="all">📅 Allar vikur lausar</option>
+        <option value="top">⭐ 1. val hópsins</option>
+        ${WEEKS.map(w => `<option value="${w.id}">${w.num} (${w.dates.split("–")[0].trim()}${w.tag && w.tag.includes("Midsommar") ? ' · Midsommar' : ''})</option>`).join("")}
+      `;
+      sel.value = curVal;
+    }
 
     function getHousePopularity(houseId) {
       let love = [], like = [], dislike = [];
@@ -2774,6 +2873,16 @@
         list = HOUSES.filter(h => h.country === 'Danmörk');
       } else if (currentFilter === 'custom') {
         list = HOUSES.filter(h => h.isCustom);
+      }
+
+      if (houseWeekFilter === 'top') {
+        const activeWeeksSorted = sortWeeksList(WEEKS, 'popularity').filter(w => getWeekStats(w.id).totalVotes > 0);
+        const topW = activeWeeksSorted.length > 0 ? activeWeeksSorted[0] : null;
+        if (topW) {
+          list = list.filter(h => (h.availableWeeks || ["w25","w26","w27","w28","w29","w30","w31","w32","w33","w34","w35"]).includes(topW.id));
+        }
+      } else if (houseWeekFilter && houseWeekFilter !== 'all') {
+        list = list.filter(h => (h.availableWeeks || ["w25","w26","w27","w28","w29","w30","w31","w32","w33","w34","w35"]).includes(houseWeekFilter));
       }
 
       list = sortHousesList(list, housesSort);
@@ -2984,6 +3093,9 @@
       const badgeEl = document.getElementById(`pop-badge-${houseId}`);
       if (badgeEl) badgeEl.innerHTML = getHouseBadgeHTML(h);
 
+      const availEl = document.getElementById(`house-avail-${houseId}`);
+      if (availEl) availEl.innerHTML = getHouseAvailabilityHTML(h);
+
       const breakdownEl = document.getElementById(`votes-breakdown-${houseId}`);
       if (breakdownEl) breakdownEl.innerHTML = getHouseBreakdownHTML(h);
 
@@ -3006,6 +3118,75 @@
           btn.classList.toggle("active-dislike", vote === 'dislike' && cur === 'dislike');
         });
       }
+    }
+
+    function getHouseAvailabilityHTML(h) {
+      const availWeeks = (Array.isArray(h.availableWeeks) && h.availableWeeks.length > 0)
+        ? h.availableWeeks
+        : (WEEKS && WEEKS.length > 0 ? WEEKS.map(w => w.id) : ["w25","w26","w27","w28","w29","w30","w31","w32","w33","w34","w35"]);
+
+      // Finna vinsælustu viku fjölskyldunnar út frá atkvæðum
+      let topWeek = null;
+      if (typeof sortWeeksList === 'function' && WEEKS && WEEKS.length > 0) {
+        const activeWeeksSorted = sortWeeksList(WEEKS, 'popularity').filter(w => getWeekStats(w.id).totalVotes > 0);
+        if (activeWeeksSorted.length > 0) {
+          topWeek = activeWeeksSorted[0];
+        }
+      }
+
+      const isTopWeekAvail = topWeek ? availWeeks.includes(topWeek.id) : false;
+      const isAllAvail = WEEKS && WEEKS.length > 0 && WEEKS.every(w => availWeeks.includes(w.id));
+      const totalWeeksCount = WEEKS && WEEKS.length > 0 ? WEEKS.length : 11;
+
+      let topWeekBadge = "";
+      if (topWeek && isTopWeekAvail) {
+        topWeekBadge = `
+          <div class="house-avail-top-match">
+            ⭐ <strong>Laust á 1. vali hópsins:</strong> ${topWeek.num} (${topWeek.dates})
+          </div>
+        `;
+      }
+
+      const pillsHTML = (WEEKS || []).map(w => {
+        const isAvail = availWeeks.includes(w.id);
+        const isTop = topWeek && topWeek.id === w.id;
+        const vNum = w.num.replace("Vika ", "V");
+        const isMidsommar = w.tag && w.tag.includes("Midsommar");
+        const label = `${vNum}${isMidsommar ? ' 🇸🇪' : ''}`;
+
+        if (isAvail) {
+          return `<span class="avail-pill ${isTop ? 'pill-top-week' : 'pill-avail'}" title="${w.num} (${w.dates})${w.tag ? ` · ${w.tag}` : ''} — Laust!">${isTop ? '⭐ ' : '✓ '}${label}</span>`;
+        } else {
+          return `<span class="avail-pill pill-booked" title="${w.num} (${w.dates}) — Ekki laust / bókað">✕ ${label}</span>`;
+        }
+      }).join("");
+
+      return `
+        <div class="house-availability-box">
+          <div class="house-avail-header">
+            <div class="house-avail-title">
+              <span>📅 Bókunarstaða (15. jún – 31. ágúst 2027)</span>
+            </div>
+            <span class="house-avail-status-pill ${isAllAvail ? 'pill-green' : 'pill-yellow'}">
+              ${isAllAvail ? '🟢 Laust allar 11 vikurnar' : `🟡 Laust í ${availWeeks.length}/${totalWeeksCount} vikum`}
+            </span>
+          </div>
+          ${topWeekBadge}
+          <div class="house-avail-summary-line">
+            ${escapeHtml(h.availabilitySummary || (isAllAvail ? 'Laust allar vikur tímabilsins (15. jún – 31. ágúst 2027)' : `Laust í ${availWeeks.length} vikum`))}
+          </div>
+          <div class="house-avail-pills-row">
+            ${pillsHTML}
+          </div>
+        </div>
+      `;
+    }
+
+    function updateAllHouseAvailabilityBadges() {
+      HOUSES.forEach(h => {
+        const el = document.getElementById(`house-avail-${h.id}`);
+        if (el) el.innerHTML = getHouseAvailabilityHTML(h);
+      });
     }
 
     function createHouseCardHTML(h) {
@@ -3037,6 +3218,10 @@
               ${specsHTML}
             </div>
 
+            <div id="house-avail-${h.id}">
+              ${getHouseAvailabilityHTML(h)}
+            </div>
+
             <div id="votes-breakdown-${h.id}">
               ${getHouseBreakdownHTML(h)}
             </div>
@@ -3045,7 +3230,7 @@
               ${getHouseCommentsHTML(h.id)}
             </div>
 
-            ${h.isCustom && (h.suggestedBy === currentPerson || currentPerson === "Sigurjón Axel") ? `
+            ${h.isCustom && (isSamePerson(h.suggestedBy, currentPerson) || isSigurjon(currentPerson) || isMasterSession) ? `
               <div style="display:flex; gap:10px; margin-bottom:10px;">
                 <button onclick="editCustomHouse('${h.id}')" style="background:none; border:none; color:var(--primary); font-size:0.8rem; font-weight:700; cursor:pointer;">✏️ Breyta upplýsingum</button>
                 <button onclick="deleteCustomHouse('${h.id}')" style="background:none; border:none; color:var(--danger); font-size:0.8rem; font-weight:700; cursor:pointer;">🗑️ Eyða húsi</button>
@@ -3095,6 +3280,38 @@
     // Modal: Bæta við / Breyta húsi
     let editingHouseId = null;
 
+    function renderModalWeeksCheckboxes(selectedWeeks = null) {
+      const container = document.getElementById("modalWeeksCheckboxes");
+      if (!container || !WEEKS) return;
+      const allIds = WEEKS.map(w => w.id);
+      const selected = (Array.isArray(selectedWeeks) && selectedWeeks.length > 0) ? selectedWeeks : allIds;
+      container.innerHTML = WEEKS.map(w => {
+        const isChecked = selected.includes(w.id);
+        const shortNum = w.num.replace("Vika ", "V");
+        const isMid = w.tag && w.tag.includes("Midsommar") ? " 🇸🇪" : "";
+        return `
+          <label style="display: flex; align-items: center; gap: 5px; font-size: 0.76rem; font-weight: 600; cursor: pointer; background: white; padding: 4px 6px; border-radius: 6px; border: 1px solid #e2e8f0;">
+            <input type="checkbox" name="modalWeekCheck" value="${w.id}" ${isChecked ? 'checked' : ''} />
+            <span>${shortNum}${isMid}</span>
+          </label>
+        `;
+      }).join("");
+    }
+
+    function setAllModalWeeks(check) {
+      document.querySelectorAll("input[name='modalWeekCheck']").forEach(cb => {
+        cb.checked = check;
+      });
+    }
+
+    function getSelectedModalWeeks() {
+      const checked = [];
+      document.querySelectorAll("input[name='modalWeekCheck']:checked").forEach(cb => {
+        checked.push(cb.value);
+      });
+      return checked;
+    }
+
     function openAddHouseModal() {
       if (!ensureUserSelected("leggja til nýtt hús")) return;
       editingHouseId = null;
@@ -3109,6 +3326,7 @@
       document.getElementById("newHouseSpecs").value = "";
       document.getElementById("newHousePhoto").value = "";
       document.getElementById("newHousePin").value = "";
+      renderModalWeeksCheckboxes();
       document.getElementById("addHouseModal").style.display = "flex";
     }
 
@@ -3137,6 +3355,7 @@
       document.getElementById("newHouseSpecs").value = (h.specs || []).join(", ") || "";
       document.getElementById("newHousePhoto").value = h.photo || "";
       document.getElementById("newHousePin").value = h.pin || "2027";
+      renderModalWeeksCheckboxes(h.availableWeeks || null);
       document.getElementById("addHouseModal").style.display = "flex";
     }
 
@@ -3196,6 +3415,11 @@
         return;
       }
 
+      const selectedWeeks = getSelectedModalWeeks();
+      const availWeeks = selectedWeeks.length > 0 ? selectedWeeks : (WEEKS || []).map(w => w.id);
+      const isAll = WEEKS && WEEKS.length > 0 && availWeeks.length === WEEKS.length;
+      const availSummary = isAll ? "Laust allar vikur (15. jún – 31. ágúst 2027)" : `Laust í ${availWeeks.length} vikum`;
+
       if (editingHouseId) {
         // Breyta fyrirliggjandi húsi
         const idxH = HOUSES.findIndex(x => x.id === editingHouseId);
@@ -3211,7 +3435,9 @@
           specs: specs ? [specs] : ["Tillaga"],
           suggestedBy: person,
           pin: pin,
-          photo: photo || (HOUSES[idxH] ? HOUSES[idxH].photo : "")
+          photo: photo || (HOUSES[idxH] ? HOUSES[idxH].photo : ""),
+          availableWeeks: availWeeks,
+          availabilitySummary: availSummary
         };
         if (idxH !== -1) HOUSES[idxH] = updated;
         if (idxC !== -1) CUSTOM_HOUSES[idxC] = updated;
@@ -3241,7 +3467,9 @@
           isBudgetFit: true,
           isCustom: true,
           suggestedBy: person,
-          pin: pin
+          pin: pin,
+          availableWeeks: availWeeks,
+          availabilitySummary: availSummary
         };
 
         HOUSES.unshift(newHouse);
