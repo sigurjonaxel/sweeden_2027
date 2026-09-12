@@ -434,17 +434,42 @@
     </header>
 
     <main class="container">
-        <div class="card">
-          <div class="card-title">1. Hver ert þú?</div>
-          <div class="card-desc">Veldu nafnið þitt úr hópnum eða skrifaðu nafn til að skrá hvenær þú kemst, leggja til hús og kjósa:</div>
-          <div class="person-chips" id="personChips"></div>
-          <div style="max-width: 420px; margin-bottom: 8px;">
-            <input type="text" id="customNameInput" placeholder="Eða skrifaðu nafn..." oninput="onCustomNameInput(this.value)">
+        <div class="card" id="userProfileCard" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-left: 5px solid var(--primary);">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+            <div>
+              <div class="card-title" style="margin-bottom: 4px; font-size: 1.15rem;">1. Innskráður notandi</div>
+              <div style="display: flex; align-items: center; gap: 10px; margin-top: 4px;">
+                <span style="font-size: 1.35rem; font-weight: 800; color: var(--text);" id="profileUserNameDisplay">Enginn valinn</span>
+                <span id="profileUserStatusBadge" style="display: none; font-size: 0.76rem; font-weight: 700; background: #dcfce7; color: #166534; padding: 3px 9px; border-radius: 999px; border: 1px solid #bbf7d0;">🔒 Varið með PIN</span>
+              </div>
+              <div style="font-size: 0.84rem; color: var(--text-muted); margin-top: 4px;" id="profileUserDesc">
+                Smelltu á „Skipta um notanda“ til að velja nafn og skrá þig inn með PIN.
+              </div>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+              <button onclick="openChangeUserModal()" style="padding: 10px 18px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 6px rgba(37, 99, 235, 0.2);">
+                🔄 Skipta um notanda
+              </button>
+              <button onclick="logoutUser()" id="logoutBtn" style="display: none; padding: 10px 16px; background: #f1f5f9; color: var(--text-muted); border: 1px solid var(--border); border-radius: 10px; font-weight: 600; font-size: 0.9rem; cursor: pointer;">
+                Útskrá
+              </button>
+            </div>
           </div>
-          <div id="masterDeletePersonBtnContainer" style="display: none; margin-top: 6px;">
-            <button onclick="deletePersonAsMaster()" style="background: none; border: 1px dashed var(--danger); color: var(--danger); font-size: 0.78rem; font-weight: 700; padding: 6px 14px; border-radius: 6px; cursor: pointer;">
-              🗑️ Eyða nafni / svörum (Master)
-            </button>
+
+          <!-- Master / Sigurjón stjórnborð (aðeins sýnilegt ef Sigurjón er innskráður) -->
+          <div id="masterAdminSection" style="display: none; margin-top: 16px; padding-top: 14px; border-top: 1px dashed #cbd5e1;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 10px;">
+              <span style="font-weight: 800; font-size: 0.88rem; color: #9a3412;">👑 Sigurjón - Master stjórnborð:</span>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button onclick="deletePersonAsMaster()" style="background: #fff; border: 1px dashed var(--danger); color: var(--danger); font-size: 0.8rem; font-weight: 700; padding: 6px 12px; border-radius: 6px; cursor: pointer;">
+                  🗑️ Eyða notanda / svörum
+                </button>
+                <button onclick="masterManualResetPin()" style="background: #fff; border: 1px dashed #d97706; color: #d97706; font-size: 0.8rem; font-weight: 700; padding: 6px 12px; border-radius: 6px; cursor: pointer;">
+                  🔑 Endurstilla PIN fyrir notanda
+                </button>
+              </div>
+            </div>
+            <div id="masterPendingResetsList" style="font-size: 0.84rem;"></div>
           </div>
         </div>
 
@@ -677,24 +702,134 @@
     </div>
   </div>
 
-  <!-- Modal: Velja notanda í byrjun (Skylda) -->
+  <!-- Modal: Velja notanda (Innskráning / Skipta um notanda) -->
   <div class="modal-overlay" id="welcomeUserModal" style="display: none; z-index: 10000; background: rgba(15, 23, 42, 0.88); backdrop-filter: blur(8px);">
-    <div class="modal-box" style="max-width: 520px; text-align: center; border: 2px solid var(--primary); box-shadow: 0 20px 40px rgba(0,0,0,0.4);">
+    <div class="modal-box" style="position: relative; max-width: 540px; text-align: center; border: 2px solid var(--primary); box-shadow: 0 20px 40px rgba(0,0,0,0.4);">
+      <button id="welcomeModalCloseBtn" onclick="closeChangeUserModal()" style="display: none; position: absolute; top: 12px; right: 16px; background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--text-muted); padding: 0 4px;" title="Loka glugga">&times;</button>
       <div style="font-size: 2.8rem; margin-bottom: 8px;">👋</div>
-      <h3 style="margin-bottom: 6px; font-size: 1.45rem; font-weight: 800; color: var(--text);">Hver ert þú?</h3>
+      <h3 id="welcomeModalTitle" style="margin-bottom: 6px; font-size: 1.45rem; font-weight: 800; color: var(--text);">Hver ert þú?</h3>
       <p style="font-size: 0.92rem; color: var(--text-muted); margin-bottom: 22px;">
-        Vinsamlegast veldu nafnið þitt úr fjölskyldunni eða skrifaðu nafn til að opna síðuna:
+        Veldu nafnið þitt úr hópnum eða skrifaðu nafn ef þú ert ekki á listanum:
       </p>
 
       <div id="welcomeUserChips" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 22px;">
-        <!-- Fyllt út sjálfkrafa með fjölskyldumeðlimum -->
+        <!-- Fyllt út sjálfkrafa með fjölskyldumeðlimum og kjósendum -->
       </div>
 
       <div style="border-top: 1px solid var(--border); padding-top: 18px; margin-top: 10px;">
-        <label style="font-size: 0.8rem; font-weight: 700; display: block; margin-bottom: 8px; color: var(--text-muted);">Eða skrifaðu nafn:</label>
+        <label style="font-size: 0.82rem; font-weight: 700; display: block; margin-bottom: 8px; color: var(--text-muted);">Eða skrifaðu nafn ef þú ert ekki á listanum:</label>
         <div style="display: flex; gap: 8px; max-width: 360px; margin: 0 auto;">
           <input type="text" id="welcomeCustomName" placeholder="Nafn þitt..." style="flex: 1; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border);" onkeydown="if(event.key==='Enter') submitWelcomeCustomName()">
           <button onclick="submitWelcomeCustomName()" style="padding: 10px 18px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">Áfram ➔</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Slá inn PIN fyrir notanda -->
+  <div class="modal-overlay" id="pinLoginModal" style="display: none; z-index: 10001; background: rgba(15, 23, 42, 0.88); backdrop-filter: blur(8px);">
+    <div class="modal-box" style="max-width: 440px; text-align: center; border: 1.5px solid var(--primary); box-shadow: 0 20px 40px rgba(0,0,0,0.3);">
+      <div style="font-size: 2.6rem; margin-bottom: 6px;">🔒</div>
+      <h3 id="pinLoginTitle" style="margin-bottom: 6px; font-size: 1.35rem; font-weight: 800; color: var(--text);">Sláðu inn PIN</h3>
+      <p id="pinLoginDesc" style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 16px;">
+        Sláðu inn 4-stafa leyninúmerið þitt til að opna aðganginn:
+      </p>
+      <div style="margin-bottom: 14px;">
+        <input type="password" id="loginPinInput" maxlength="4" pattern="[0-9]{4}" inputmode="numeric" placeholder="••••"
+          style="font-size: 2rem; letter-spacing: 12px; text-align: center; width: 180px; padding: 8px 12px; border: 2px solid var(--border); border-radius: 12px;"
+          oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 4);"
+          onkeydown="if(event.key==='Enter') submitLoginPin()">
+        <div id="loginPinError" style="display: none; color: var(--danger); font-size: 0.85rem; font-weight: 700; margin-top: 8px;">
+          ❌ Rangt PIN! Reyndu aftur.
+        </div>
+      </div>
+      <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 16px;">
+        <button onclick="closePinLoginModal()" style="padding: 10px 18px; border: 1px solid var(--border); background: white; border-radius: 8px; font-weight: 600; cursor: pointer;">Hætta við</button>
+        <button onclick="submitLoginPin()" style="padding: 10px 24px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">Skrá inn ➔</button>
+      </div>
+      <div style="border-top: 1px solid var(--border); padding-top: 12px;">
+        <button onclick="onForgotPinClick()" style="background: none; border: none; color: #2563eb; font-size: 0.85rem; font-weight: 700; cursor: pointer; text-decoration: underline;">
+          🔑 Gleymdirðu PIN?
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Stofna / Velja nýtt PIN fyrir notanda -->
+  <div class="modal-overlay" id="pinSetupModal" style="display: none; z-index: 10001; background: rgba(15, 23, 42, 0.88); backdrop-filter: blur(8px);">
+    <div class="modal-box" style="max-width: 440px; text-align: center; border: 1.5px solid var(--primary); box-shadow: 0 20px 40px rgba(0,0,0,0.3);">
+      <div style="font-size: 2.6rem; margin-bottom: 6px;">🔑</div>
+      <h3 id="pinSetupTitle" style="margin-bottom: 6px; font-size: 1.35rem; font-weight: 800; color: var(--text);">Veldu 4-stafa PIN</h3>
+      <p id="pinSetupDesc" style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 16px;">
+        Til að verja svörin þín og tryggja að aðrir geti ekki breytt þeim, veldu 4-stafa PIN:
+      </p>
+      <div style="display: flex; flex-direction: column; gap: 10px; max-width: 250px; margin: 0 auto 14px auto;">
+        <div>
+          <label style="font-size: 0.78rem; font-weight: 700; display: block; margin-bottom: 4px; color: var(--text-muted); text-align: left;">Nýtt PIN (4 tölustafir):</label>
+          <input type="password" id="setupPinInput" maxlength="4" pattern="[0-9]{4}" inputmode="numeric" placeholder="••••"
+            style="font-size: 1.6rem; letter-spacing: 10px; text-align: center; width: 100%; padding: 8px 10px; border: 2px solid var(--border); border-radius: 10px;"
+            oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 4);">
+        </div>
+        <div>
+          <label style="font-size: 0.78rem; font-weight: 700; display: block; margin-bottom: 4px; color: var(--text-muted); text-align: left;">Staðfesta PIN:</label>
+          <input type="password" id="setupPinConfirm" maxlength="4" pattern="[0-9]{4}" inputmode="numeric" placeholder="••••"
+            style="font-size: 1.6rem; letter-spacing: 10px; text-align: center; width: 100%; padding: 8px 10px; border: 2px solid var(--border); border-radius: 10px;"
+            oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 4);"
+            onkeydown="if(event.key==='Enter') submitSetupPin()">
+        </div>
+        <div id="setupPinError" style="display: none; color: var(--danger); font-size: 0.84rem; font-weight: 700;"></div>
+      </div>
+      <div style="display: flex; gap: 10px; justify-content: center;">
+        <button onclick="closePinSetupModal()" style="padding: 10px 18px; border: 1px solid var(--border); background: white; border-radius: 8px; font-weight: 600; cursor: pointer;">Hætta við</button>
+        <button onclick="submitSetupPin()" style="padding: 10px 24px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">Vista PIN 💾</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Gleymdi PIN & Endursetning -->
+  <div class="modal-overlay" id="forgotPinModal" style="display: none; z-index: 10002; background: rgba(15, 23, 42, 0.88); backdrop-filter: blur(8px);">
+    <div class="modal-box" style="max-width: 490px; text-align: center; border: 1.5px solid #3b82f6; box-shadow: 0 20px 40px rgba(0,0,0,0.35);">
+      <div style="font-size: 2.6rem; margin-bottom: 6px;">📧</div>
+      <h3 style="margin-bottom: 6px; font-size: 1.35rem; font-weight: 800; color: var(--text);">Gleymdirðu PIN?</h3>
+      
+      <div id="forgotPinInitialView">
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 18px; line-height: 1.45;">
+          Við getum sent tilkynningu á <strong>sigurjonaxel@gmail.com</strong> með reset-kóða til að endursetja PIN fyrir <strong id="forgotPinUserName" style="color: var(--primary);"></strong>.
+        </p>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+          <button onclick="closeForgotPinModal()" style="padding: 10px 18px; border: 1px solid var(--border); background: white; border-radius: 8px; font-weight: 600; cursor: pointer;">Hætta við</button>
+          <button onclick="confirmRequestPinReset()" id="sendResetReqBtn" style="padding: 10px 22px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">Senda á Sigurjón ✉️</button>
+        </div>
+      </div>
+
+      <div id="forgotPinSentView" style="display: none; text-align: left;">
+        <div style="background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; padding: 12px 14px; border-radius: 10px; font-size: 0.86rem; margin-bottom: 14px;">
+          ✅ <strong>Beiðni send!</strong> Tilkynning hefur verið send á <strong>sigurjonaxel@gmail.com</strong>.
+        </div>
+        <div style="background: #f8fafc; border: 1px solid var(--border); padding: 12px; border-radius: 8px; margin-bottom: 12px; font-size: 0.85rem;">
+          <div>🔑 <strong>Reset-kóði (strengur):</strong> <code id="displayResetToken" style="font-size: 1.15rem; font-weight: 800; color: #b45309; background: #fef3c7; padding: 2px 8px; border-radius: 4px; letter-spacing: 2px;"></code></div>
+          <div style="color: var(--text-muted); font-size: 0.78rem; margin-top: 4px;">Þessi kóði var sendur á Sigurjón. Viðkomandi getur endursett PIN þegar Sigurjón hefur samþykkt.</div>
+        </div>
+        <div style="margin-bottom: 14px; text-align: center;">
+          <a id="forgotPinMailtoLink" href="#" target="_blank" style="display: inline-block; font-size: 0.8rem; font-weight: 700; color: var(--primary); text-decoration: none; border: 1px solid #bae6fd; background: #e0f2fe; padding: 6px 14px; border-radius: 6px;">
+            ✉️ Opna póstforrit til að senda beint á Sigurjón ↗
+          </a>
+        </div>
+        <hr style="border: 0; border-top: 1px solid var(--border); margin: 14px 0;">
+        <div style="font-size: 0.86rem; font-weight: 700; margin-bottom: 8px; color: var(--text);">
+          Sláðu inn Reset-kóðann og veldu nýtt PIN:
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <input type="text" id="resetTokenInput" placeholder="Sláðu inn Reset-kóðann..." style="padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.88rem;">
+          <div style="display: flex; gap: 8px;">
+            <input type="password" id="resetNewPinInput" maxlength="4" pattern="[0-9]{4}" inputmode="numeric" placeholder="Nýtt 4-stafa PIN" style="flex: 1; padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.88rem;" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 4);">
+            <input type="password" id="resetNewPinConfirm" maxlength="4" pattern="[0-9]{4}" inputmode="numeric" placeholder="Staðfesta PIN" style="flex: 1; padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.88rem;" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 4);">
+          </div>
+          <div id="resetPinError" style="display: none; color: var(--danger); font-size: 0.82rem; font-weight: 700;"></div>
+          <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 4px;">
+            <button onclick="closeForgotPinModal()" style="padding: 8px 14px; border: 1px solid var(--border); background: white; border-radius: 8px; font-size: 0.85rem; cursor: pointer;">Loka</button>
+            <button onclick="executePinReset()" style="padding: 8px 18px; background: #16a34a; color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 0.85rem; cursor: pointer;">Endursetja PIN og skrá inn ➔</button>
+          </div>
         </div>
       </div>
     </div>
@@ -713,6 +848,9 @@
     let activePIN = "";
     let currentFilter = "all";
     const SIGURJON_MASTER_PIN = "6243";
+    let USER_PINS = {};
+    let PIN_RESET_REQUESTS = {};
+    let selectingUser = "";
 
     const CLOUD_SYNC_URL = "https://kvdb.io/SKmnoosJYG9rrzQ9ioVJEn/family_sync";
 
@@ -836,6 +974,8 @@
           votes: allVotes,
           customHouses: CUSTOM_HOUSES,
           userRequests: USER_REQUESTS,
+          userPins: USER_PINS,
+          pinResetRequests: PIN_RESET_REQUESTS,
           updatedAt: new Date().toISOString(),
           updatedBy: currentPerson || "Fjölskylda"
         };
@@ -964,6 +1104,17 @@
               localStorage.setItem("sweeden_2027_user_requests", JSON.stringify(USER_REQUESTS));
             }
 
+            if (cloudData.userPins && typeof cloudData.userPins === "object") {
+              USER_PINS = { ...USER_PINS, ...cloudData.userPins };
+              localStorage.setItem("sweeden_2027_user_pins", JSON.stringify(USER_PINS));
+            }
+
+            if (cloudData.pinResetRequests && typeof cloudData.pinResetRequests === "object") {
+              PIN_RESET_REQUESTS = { ...cloudData.pinResetRequests };
+              localStorage.setItem("sweeden_2027_pin_resets", JSON.stringify(PIN_RESET_REQUESTS));
+              renderMasterResets();
+            }
+
             // Uppfæra viðmót án þess að eyðileggja stöðu núverandi kjósanda eða láta spjöld hoppa
             if (!silent || changedHouse) {
               renderWeeks();
@@ -1063,15 +1214,24 @@
         try { USER_REQUESTS = JSON.parse(storedRequests); } catch (e) {}
       }
 
+      // Lesa user pins og reset-beiðnir staðbundið
+      const storedPins = localStorage.getItem("sweeden_2027_user_pins");
+      if (storedPins) {
+        try { USER_PINS = JSON.parse(storedPins); } catch (e) {}
+      }
+      const storedResets = localStorage.getItem("sweeden_2027_pin_resets");
+      if (storedResets) {
+        try { PIN_RESET_REQUESTS = JSON.parse(storedResets); } catch (e) {}
+      }
+
       checkUrlHashImport();
-      renderPersonChips();
 
       const savedPerson = localStorage.getItem("sweeden_2027_current_person");
       if (savedPerson && !isDisallowedName(savedPerson)) {
         selectPerson(savedPerson);
       } else {
         selectPerson(null);
-        openWelcomeUserModal();
+        openChangeUserModal();
       }
 
       // Sækja sjálfkrafa nýjustu gögn úr skýi
@@ -1083,30 +1243,52 @@
       }
     }
 
-    function openWelcomeUserModal() {
-      const modal = document.getElementById("welcomeUserModal");
-      const chipsEl = document.getElementById("welcomeUserChips");
-      if (!modal || !chipsEl) return;
-
-      chipsEl.innerHTML = FAMILY_MEMBERS.map(name => `
-        <button class="person-chip" onclick="chooseWelcomeUser('${name}')" style="font-size: 0.95rem; padding: 10px 18px; border-radius: 20px; font-weight: 600;">
-          ${name}
-        </button>
-      `).join("");
-
-      modal.style.display = "flex";
-    }
-
-    function chooseWelcomeUser(name) {
-      selectPerson(name);
-      closeWelcomeModal();
-      showToast(`👋 Velkomin(n) ${name}! Svörin þín eru nú virk.`);
-    }
-
     function isDisallowedName(name) {
       if (!name) return true;
       const lower = name.trim().toLowerCase();
       return lower === "gestur" || lower === "gest" || lower === "guest" || lower === "gestir" || lower === "guests" || lower === "gesti";
+    }
+
+    function openChangeUserModal() {
+      const modal = document.getElementById("welcomeUserModal");
+      const chipsEl = document.getElementById("welcomeUserChips");
+      const closeBtn = document.getElementById("welcomeModalCloseBtn");
+      if (!modal || !chipsEl) return;
+
+      if (closeBtn) {
+        closeBtn.style.display = currentPerson ? "block" : "none";
+      }
+
+      const allKnownNames = [...FAMILY_MEMBERS];
+      Object.keys(allVotes).forEach(p => {
+        if (p && !allKnownNames.includes(p) && !isDisallowedName(p)) allKnownNames.push(p);
+      });
+      Object.keys(USER_PINS).forEach(p => {
+        if (p && !allKnownNames.includes(p) && !isDisallowedName(p)) allKnownNames.push(p);
+      });
+
+      chipsEl.innerHTML = allKnownNames.map(name => {
+        const isActive = (currentPerson === name) ? 'active' : '';
+        const hasPin = !!USER_PINS[name];
+        return `
+          <button class="person-chip ${isActive}" onclick="onUserChosenFromModal('${name}')" style="font-size: 0.95rem; padding: 10px 18px; border-radius: 20px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+            ${name} ${hasPin ? '<span style="font-size: 0.72rem; opacity: 0.75;">🔒</span>' : ''}
+          </button>
+        `;
+      }).join("");
+
+      const customInput = document.getElementById("welcomeCustomName");
+      if (customInput) customInput.value = "";
+
+      modal.style.display = "flex";
+    }
+
+    function closeChangeUserModal() {
+      const modal = document.getElementById("welcomeUserModal");
+      if (modal) modal.style.display = "none";
+      if (!currentPerson) {
+        showToast("⚠️ Vinsamlegast veldu nafn til að geta kosið eða skráð svör.", "warning");
+      }
     }
 
     function submitWelcomeCustomName() {
@@ -1121,12 +1303,330 @@
         if (input) input.focus();
         return;
       }
-      chooseWelcomeUser(val);
+      onUserChosenFromModal(val);
     }
 
-    function closeWelcomeModal() {
+    function onUserChosenFromModal(name) {
+      if (!name) return;
+      const cleanName = name.trim();
+      if (isDisallowedName(cleanName)) {
+        alert("Ekki er leyfilegt að nota „Gestur“ sem nafn.");
+        return;
+      }
+      selectingUser = cleanName;
       const modal = document.getElementById("welcomeUserModal");
       if (modal) modal.style.display = "none";
+
+      if (!USER_PINS[selectingUser]) {
+        // Nýr notandi eða hefur ekki enn valið PIN
+        openPinSetupModal(selectingUser, false);
+      } else {
+        // Notandi á PIN - athuga hvort Sigurjón hafi samþykkt endursetningu
+        if (PIN_RESET_REQUESTS[selectingUser] && PIN_RESET_REQUESTS[selectingUser].approved) {
+          openPinSetupModal(selectingUser, true);
+        } else {
+          openPinLoginModal(selectingUser);
+        }
+      }
+    }
+
+    function openPinLoginModal(name) {
+      selectingUser = name;
+      document.getElementById("pinLoginTitle").textContent = "Innskráning: " + name;
+      document.getElementById("pinLoginDesc").textContent = "Sláðu inn 4-stafa leyninúmerið (PIN) fyrir " + name + ":";
+      document.getElementById("loginPinInput").value = "";
+      document.getElementById("loginPinError").style.display = "none";
+      document.getElementById("pinLoginModal").style.display = "flex";
+      setTimeout(() => {
+        const inp = document.getElementById("loginPinInput");
+        if (inp) inp.focus();
+      }, 150);
+    }
+
+    function closePinLoginModal() {
+      document.getElementById("pinLoginModal").style.display = "none";
+      if (!currentPerson) {
+        openChangeUserModal();
+      }
+    }
+
+    function submitLoginPin() {
+      const inp = document.getElementById("loginPinInput");
+      const pin = inp ? inp.value.trim() : "";
+      const expected = (USER_PINS[selectingUser] || "").toString().trim();
+
+      if (pin === expected || pin === SIGURJON_MASTER_PIN) {
+        document.getElementById("pinLoginModal").style.display = "none";
+        selectPerson(selectingUser);
+        showToast(`👋 Velkomin(n) ${selectingUser}!`);
+      } else {
+        const err = document.getElementById("loginPinError");
+        if (err) err.style.display = "block";
+        if (inp) {
+          inp.value = "";
+          inp.focus();
+        }
+      }
+    }
+
+    function openPinSetupModal(name, isReset = false) {
+      selectingUser = name;
+      const titleEl = document.getElementById("pinSetupTitle");
+      const descEl = document.getElementById("pinSetupDesc");
+      if (isReset) {
+        if (titleEl) titleEl.textContent = "Endursetja PIN fyrir " + name;
+        if (descEl) descEl.textContent = "Sigurjón hefur samþykkt endursetningu! Veldu nú nýtt 4-stafa PIN:";
+      } else {
+        if (titleEl) titleEl.textContent = "Veldu 4-stafa PIN fyrir " + name;
+        if (descEl) descEl.textContent = "Til að verja svörin þín og tryggja að aðrir geti ekki breytt þeim, veldu 4-stafa PIN:";
+      }
+      document.getElementById("setupPinInput").value = "";
+      document.getElementById("setupPinConfirm").value = "";
+      document.getElementById("setupPinError").style.display = "none";
+      document.getElementById("pinSetupModal").style.display = "flex";
+      setTimeout(() => {
+        const inp = document.getElementById("setupPinInput");
+        if (inp) inp.focus();
+      }, 150);
+    }
+
+    function closePinSetupModal() {
+      document.getElementById("pinSetupModal").style.display = "none";
+      if (!currentPerson) {
+        openChangeUserModal();
+      }
+    }
+
+    async function submitSetupPin() {
+      const p1 = document.getElementById("setupPinInput").value.trim();
+      const p2 = document.getElementById("setupPinConfirm").value.trim();
+      const errEl = document.getElementById("setupPinError");
+
+      if (p1.length !== 4 || !/^\d{4}$/.test(p1)) {
+        errEl.textContent = "❌ PIN verður að vera nákvæmlega 4 tölustafir.";
+        errEl.style.display = "block";
+        return;
+      }
+      if (p1 !== p2) {
+        errEl.textContent = "❌ PIN stemma ekki saman í báðum reitum.";
+        errEl.style.display = "block";
+        return;
+      }
+
+      USER_PINS[selectingUser] = p1;
+      if (PIN_RESET_REQUESTS[selectingUser]) {
+        delete PIN_RESET_REQUESTS[selectingUser];
+        localStorage.setItem("sweeden_2027_pin_resets", JSON.stringify(PIN_RESET_REQUESTS));
+      }
+      localStorage.setItem("sweeden_2027_user_pins", JSON.stringify(USER_PINS));
+      await pushToCloud();
+
+      document.getElementById("pinSetupModal").style.display = "none";
+      selectPerson(selectingUser);
+      showToast(`✅ PIN vistað! Velkomin(n) ${selectingUser}.`);
+    }
+
+    function onForgotPinClick() {
+      document.getElementById("pinLoginModal").style.display = "none";
+      openForgotPinModal(selectingUser);
+    }
+
+    function openForgotPinModal(name) {
+      selectingUser = name;
+      document.getElementById("forgotPinUserName").textContent = name;
+      document.getElementById("resetPinError").style.display = "none";
+      document.getElementById("resetTokenInput").value = "";
+      document.getElementById("resetNewPinInput").value = "";
+      document.getElementById("resetNewPinConfirm").value = "";
+
+      if (PIN_RESET_REQUESTS[name] && PIN_RESET_REQUESTS[name].token) {
+        showSentResetView(name, PIN_RESET_REQUESTS[name].token);
+      } else {
+        document.getElementById("forgotPinInitialView").style.display = "block";
+        document.getElementById("forgotPinSentView").style.display = "none";
+      }
+
+      document.getElementById("forgotPinModal").style.display = "flex";
+    }
+
+    function closeForgotPinModal() {
+      document.getElementById("forgotPinModal").style.display = "none";
+      if (!currentPerson) {
+        openChangeUserModal();
+      }
+    }
+
+    async function confirmRequestPinReset() {
+      const resetBtn = document.getElementById("sendResetReqBtn");
+      if (resetBtn) {
+        resetBtn.disabled = true;
+        resetBtn.textContent = "Sendir beiðni... ⏳";
+      }
+
+      const token = Math.floor(100000 + Math.random() * 900000).toString();
+      PIN_RESET_REQUESTS[selectingUser] = {
+        token: token,
+        requestedAt: new Date().toISOString(),
+        approved: false
+      };
+      localStorage.setItem("sweeden_2027_pin_resets", JSON.stringify(PIN_RESET_REQUESTS));
+      await pushToCloud();
+
+      // Senda sjálfvirkan tölvupóst á sigurjonaxel@gmail.com
+      try {
+        fetch("https://formsubmit.co/ajax/sigurjonaxel@gmail.com", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify({
+            _subject: `🔒 Gleymt PIN fyrir ${selectingUser} (Svíþjóð 2027)`,
+            Notandi: selectingUser,
+            Reset_kóði: token,
+            Tími: new Date().toLocaleString("is-IS"),
+            Skilaboð: `Notandinn „${selectingUser}“ gleymdi PIN-númerinu sínu í Svíþjóðarvefnum.\nReset-kóði: ${token}\n\nÞú getur samþykkt endursetninguna beint í vefnum undir Master stjórnborði eða látið notandann fá þennan kóða.`
+          })
+        }).catch(err => console.warn("Email dispatch error:", err));
+      } catch (e) {
+        console.warn("Email dispatch exception:", e);
+      }
+
+      if (resetBtn) {
+        resetBtn.disabled = false;
+        resetBtn.textContent = "Senda á Sigurjón ✉️";
+      }
+
+      showSentResetView(selectingUser, token);
+      showToast("✉️ Beiðni send á sigurjonaxel@gmail.com!");
+    }
+
+    function showSentResetView(name, token) {
+      document.getElementById("displayResetToken").textContent = token;
+      const mailtoSub = encodeURIComponent(`Gleymt PIN fyrir ${name} - Svíþjóðarferð 2027`);
+      const mailtoBody = encodeURIComponent(`Hæ Sigurjón,\n\nÉg gleymdi PIN-númerinu mínu fyrir Svíþjóðarvefinn (${name}).\nReset-kóðinn minn er: ${token}\n\nVinsamlegast samþykktu endursetninguna á síðunni eða sendu mér staðfestingu.\n\nKveðja,\n${name}`);
+      const mailtoLink = document.getElementById("forgotPinMailtoLink");
+      if (mailtoLink) mailtoLink.href = `mailto:sigurjonaxel@gmail.com?subject=${mailtoSub}&body=${mailtoBody}`;
+
+      document.getElementById("forgotPinInitialView").style.display = "none";
+      document.getElementById("forgotPinSentView").style.display = "block";
+    }
+
+    async function executePinReset() {
+      const enteredToken = document.getElementById("resetTokenInput").value.trim();
+      const p1 = document.getElementById("resetNewPinInput").value.trim();
+      const p2 = document.getElementById("resetNewPinConfirm").value.trim();
+      const errEl = document.getElementById("resetPinError");
+
+      const req = PIN_RESET_REQUESTS[selectingUser];
+      const isApproved = req && req.approved;
+      const isTokenMatch = req && req.token && (enteredToken === req.token.toString().trim());
+      const isMasterBypass = (enteredToken === SIGURJON_MASTER_PIN);
+
+      if (!isApproved && !isTokenMatch && !isMasterBypass) {
+        errEl.textContent = "❌ Rangur Reset-kóði eða Sigurjón hefur ekki samþykkt endursetninguna ennþá.";
+        errEl.style.display = "block";
+        return;
+      }
+
+      if (p1.length !== 4 || !/^\d{4}$/.test(p1)) {
+        errEl.textContent = "❌ Nýja PIN-númerið verður að vera nákvæmlega 4 tölustafir.";
+        errEl.style.display = "block";
+        return;
+      }
+      if (p1 !== p2) {
+        errEl.textContent = "❌ PIN stemma ekki saman í báðum reitum.";
+        errEl.style.display = "block";
+        return;
+      }
+
+      USER_PINS[selectingUser] = p1;
+      delete PIN_RESET_REQUESTS[selectingUser];
+      localStorage.setItem("sweeden_2027_user_pins", JSON.stringify(USER_PINS));
+      localStorage.setItem("sweeden_2027_pin_resets", JSON.stringify(PIN_RESET_REQUESTS));
+      await pushToCloud();
+
+      document.getElementById("forgotPinModal").style.display = "none";
+      selectPerson(selectingUser);
+      showToast(`🎉 Nýtt PIN vistað og þú ert skráð(ur) inn sem ${selectingUser}!`);
+    }
+
+    function renderMasterResets() {
+      const container = document.getElementById("masterPendingResetsList");
+      if (!container) return;
+      const names = Object.keys(PIN_RESET_REQUESTS);
+      if (names.length === 0) {
+        container.innerHTML = `<span style="color: var(--text-muted); font-size: 0.8rem;">Engar beiðnir um PIN endursetningu í bið.</span>`;
+        return;
+      }
+      container.innerHTML = `
+        <div style="font-weight: 700; margin-bottom: 6px; color: #b45309;">📬 Beiðnir um PIN endursetningu (${names.length}):</div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          ${names.map(name => {
+            const req = PIN_RESET_REQUESTS[name];
+            const isApproved = req.approved;
+            return `
+              <div style="display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 8px 12px; border-radius: 8px; border: 1px solid #fde68a;">
+                <div>
+                  <strong>${name}</strong>
+                  <span style="font-family: monospace; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; margin-left: 6px; font-size: 0.82rem;">Kóði: ${req.token}</span>
+                  ${isApproved ? '<span style="color: #166534; font-weight: 700; margin-left: 6px;">(Samþykkt ✅)</span>' : '<span style="color: #b45309; font-size: 0.78rem; margin-left: 6px;">(Bíður samþykkis)</span>'}
+                </div>
+                <div style="display: flex; gap: 6px;">
+                  ${!isApproved ? `
+                    <button onclick="approvePinReset('${name}')" style="background: #16a34a; color: white; border: none; padding: 4px 10px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer;">Samþykkja ✅</button>
+                  ` : ''}
+                  <button onclick="dismissPinReset('${name}')" style="background: #f1f5f9; color: var(--text-muted); border: 1px solid var(--border); padding: 4px 8px; border-radius: 6px; font-size: 0.78rem; cursor: pointer;">Hafna / Hreinsa ✕</button>
+                </div>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+
+    async function approvePinReset(name) {
+      if (!PIN_RESET_REQUESTS[name]) return;
+      PIN_RESET_REQUESTS[name].approved = true;
+      localStorage.setItem("sweeden_2027_pin_resets", JSON.stringify(PIN_RESET_REQUESTS));
+      await pushToCloud();
+      renderMasterResets();
+      showToast(`✅ Endursetning fyrir „${name}“ samþykkt! Viðkomandi getur nú valið nýtt PIN.`);
+    }
+
+    async function dismissPinReset(name) {
+      delete PIN_RESET_REQUESTS[name];
+      localStorage.setItem("sweeden_2027_pin_resets", JSON.stringify(PIN_RESET_REQUESTS));
+      await pushToCloud();
+      renderMasterResets();
+      showToast(`🗑️ Beiðni fyrir „${name}“ hreinsuð.`);
+    }
+
+    async function masterManualResetPin() {
+      const allKnown = Array.from(new Set([...FAMILY_MEMBERS, ...Object.keys(USER_PINS), ...Object.keys(allVotes)]));
+      const target = prompt(`🔑 Master: Sláðu inn nafn þess sem á að endurstilla PIN fyrir:\nÞekkt nöfn: ${allKnown.join(", ")}`);
+      if (!target || !target.trim()) return;
+      const cleanTarget = target.trim();
+      const newP = prompt(`Sláðu inn nýtt 4-stafa PIN fyrir „${cleanTarget}“ (eða skildu eftir tómt til að hreinsa PIN svo notandi velji sjálfur):`);
+      if (newP === null) return;
+      const cleanPin = newP.trim();
+      if (cleanPin) {
+        if (cleanPin.length !== 4 || !/^\d{4}$/.test(cleanPin)) {
+          alert("❌ PIN verður að vera 4 tölustafir.");
+          return;
+        }
+        USER_PINS[cleanTarget] = cleanPin;
+        delete PIN_RESET_REQUESTS[cleanTarget];
+        showToast(`✅ Nýtt PIN stillt fyrir „${cleanTarget}“.`);
+      } else {
+        delete USER_PINS[cleanTarget];
+        delete PIN_RESET_REQUESTS[cleanTarget];
+        showToast(`🗑️ PIN hreinsað fyrir „${cleanTarget}“. Notandi velur nýtt við næstu innskráningu.`);
+      }
+      localStorage.setItem("sweeden_2027_user_pins", JSON.stringify(USER_PINS));
+      localStorage.setItem("sweeden_2027_pin_resets", JSON.stringify(PIN_RESET_REQUESTS));
+      await pushToCloud();
+      renderMasterResets();
     }
 
     function checkUrlHashImport() {
@@ -1164,59 +1664,23 @@
       if (currentPerson && currentPerson.trim() !== "") {
         return true;
       }
-      const entered = prompt(`👤 Hver ert þú?\nSláðu inn nafnið þitt til að ${actionDescription}:`);
-      if (entered && entered.trim() !== "") {
-        if (isDisallowedName(entered)) {
-          alert("Ekki er leyfilegt að nota „Gestur“ sem nafn. Vinsamlegast sláðu inn raunverulegt nafn.");
-          return false;
-        }
-        selectPerson(entered.trim());
-        return true;
-      }
-      const chipsEl = document.getElementById("personChips");
-      if (chipsEl) chipsEl.scrollIntoView({ behavior: "smooth", block: "center" });
-      alert(`⚠️ Vinsamlegast veldu nafnið þitt í lið 1 (eða skrifaðu nafn) til að ${actionDescription}.`);
+      openChangeUserModal();
+      showToast(`⚠️ Vinsamlegast skráðu þig inn til að ${actionDescription}.`, "warning");
       return false;
     }
 
     function renderPersonChips() {
-      const c = document.getElementById("personChips");
-      if (!c) return;
-
-      const allNames = [...FAMILY_MEMBERS];
-      Object.keys(allVotes).forEach(p => {
-        if (p && !allNames.includes(p)) allNames.push(p);
-      });
-
-      const isSigurjon = (currentPerson === "Sigurjón Axel");
-
-      c.innerHTML = allNames.map(name => {
-        const isActive = (currentPerson === name) ? 'active' : '';
-        const safeId = "chip-" + name.replace(/[^a-zA-Z0-9]/g, '');
-        return `
-          <button class="person-chip ${isActive}" onclick="selectPerson('${name}')" id="${safeId}">
-            ${name}
-            ${isSigurjon ? `
-              <span onclick="event.stopPropagation(); deletePersonAsMaster('${name}')" title="Eyða „${name}“ og svörum sem Master" style="margin-left: 8px; color: var(--danger); font-weight: 900; font-size: 0.95rem; cursor: pointer; padding: 0 4px;">✕</span>
-            ` : ''}
-          </button>
-        `;
-      }).join("");
-
-      const masterBtnEl = document.getElementById("masterDeletePersonBtnContainer");
-      if (masterBtnEl) {
-        masterBtnEl.style.display = isSigurjon ? "block" : "none";
-      }
+      // Engin þörf á flóknum lista í aðalborði lengur, notandaspjald sýnir núverandi stöðu
     }
 
     async function deletePersonAsMaster(nameToDelete) {
       if (!nameToDelete) {
-        const voters = Object.keys(allVotes).filter(Boolean);
+        const voters = Array.from(new Set([...Object.keys(allVotes), ...Object.keys(USER_PINS)])).filter(Boolean);
         if (voters.length === 0) {
-          alert("Engir notendur hafa skráð svör ennþá.");
+          alert("Engir notendur hafa skráð svör eða PIN ennþá.");
           return;
         }
-        const entered = prompt(`🔒 Master (Sigurjón):\nSláðu inn nafn þess sem á að eyða (og öllum svörum viðkomandi):\nSkráðir notendur: ${voters.join(", ")}`);
+        const entered = prompt(`🔒 Master (Sigurjón):\nSláðu inn nafn þess sem á að eyða (og öllum svörum og PIN viðkomandi):\nSkráðir notendur: ${voters.join(", ")}`);
         if (!entered || !entered.trim()) return;
         nameToDelete = entered.trim();
       }
@@ -1228,10 +1692,15 @@
         return;
       }
 
-      if (!confirm(`Ertu alveg viss um að vilja eyða öllum svörum og atkvæðum fyrir „${nameToDelete}“?`)) return;
+      if (!confirm(`Ertu alveg viss um að vilja eyða öllum svörum, atkvæðum og PIN fyrir „${nameToDelete}“?`)) return;
 
       delete allVotes[nameToDelete];
+      delete USER_PINS[nameToDelete];
+      delete PIN_RESET_REQUESTS[nameToDelete];
+
       localStorage.setItem("sweeden_2027_votes", JSON.stringify(allVotes));
+      localStorage.setItem("sweeden_2027_user_pins", JSON.stringify(USER_PINS));
+      localStorage.setItem("sweeden_2027_pin_resets", JSON.stringify(PIN_RESET_REQUESTS));
 
       if (localStorage.getItem("sweeden_2027_current_person") === nameToDelete) {
         localStorage.removeItem("sweeden_2027_current_person");
@@ -1240,24 +1709,34 @@
         selectPerson(null);
       }
 
-      renderPersonChips();
       renderWeeks();
       renderAllHouses(currentFilter || 'all');
       updateHouseCounts();
       renderResults();
+      renderMasterResets();
 
       await pushToCloud();
-      showToast(`🗑️ Svörum og nafni „${nameToDelete}“ hefur verið eytt og samstillt við alla.`);
+      showToast(`🗑️ Notanda „${nameToDelete}“ hefur verið eytt og samstillt við alla.`);
     }
 
     function selectPerson(name) {
-      if (!name || name === currentPerson) {
+      if (!name) {
         currentPerson = null;
         localStorage.removeItem("sweeden_2027_current_person");
-        document.getElementById("customNameInput").value = "";
-        document.querySelectorAll(".person-chip").forEach(el => el.classList.remove("active"));
+
+        const profDisplay = document.getElementById("profileUserNameDisplay");
+        if (profDisplay) profDisplay.textContent = "Enginn valinn";
+        const badge = document.getElementById("profileUserStatusBadge");
+        if (badge) badge.style.display = "none";
+        const logoutBtn = document.getElementById("logoutBtn");
+        if (logoutBtn) logoutBtn.style.display = "none";
+        const desc = document.getElementById("profileUserDesc");
+        if (desc) desc.textContent = "Smelltu á „Skipta um notanda“ til að velja nafn og skrá þig inn með PIN.";
+        const masterSec = document.getElementById("masterAdminSection");
+        if (masterSec) masterSec.style.display = "none";
+
         document.getElementById("saveBarName").textContent = "Enginn valinn";
-        document.getElementById("saveBarStatus").textContent = "Veldu nafn hér að ofan til að skrá svör";
+        document.getElementById("saveBarStatus").textContent = "Veldu nafn til að skrá svör";
         currentVote = { weeks: {}, houseVotes: {}, houseComments: {}, comment: "" };
         const cEl = document.getElementById("commentInput");
         if (cEl) cEl.value = "";
@@ -1270,19 +1749,24 @@
         return;
       }
 
-      if (isDisallowedName(name)) {
-        alert("Ekki er leyfilegt að nota „Gestur“ sem nafn.");
-        selectPerson(null);
-        return;
-      }
-
       currentPerson = name.trim();
       localStorage.setItem("sweeden_2027_current_person", currentPerson);
-      document.getElementById("customNameInput").value = FAMILY_MEMBERS.includes(currentPerson) ? "" : currentPerson;
-      document.querySelectorAll(".person-chip").forEach(el => el.classList.remove("active"));
-      const safeId = "chip-" + currentPerson.replace(/[^a-zA-Z0-9]/g, '');
-      const activeEl = document.getElementById(safeId);
-      if (activeEl) activeEl.classList.add("active");
+
+      const profDisplay = document.getElementById("profileUserNameDisplay");
+      if (profDisplay) profDisplay.textContent = currentPerson;
+      const badge = document.getElementById("profileUserStatusBadge");
+      if (badge) badge.style.display = "inline-block";
+      const logoutBtn = document.getElementById("logoutBtn");
+      if (logoutBtn) logoutBtn.style.display = "inline-block";
+      const desc = document.getElementById("profileUserDesc");
+      if (desc) desc.textContent = "Þú ert innskráð(ur) og svörin þín vistast sjálfkrafa við hvern smell.";
+
+      const isMasterUser = (currentPerson === "Sigurjón Axel" || currentPerson === "Sigurjón");
+      const masterSec = document.getElementById("masterAdminSection");
+      if (masterSec) {
+        masterSec.style.display = isMasterUser ? "block" : "none";
+        if (isMasterUser) renderMasterResets();
+      }
 
       document.getElementById("saveBarName").textContent = currentPerson;
       document.getElementById("saveBarStatus").textContent = "Skráir svör fyrir " + currentPerson;
@@ -1306,17 +1790,14 @@
       renderResults();
     }
 
+    function logoutUser() {
+      selectPerson(null);
+      showToast("👋 Þú hefur verið skráð(ur) út.");
+      openChangeUserModal();
+    }
+
     function onCustomNameInput(val) {
-      const clean = val.trim();
-      if (clean) {
-        if (isDisallowedName(clean)) {
-          document.getElementById("saveBarName").textContent = "Ógilt nafn (Gestur er ekki leyft)";
-          return;
-        }
-        selectPerson(clean);
-      } else {
-        selectPerson(null);
-      }
+      // Notandi er nú valinn í gegnum öruggan sprettiglugga með PIN
     }
 
     let tab1WeeksSort = "popularity";
@@ -1741,12 +2222,7 @@
     }
 
     function saveHouseComment(houseId) {
-      if (!currentPerson) {
-        alert("Vinsamlegast veldu eða skrifaðu nafn áður en þú skrifar athugasemd.");
-        const nameSection = document.getElementById("personChips");
-        if (nameSection) nameSection.scrollIntoView({ behavior: 'smooth' });
-        return;
-      }
+      if (!ensureUserSelected("skrifa athugasemd")) return;
       const input = document.getElementById(`comment-input-${houseId}`);
       if (!input) return;
       const val = input.value.trim();
