@@ -71,8 +71,38 @@
     .pin-error { color: var(--danger); font-size: 0.85rem; font-weight: 600; margin-top: 12px; display: none; }
 
     header {
-      background: linear-gradient(135deg, #0284c7 0%, #0369a1 50%, #1e3a8a 100%);
-      color: white; padding: 44px 20px 36px; text-align: center; position: relative;
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 45%, #1e3a8a 100%);
+      color: white; padding: 46px 20px 38px; text-align: center; position: relative;
+      overflow: hidden;
+    }
+    .header-flags-bg {
+      position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 1;
+    }
+    .flag-banner {
+      position: absolute; width: 130px; height: 82px; border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35), 0 0 0 2px rgba(255, 255, 255, 0.35);
+      overflow: hidden; opacity: 0.92;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    .flag-banner.left-sweden {
+      left: 28px; top: 50%; transform: translateY(-50%) rotate(-5deg);
+    }
+    .flag-banner.right-denmark {
+      right: 28px; top: 50%; transform: translateY(-50%) rotate(5deg);
+    }
+    .flag-banner svg {
+      width: 100%; height: 100%; display: block;
+    }
+    .flag-watermark-left {
+      position: absolute; left: -30px; bottom: -30px; width: 260px; height: 165px;
+      opacity: 0.08; pointer-events: none; transform: rotate(-8deg);
+    }
+    .flag-watermark-right {
+      position: absolute; right: -30px; bottom: -30px; width: 260px; height: 165px;
+      opacity: 0.08; pointer-events: none; transform: rotate(8deg);
+    }
+    @media (max-width: 960px) {
+      .flag-banner { display: none; }
     }
     .header-content { max-width: 840px; margin: 0 auto; }
     .header-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
@@ -413,7 +443,40 @@
   <!-- Main App -->
   <div id="appContainer" style="display: none;">
     <header>
-      <div class="header-content">
+      <!-- Bakgrunnsfánar: Svíþjóð og Danmörk -->
+      <div class="header-flags-bg">
+        <!-- Stórir daufir vatnsmerkjafánar -->
+        <svg class="flag-watermark-left" viewBox="0 0 16 10">
+          <rect width="16" height="10" fill="#ffffff"/>
+          <rect width="2.4" height="10" x="5" fill="#fecb00"/>
+          <rect width="16" height="2.4" y="3.8" fill="#fecb00"/>
+        </svg>
+        <svg class="flag-watermark-right" viewBox="0 0 37 28">
+          <rect width="37" height="28" fill="#c8102e"/>
+          <rect width="4.5" height="28" x="12" fill="#ffffff"/>
+          <rect width="37" height="4.5" y="11.75" fill="#ffffff"/>
+        </svg>
+
+        <!-- Sænski fáninn vinstra megin -->
+        <div class="flag-banner left-sweden" title="Svíþjóð 🇸🇪">
+          <svg viewBox="0 0 16 10" preserveAspectRatio="none">
+            <rect width="16" height="10" fill="#005293"/>
+            <rect width="2.4" height="10" x="5" fill="#fecb00"/>
+            <rect width="16" height="2.4" y="3.8" fill="#fecb00"/>
+          </svg>
+        </div>
+
+        <!-- Danski fáninn hægra megin -->
+        <div class="flag-banner right-denmark" title="Danmörk 🇩🇰">
+          <svg viewBox="0 0 37 28" preserveAspectRatio="none">
+            <rect width="37" height="28" fill="#c8102e"/>
+            <rect width="4.5" height="28" x="12" fill="#ffffff"/>
+            <rect width="37" height="4.5" y="11.75" fill="#ffffff"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="header-content" style="position: relative; z-index: 2;">
         <div class="header-top-bar">
           <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
             <div class="badge">🇸🇪 Svíþjóð & Danmörk 2027 🇩🇰 (Dulkóðuð 🛡️)</div>
@@ -421,10 +484,10 @@
           </div>
           <div style="display: flex; gap: 8px; align-items: center;">
             <button class="lock-btn" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; border-color: rgba(56, 189, 248, 0.4);" onclick="openFeedbackModal()" title="Senda inn ábendingu, ósk eða tilkynna villu">💡 Ábending / Beiðni</button>
-            <button class="lock-btn" onclick="lockApp()">Læsa síðu 🔒</button>
+            <button class="lock-btn" onclick="lockApp()" title="Læsa síðunni með PIN (krefst PIN 2027 til að opna aftur)">Læsa síðu 🔒</button>
           </div>
         </div>
-        <h1>Sumarfrí Fjölskyldunnar 2027</h1>
+        <h1>🇸🇪 Sumarfrí Fjölskyldunnar 2027 🇩🇰</h1>
         <p class="subtitle">Skipulag, dagsetningakosning og val á gististað fyrir 14 manna hópinn okkar!</p>
         
         <div class="quick-stats">
@@ -441,12 +504,17 @@
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
             <div>
               <div class="card-title" style="margin-bottom: 4px; font-size: 1.15rem;">1. Innskráður notandi</div>
-              <div style="display: flex; align-items: center; gap: 10px; margin-top: 4px;">
-                <span style="font-size: 1.35rem; font-weight: 800; color: var(--text);" id="profileUserNameDisplay">Enginn valinn</span>
-                <span id="profileUserStatusBadge" style="display: none; font-size: 0.76rem; font-weight: 700; background: #dcfce7; color: #166534; padding: 3px 9px; border-radius: 999px; border: 1px solid #bbf7d0;">🔒 Varið með PIN</span>
-              </div>
-              <div style="font-size: 0.84rem; color: var(--text-muted); margin-top: 4px;" id="profileUserDesc">
-                Smelltu á „Skipta um notanda“ til að velja nafn og skrá þig inn með PIN.
+              <div style="display: flex; align-items: center; gap: 12px; margin-top: 6px;">
+                <div id="profileUserAvatarDisplay"></div>
+                <div>
+                  <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 1.35rem; font-weight: 800; color: var(--text);" id="profileUserNameDisplay">Enginn valinn</span>
+                    <span id="profileUserStatusBadge" style="display: none; font-size: 0.76rem; font-weight: 700; background: #dcfce7; color: #166534; padding: 3px 9px; border-radius: 999px; border: 1px solid #bbf7d0;">🔒 Varið með PIN</span>
+                  </div>
+                  <div style="font-size: 0.84rem; color: var(--text-muted); margin-top: 3px;" id="profileUserDesc">
+                    Smelltu á „Skipta um notanda“ til að velja nafn og skrá þig inn með PIN.
+                  </div>
+                </div>
               </div>
             </div>
             <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
@@ -838,6 +906,38 @@
   <script>
     let FAMILY_MEMBERS = [];
     let FAMILY_BIRTHDAYS = [];
+
+    const USER_AVATARS = {
+      "Sigurjón Axel": "images/avatars/sigurjon.jpg",
+      "Sigurjón": "images/avatars/sigurjon.jpg",
+      "Ólafía Rósbjörg (Lóa)": "images/avatars/loa.jpg",
+      "Ólafía Rósbjörg": "images/avatars/loa.jpg",
+      "Lóa": "images/avatars/loa.jpg",
+      "Axel Bjarkar": "images/avatars/axel.jpg",
+      "Axel": "images/avatars/axel.jpg",
+      "Vala Björk": "images/avatars/vala.jpg",
+      "Vala": "images/avatars/vala.jpg",
+      "Rannveig Arna": "images/avatars/rannveig.jpg",
+      "Rannveig": "images/avatars/rannveig.jpg",
+      "Sara Kristín": "images/avatars/sara.jpg",
+      "Sara": "images/avatars/sara.jpg",
+      "Viktor Ingi": "images/avatars/viktor.jpg",
+      "Viktor": "images/avatars/viktor.jpg",
+      "Þórhildur Soffía": "images/avatars/thorhildur.jpg",
+      "Þórhildur": "images/avatars/thorhildur.jpg",
+      "Birkir Evan": "images/avatars/birkir.jpg",
+      "Birkir": "images/avatars/birkir.jpg"
+    };
+
+    function getUserAvatarHTML(name, size = 32) {
+      if (!name) return "";
+      const src = USER_AVATARS[name];
+      if (src) {
+        return `<img src="${src}" alt="${name}" style="width: ${size}px; height: ${size}px; border-radius: 50%; object-fit: cover; border: 1.5px solid rgba(255,255,255,0.85); box-shadow: 0 1px 4px rgba(0,0,0,0.18); vertical-align: middle; flex-shrink: 0;" onerror="this.outerHTML='<span style=\\'width: ${size}px; height: ${size}px; border-radius: 50%; background: #e0f2fe; color: #0369a1; display: inline-flex; align-items: center; justify-content: center; font-size: ${Math.round(size * 0.45)}px; font-weight: 700; vertical-align: middle; flex-shrink: 0;\\'>${name.charAt(0)}</span>'">`;
+      }
+      return `<span style="width: ${size}px; height: ${size}px; border-radius: 50%; background: #e0f2fe; color: #0369a1; display: inline-flex; align-items: center; justify-content: center; font-size: ${Math.round(size * 0.45)}px; font-weight: 700; vertical-align: middle; flex-shrink: 0;">${name.charAt(0)}</span>`;
+    }
+
     let WEEKS = [];
     let HOUSES = [];
     let CUSTOM_HOUSES = [];
@@ -1275,8 +1375,10 @@
         const isActive = (currentPerson === name) ? 'active' : '';
         const hasPin = !!USER_PINS[name];
         return `
-          <button class="person-chip ${isActive}" onclick="onUserChosenFromModal('${name}')" style="font-size: 0.95rem; padding: 10px 18px; border-radius: 20px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
-            ${name} ${hasPin ? '<span style="font-size: 0.72rem; opacity: 0.75;">🔒</span>' : ''}
+          <button class="person-chip ${isActive}" onclick="onUserChosenFromModal('${name}')" style="font-size: 0.95rem; padding: 6px 16px 6px 8px; border-radius: 999px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;">
+            ${getUserAvatarHTML(name, 30)}
+            <span>${name}</span>
+            ${hasPin ? '<span style="font-size: 0.72rem; opacity: 0.75;">🔒</span>' : ''}
           </button>
         `;
       }).join("");
@@ -1742,6 +1844,8 @@
 
         const profDisplay = document.getElementById("profileUserNameDisplay");
         if (profDisplay) profDisplay.textContent = "Enginn valinn";
+        const avDisplay = document.getElementById("profileUserAvatarDisplay");
+        if (avDisplay) avDisplay.innerHTML = "";
         const badge = document.getElementById("profileUserStatusBadge");
         if (badge) badge.style.display = "none";
         const logoutBtn = document.getElementById("logoutBtn");
@@ -1768,6 +1872,8 @@
 
       const profDisplay = document.getElementById("profileUserNameDisplay");
       if (profDisplay) profDisplay.textContent = currentPerson;
+      const avDisplay = document.getElementById("profileUserAvatarDisplay");
+      if (avDisplay) avDisplay.innerHTML = getUserAvatarHTML(currentPerson, 46);
       const badge = document.getElementById("profileUserStatusBadge");
       if (badge) badge.style.display = "inline-block";
       const logoutBtn = document.getElementById("logoutBtn");
@@ -1870,11 +1976,12 @@
     function getWeekAttendeesHTML(weekId) {
       const stats = getWeekStats(weekId);
       if (stats.yes.length > 0 || stats.maybe.length > 0 || stats.no.length > 0) {
+        const renderList = (arr) => arr.map(n => `<span style="display: inline-flex; align-items: center; gap: 4px; background: rgba(255,255,255,0.7); padding: 1px 6px 1px 2px; border-radius: 999px; margin: 1px 2px;">${getUserAvatarHTML(n, 18)}<span>${n}</span></span>`).join(" ");
         return `
           <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 4px;">
-            ${stats.yes.length > 0 ? `<div><span class="mini-name-chip chip-yes">✅ <strong>Komast (${stats.yes.length}):</strong> ${stats.yes.join(", ")}</span></div>` : ''}
-            ${stats.maybe.length > 0 ? `<div><span class="mini-name-chip chip-maybe">🟡 <strong>Gætu (${stats.maybe.length}):</strong> ${stats.maybe.join(", ")}</span></div>` : ''}
-            ${stats.no.length > 0 ? `<div><span class="mini-name-chip chip-no">❌ <strong>Komast ekki (${stats.no.length}):</strong> ${stats.no.join(", ")}</span></div>` : ''}
+            ${stats.yes.length > 0 ? `<div><span class="mini-name-chip chip-yes" style="display: inline-flex; align-items: center; flex-wrap: wrap; gap: 4px;">✅ <strong>Komast (${stats.yes.length}):</strong> ${renderList(stats.yes)}</span></div>` : ''}
+            ${stats.maybe.length > 0 ? `<div><span class="mini-name-chip chip-maybe" style="display: inline-flex; align-items: center; flex-wrap: wrap; gap: 4px;">🟡 <strong>Gætu (${stats.maybe.length}):</strong> ${renderList(stats.maybe)}</span></div>` : ''}
+            ${stats.no.length > 0 ? `<div><span class="mini-name-chip chip-no" style="display: inline-flex; align-items: center; flex-wrap: wrap; gap: 4px;">❌ <strong>Komast ekki (${stats.no.length}):</strong> ${renderList(stats.no)}</span></div>` : ''}
           </div>
         `;
       }
@@ -2004,10 +2111,10 @@
 
           <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;">
             ${summerBirthdays.map(b => `
-              <div style="background: white; border: 1px solid #fde68a; border-radius: 8px; padding: 8px 12px; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
-                <span style="font-size: 1.15rem;">🎉</span>
+              <div style="background: white; border: 1px solid #fde68a; border-radius: 10px; padding: 8px 14px; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.05);">
+                ${getUserAvatarHTML(b.name, 40)}
                 <div>
-                  <div style="font-weight: 800; font-size: 0.88rem; color: #78350f;">${b.name}</div>
+                  <div style="font-weight: 800; font-size: 0.9rem; color: #78350f;">${b.name}</div>
                   <div style="font-size: 0.78rem; color: #92400e;">
                     <strong>${b.dayMonth}</strong> · verður <strong>${b.age2027} ára</strong>
                   </div>
@@ -2021,11 +2128,14 @@
               <div style="font-size: 0.82rem; font-weight: 700; color: #92400e; margin-bottom: 8px;">
                 Öll afmæli fjölskyldunnar (úr Sag / Ancestry kerfinu):
               </div>
-              <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px;">
+              <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px;">
                 ${birthdays.map(b => `
-                  <div style="background: ${b.inSummer ? '#fef3c7' : 'white'}; border: 1px solid ${b.inSummer ? '#f59e0b' : '#f1f5f9'}; border-radius: 8px; padding: 6px 10px; font-size: 0.82rem; display: flex; justify-content: space-between; align-items: center;">
-                    <span style="font-weight: 700; color: var(--text);">${b.name}</span>
-                    <span style="color: var(--text-muted); font-size: 0.76rem;">${b.dayMonth} (${b.age2027} ára)</span>
+                  <div style="background: ${b.inSummer ? '#fef3c7' : 'white'}; border: 1px solid ${b.inSummer ? '#f59e0b' : '#f1f5f9'}; border-radius: 8px; padding: 6px 10px; font-size: 0.82rem; display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      ${getUserAvatarHTML(b.name, 26)}
+                      <span style="font-weight: 700; color: var(--text);">${b.name}</span>
+                    </div>
+                    <span style="color: var(--text-muted); font-size: 0.76rem; white-space: nowrap;">${b.dayMonth} (${b.age2027} ára)</span>
                   </div>
                 `).join("")}
               </div>
