@@ -712,6 +712,7 @@
     let allVotes = {};
     let activePIN = "";
     let currentFilter = "all";
+    const SIGURJON_MASTER_PIN = "6243";
 
     const CLOUD_SYNC_URL = "https://kvdb.io/SKmnoosJYG9rrzQ9ioVJEn/family_sync";
 
@@ -1220,10 +1221,10 @@
         nameToDelete = entered.trim();
       }
 
-      const enteredPin = prompt(`🔒 Sláðu inn Master-kóða (2027) til að staðfesta eyðingu á „${nameToDelete}“:`);
+      const enteredPin = prompt(`🔒 Sláðu inn Master-PIN til að staðfesta eyðingu á „${nameToDelete}“:`);
       if (enteredPin === null) return;
-      if (enteredPin.trim() !== "2027") {
-        alert("❌ Rangur Master-kóði! Aðeins Sigurjón getur eytt nöfnum.");
+      if (enteredPin.trim() !== SIGURJON_MASTER_PIN) {
+        alert("❌ Rangur Master-PIN! Aðeins Sigurjón getur eytt nöfnum.");
         return;
       }
 
@@ -1936,7 +1937,7 @@
       const enteredPin = prompt(`🔒 Sláðu inn leynikóða hússins:\nTillaga frá: ${creatorName}`);
       if (enteredPin === null) return;
       const cleanPin = enteredPin.trim();
-      if (cleanPin !== expectedPin && cleanPin !== "2027") {
+      if (cleanPin !== expectedPin && cleanPin !== SIGURJON_MASTER_PIN) {
         alert("❌ Rangur leynikóði! Þú hefur ekki heimild til að breyta þessu húsi.");
         return;
       }
@@ -1964,7 +1965,7 @@
       const enteredPin = prompt(`🔒 Sláðu inn leynikóða hússins:\nTillaga frá: ${creatorName}`);
       if (enteredPin === null) return;
       const cleanPin = enteredPin.trim();
-      if (cleanPin !== expectedPin && cleanPin !== "2027") {
+      if (cleanPin !== expectedPin && cleanPin !== SIGURJON_MASTER_PIN) {
         alert("❌ Rangur leynikóði! Þú hefur ekki heimild til að eyða þessu húsi.");
         return;
       }
