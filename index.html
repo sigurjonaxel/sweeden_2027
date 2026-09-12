@@ -756,6 +756,7 @@
               <button class="filter-btn" onclick="filterHouses('popularity', this)">🔥 Vinsælust (<span id="countPop">0</span>)</button>
               <button class="filter-btn" onclick="filterHouses('sweden', this)">Svíþjóð (<span id="countSwe">0</span>)</button>
               <button class="filter-btn" onclick="filterHouses('denmark', this)">Danmörk (<span id="countDen">0</span>)</button>
+              <button class="filter-btn" onclick="filterHouses('gemini', this)" style="background: #faf5ff; border-color: #d8b4fe; color: #7e22ce; font-weight: 700;">✨ Tillögur Gemini (<span id="countGemini">0</span>)</button>
               <button class="filter-btn" onclick="filterHouses('budget', this)">Bara ~$3.000 (<span id="countBudget">0</span>)</button>
               <button class="filter-btn" onclick="filterHouses('custom', this)">Fjölskyldutillögur (<span id="countCustom">0</span>)</button>
             </div>
@@ -3149,6 +3150,8 @@
       if (countSwe) countSwe.textContent = HOUSES.filter(h => h.country === 'Svíþjóð').length;
       const countDen = document.getElementById("countDen");
       if (countDen) countDen.textContent = HOUSES.filter(h => h.country === 'Danmörk').length;
+      const countGemini = document.getElementById("countGemini");
+      if (countGemini) countGemini.textContent = HOUSES.filter(h => h.suggestedBy && h.suggestedBy.toLowerCase().includes('gemini')).length;
       const countCustom = document.getElementById("countCustom");
       if (countCustom) countCustom.textContent = CUSTOM_HOUSES.length;
     }
@@ -3168,6 +3171,8 @@
         list = HOUSES.filter(h => h.country === 'Svíþjóð');
       } else if (currentFilter === 'denmark') {
         list = HOUSES.filter(h => h.country === 'Danmörk');
+      } else if (currentFilter === 'gemini') {
+        list = HOUSES.filter(h => h.suggestedBy && h.suggestedBy.toLowerCase().includes('gemini'));
       } else if (currentFilter === 'custom') {
         list = HOUSES.filter(h => h.isCustom);
       }
@@ -3542,7 +3547,7 @@
             <img src="${cardPhoto}" alt="${h.title}" loading="lazy" onerror="this.src='${defaultImg}'" />
             <div class="house-badge-loc">${h.region}</div>
             <div id="pop-badge-${h.id}" style="display:contents;">${getHouseBadgeHTML(h)}</div>
-            ${h.isCustom ? `<div class="house-badge-custom">Tillaga: ${h.suggestedBy || 'Fjölskylda'}</div>` : ''}
+            ${h.suggestedBy ? `<div class="house-badge-custom" style="${h.suggestedBy.toLowerCase().includes('gemini') ? 'background: linear-gradient(135deg, #4f46e5, #9333ea); color: #fff; font-weight: 800; border: 1px solid rgba(255,255,255,0.4); box-shadow: 0 2px 8px rgba(147, 51, 234, 0.4);' : ''}">✨ Tillaga: ${h.suggestedBy}</div>` : (h.isCustom ? `<div class="house-badge-custom">Tillaga: ${h.suggestedBy || 'Fjölskylda'}</div>` : '')}
             <div class="house-badge-price">${h.priceFormatted}</div>
           </div>
           <div class="house-body">

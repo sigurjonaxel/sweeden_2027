@@ -430,5 +430,125 @@
       "w35"
     ],
     "availabilitySummary": "Laust í 9 af 11 vikum (Uppbókað í V29–V30 háönn)"
+  },
+  {
+    "id": "1155672325686872007",
+    "title": "Ringkøbing: Afþreyingar-resort m. innilaug, bíósal, leikjasal & mínígolfi",
+    "propertyType": "Lúxus orlofshús í Ringkøbing",
+    "city": "Ringkøbing",
+    "region": "Danmörk (Vestur-Jótland)",
+    "country": "Danmörk",
+    "specs": [
+      "30 gestir",
+      "9 svefnherb. + 6 loft",
+      "30 rúm",
+      "4 baðherbergi"
+    ],
+    "rating": "4.92",
+    "ratingLabel": "4.92 af 5 (13 umsagnir)",
+    "priceEur": 4670,
+    "priceUsdApprox": 5140,
+    "priceFormatted": "€4,670 (~,140)",
+    "photo": "https://a0.muscache.com/im/pictures/prohost-api/Hosting-1155672325686872007/original/e12cc08b-65ee-4727-b66b-fe5eeb38abda.jpeg?im_w=1200",
+    "url": "https://www.airbnb.com/rooms/1155672325686872007",
+    "coordinates": {
+      "lat": 56.1249,
+      "lng": 8.1287
+    },
+    "isBudgetFit": false,
+    "suggestedBy": "Gemini",
+    "availableWeeks": [
+      "w25",
+      "w26",
+      "w27",
+      "w28",
+      "w30",
+      "w31",
+      "w32",
+      "w33",
+      "w34",
+      "w35"
+    ],
+    "availabilitySummary": "Laust í 10 af 11 vikum (Laust í öllum toppvikum V26–V28 · Uppbókað í V29)"
+  },
+  {
+    "id": "1767296663427055904",
+    "title": "Brantevik: Glæsilegt strandsetur m. sér sundlaugahúsi & sauna við sjóinn",
+    "propertyType": "Lúxus gistiheimili í Brantevik",
+    "city": "Brantevik",
+    "region": "Svíþjóð (Skáni / Österlen)",
+    "country": "Svíþjóð",
+    "specs": [
+      "14 gestir",
+      "7 svefnherbergi",
+      "7 rúm",
+      "5 baðherbergi"
+    ],
+    "rating": "Nýtt",
+    "ratingLabel": "Glænýtt á Airbnb (byggt 2017)",
+    "priceEur": 2580,
+    "priceUsdApprox": 2836,
+    "priceFormatted": "€2,580 (~,836)",
+    "photo": "https://a0.muscache.com/im/pictures/hosting/Hosting-1767296663427055904/original/3c005a37-d3db-4ed7-9fad-708f7536ff92.jpeg?im_w=1200",
+    "url": "https://www.airbnb.com/rooms/1767296663427055904",
+    "coordinates": {
+      "lat": 55.5204,
+      "lng": 14.3466
+    },
+    "isBudgetFit": true,
+    "suggestedBy": "Gemini",
+    "availableWeeks": [
+      "w25",
+      "w26",
+      "w27",
+      "w28",
+      "w30",
+      "w31",
+      "w32",
+      "w33",
+      "w34",
+      "w35"
+    ],
+    "availabilitySummary": "Laust í 10 af 11 vikum (Laust í 1. vali V27 og V26 Midsommar · Uppbókað í V29)"
+  },
+  {
+    "id": "1236701408674132678",
+    "title": "Rømø: 5-Stjörnu lúxusvilla m. sundlaug, heitum potti & gufubaði",
+    "propertyType": "Lúxusvilla á Rømø",
+    "city": "Rømø",
+    "region": "Danmörk (Suður-Jótland)",
+    "country": "Danmörk",
+    "specs": [
+      "16 gestir",
+      "8 svefnherbergi",
+      "16 rúm",
+      "4 baðherbergi"
+    ],
+    "rating": "5.0",
+    "ratingLabel": "5.0 af 5 (fullkomin einkunn)",
+    "priceEur": 2660,
+    "priceUsdApprox": 2928,
+    "priceFormatted": "€2,660 (~,928)",
+    "photo": "https://a0.muscache.com/im/pictures/hosting/Hosting-1236701408674132678/original/faf2c635-372e-4768-b500-8fffef85e485.jpeg?im_w=1200",
+    "url": "https://www.airbnb.com/rooms/1236701408674132678",
+    "coordinates": {
+      "lat": 55.13134,
+      "lng": 8.54576
+    },
+    "isBudgetFit": true,
+    "suggestedBy": "Gemini",
+    "availableWeeks": [
+      "w25",
+      "w26",
+      "w27",
+      "w28",
+      "w29",
+      "w31",
+      "w32",
+      "w33",
+      "w34",
+      "w35"
+    ],
+    "availabilitySummary": "Laust í 10 af 11 vikum (Laust í 1. vali V27 & Midsommar V26 · Uppbókað í V30)"
   }
 ]
