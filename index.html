@@ -82,103 +82,64 @@
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       color: white;
-      padding: 10px 20px 8px;
+      padding: 6px 14px;
       text-align: center;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.18);
       overflow: hidden;
     }
     header h1 {
-      font-size: 1.35rem;
-      margin: 2px 0 3px 0;
+      font-size: 1.02rem;
+      margin: 0;
       font-weight: 800;
+      letter-spacing: -0.01em;
+      line-height: 1.25;
     }
-    header .subtitle {
-      font-size: 0.85rem;
-      color: rgba(255, 255, 255, 0.9);
-      margin-bottom: 6px;
-    }
-    header .quick-stats {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 2px;
-    }
-
     .header-flags-bg {
       position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 1;
     }
-    .flag-banner {
-      position: absolute; width: 85px; height: 54px; border-radius: 9px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35), 0 0 0 1.5px rgba(255, 255, 255, 0.35);
-      overflow: hidden; opacity: 0.92;
-      transition: all 0.2s ease;
-    }
-    .flag-banner.left-sweden {
-      left: 20px; top: 50%; transform: translateY(-50%) rotate(-4deg);
-    }
-    .flag-banner.right-denmark {
-      right: 20px; top: 50%; transform: translateY(-50%) rotate(4deg);
-    }
-    .flag-banner svg {
-      width: 100%; height: 100%; display: block;
-    }
     .flag-watermark-left {
-      position: absolute; left: -25px; bottom: -25px; width: 220px; height: 140px;
+      position: absolute; left: -25px; bottom: -25px; width: 160px; height: 100px;
       opacity: 0.08; pointer-events: none; transform: rotate(-8deg);
     }
     .flag-watermark-right {
-      position: absolute; right: -25px; bottom: -25px; width: 220px; height: 140px;
+      position: absolute; right: -25px; bottom: -25px; width: 160px; height: 100px;
       opacity: 0.08; pointer-events: none; transform: rotate(8deg);
     }
-    @media (max-width: 960px) {
-      .flag-banner { display: none; }
-    }
     .header-content { max-width: 860px; margin: 0 auto; position: relative; z-index: 2; }
-    .header-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 8px; }
-
-    /* Aðgerðarhnappar í bláa panelnum - Greinilegir og smellanlegir */
-    .header-actions-group { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-    .header-action-btn {
-      display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px;
-      border-radius: 8px; font-size: 0.78rem; font-weight: 700; cursor: pointer;
-      border: 1px solid transparent; box-shadow: 0 2px 6px rgba(0,0,0,0.22);
-      transition: all 0.15s ease-in-out; white-space: nowrap; font-family: inherit;
+    .vidmid-toggle-btn {
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      color: #ffffff;
+      padding: 2px 9px;
+      border-radius: 9999px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      transition: all 0.15s ease;
+      font-family: inherit;
     }
-    .header-action-btn:hover {
-      transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0,0,0,0.3); filter: brightness(1.06);
+    .vidmid-toggle-btn:hover {
+      background: rgba(255, 255, 255, 0.28);
+      transform: translateY(-0.5px);
     }
-    .header-action-btn:active { transform: translateY(0); }
-    .header-action-btn.btn-sync {
-      background: #10b981; color: #ffffff; border-color: #059669;
+    .vidmid-details-box {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 5px auto 2px;
+      padding: 5px 12px;
+      background: rgba(15, 23, 42, 0.35);
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      font-size: 0.74rem;
+      color: #f8fafc;
+      max-width: 720px;
     }
-    .header-action-btn.btn-feedback {
-      background: #f59e0b; color: #ffffff; border-color: #d97706;
-    }
-    .header-action-btn.btn-lock {
-      background: #ffffff; color: #0f172a; border-color: #cbd5e1;
-    }
-
-    /* Ósmellanlegt / Fastar öryggis- og samantektarupplýsingar (Static) */
-    .header-static-tag {
-      display: inline-flex; align-items: center; gap: 5px;
-      background: rgba(15, 23, 42, 0.35); border: 1px solid rgba(255, 255, 255, 0.2);
-      color: #e0f2fe; padding: 4px 12px; border-radius: 9999px; font-size: 0.78rem; font-weight: 600;
-      cursor: default; user-select: none;
-    }
-
-    h1 { font-size: 1.45rem; font-weight: 800; letter-spacing: -0.015em; margin: 2px 0 3px; }
-    .subtitle { font-size: 0.84rem; color: #e0f2fe; max-width: 620px; margin: 0 auto 6px; }
-
-    /* Upplýsingastika hópsins - Ekki hnappar, heldur samantekt */
-    .header-info-bar {
-      display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap;
-      margin: 4px auto 0; padding: 5px 14px; background: rgba(15, 23, 42, 0.25);
-      border-radius: 9999px; border: 1px solid rgba(255, 255, 255, 0.15);
-      font-size: 0.78rem; color: #f8fafc; cursor: default; user-select: none; max-width: 820px;
-    }
-    .header-info-label { font-weight: 800; color: #fde047; display: inline-flex; align-items: center; gap: 4px; }
-    .header-info-item { display: inline-flex; align-items: center; gap: 4px; font-weight: 500; }
     .header-info-sep { color: rgba(255, 255, 255, 0.35); font-weight: 300; }
 
     /* Availability Matrix Styles */
@@ -543,48 +504,21 @@
           <rect width="37" height="4.5" y="11.75" fill="#ffffff"/>
         </svg>
 
-        <!-- Sænski fáninn vinstra megin -->
-        <div class="flag-banner left-sweden" title="Svíþjóð 🇸🇪">
-          <svg viewBox="0 0 16 10" preserveAspectRatio="none">
-            <rect width="16" height="10" fill="#005293"/>
-            <rect width="2.4" height="10" x="5" fill="#fecb00"/>
-            <rect width="16" height="2.4" y="3.8" fill="#fecb00"/>
-          </svg>
-        </div>
-
-        <!-- Danski fáninn hægra megin -->
-        <div class="flag-banner right-denmark" title="Danmörk 🇩🇰">
-          <svg viewBox="0 0 37 28" preserveAspectRatio="none">
-            <rect width="37" height="28" fill="#c8102e"/>
-            <rect width="4.5" height="28" x="12" fill="#ffffff"/>
-            <rect width="37" height="4.5" y="11.75" fill="#ffffff"/>
-          </svg>
-        </div>
       </div>
 
       <div class="header-content" style="position: relative; z-index: 2;">
-        <div class="header-top-bar">
-          <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-            <div class="header-static-tag">🇸🇪 Svíþjóð & Danmörk 2027 🇩🇰 · Dulkóðuð 🛡️</div>
-          </div>
-          <div class="header-actions-group">
-            <button type="button" class="header-action-btn btn-sync" id="syncStatusBadge" onclick="pullFromCloud()" title="Smelltu til að sækja nýjustu gögn eða samstilla">🟢 Samstilla 🔄</button>
-            <button type="button" class="header-action-btn btn-feedback" onclick="openFeedbackModal()" title="Senda inn ábendingu, ósk eða tilkynna villu">💡 Ábending</button>
-            <button type="button" class="header-action-btn btn-lock" onclick="lockApp()" title="Læsa síðunni með PIN (krefst PIN 2027 til að opna aftur)">🔒 Læsa síðu</button>
-          </div>
+        <div style="display: flex; justify-content: center; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <h1>🇸🇪 Sumarfrí Fjölskyldunnar 2027 🇩🇰</h1>
+          <button type="button" id="toggleVidmidBtn" onclick="toggleVidmidInfo()" class="vidmid-toggle-btn" title="Smelltu til að skoða eða fela viðmið hópsins">ℹ️ Viðmið +</button>
         </div>
-        <h1>🇸🇪 Sumarfrí Fjölskyldunnar 2027 🇩🇰</h1>
-        <p class="subtitle">Skipulag, dagsetningakosning og val á gististað fyrir 14 manna hópinn okkar!</p>
-        
-        <div class="header-info-bar">
-          <span class="header-info-label">ℹ️ Viðmið hópsins:</span>
-          <span class="header-info-item">👥 14 manns (13 fullorðnir, 1 barn)</span>
+        <div id="vidmidDetails" style="display: none;" class="vidmid-details-box">
+          <span>👥 14 manns (13 fullorðnir, 1 barn)</span>
           <span class="header-info-sep">·</span>
-          <span class="header-info-item">💰 ~$3.000 / vika</span>
+          <span>💰 ~$3.000 / vika</span>
           <span class="header-info-sep">·</span>
-          <span class="header-info-item">📅 15. júní – 31. ágúst 2027</span>
+          <span>📅 15. jún – 31. ágú 2027</span>
           <span class="header-info-sep">·</span>
-          <span class="header-info-item">📍 Suður-Svíþjóð eða Danmörk</span>
+          <span>📍 Suður-Svíþjóð eða Danmörk</span>
         </div>
       </div>
     </header>
@@ -2392,6 +2326,15 @@
     }
 
     let matrixTableOpen = true;
+
+    let vidmidExpanded = false;
+    function toggleVidmidInfo() {
+      vidmidExpanded = !vidmidExpanded;
+      const box = document.getElementById("vidmidDetails");
+      const btn = document.getElementById("toggleVidmidBtn");
+      if (box) box.style.display = vidmidExpanded ? "flex" : "none";
+      if (btn) btn.innerHTML = vidmidExpanded ? "ℹ️ Viðmið −" : "ℹ️ Viðmið +";
+    }
 
     function toggleMatrixTable() {
       matrixTableOpen = !matrixTableOpen;
