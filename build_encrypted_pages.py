@@ -39,6 +39,7 @@ def build():
         "Sigurjón Axel",
         "Ólafía Rósbjörg (Lóa)",
         "Axel Bjarkar",
+        "Anna Huyen Ngo",
         "Rannveig Arna",
         "Þórhildur Soffía",
         "Birkir Evan",
@@ -58,7 +59,8 @@ def build():
         { "name": "Axel Bjarkar", "shortName": "Axel", "avatar": "images/avatars/axel.jpg", "date": "22. júní 2003", "dayMonth": "22. jún", "year": 2003, "age2027": 24, "inSummer": True },
         { "name": "Sara Kristín", "shortName": "Sara", "avatar": "images/avatars/sara.jpg", "date": "18. júlí 2010", "dayMonth": "18. júl", "year": 2010, "age2027": 17, "inSummer": True },
         { "name": "Þórhildur Soffía", "shortName": "Þórhildur", "avatar": "images/avatars/thorhildur.jpg", "date": "10. ágúst 2010", "dayMonth": "10. ágú", "year": 2010, "age2027": 17, "inSummer": True },
-        { "name": "Rannveig Arna", "shortName": "Rannveig", "avatar": "images/avatars/rannveig.jpg", "date": "5. september 2005", "dayMonth": "5. sep", "year": 2005, "age2027": 22 }
+        { "name": "Rannveig Arna", "shortName": "Rannveig", "avatar": "images/avatars/rannveig.jpg", "date": "5. september 2005", "dayMonth": "5. sep", "year": 2005, "age2027": 22 },
+        { "name": "Anna Huyen Ngo", "shortName": "Anna", "avatar": "images/avatars/anna.jpg", "date": "2003", "dayMonth": "2003", "year": 2003, "age2027": 24 }
     ]
 
     weeks = [
