@@ -436,8 +436,8 @@
                     "__typename": "StructuredDisplayPrice",
                     "primaryLine": {
                       "__typename": "QualifiedDisplayPriceLine",
-                      "accessibilityLabel": "€2,140 total",
-                      "price": "€2,140",
+                      "accessibilityLabel": "€2,114 total",
+                      "price": "€2,114",
                       "qualifier": "total",
                       "concatQualifierLeft": false,
                       "trailing": null
@@ -453,8 +453,8 @@
                           "items": [
                             {
                               "__typename": "DefaultExplanationLineItem",
-                              "description": "5 nights x €427.87",
-                              "priceString": "€2,139.33",
+                              "description": "5 nights x €422.78",
+                              "priceString": "€2,113.89",
                               "explanationData": null
                             }
                           ],
@@ -719,8 +719,8 @@
                     "__typename": "StructuredDisplayPrice",
                     "primaryLine": {
                       "__typename": "QualifiedDisplayPriceLine",
-                      "accessibilityLabel": "€2,802 total",
-                      "price": "€2,802",
+                      "accessibilityLabel": "€2,770 total",
+                      "price": "€2,770",
                       "qualifier": "total",
                       "concatQualifierLeft": false,
                       "trailing": null
@@ -736,8 +736,8 @@
                           "items": [
                             {
                               "__typename": "DefaultExplanationLineItem",
-                              "description": "7 nights x €400.23",
-                              "priceString": "€2,801.60",
+                              "description": "7 nights x €395.69",
+                              "priceString": "€2,769.84",
                               "explanationData": null
                             }
                           ],
@@ -1081,8 +1081,8 @@
                     "__typename": "StructuredDisplayPrice",
                     "primaryLine": {
                       "__typename": "QualifiedDisplayPriceLine",
-                      "accessibilityLabel": "€3,115 total",
-                      "price": "€3,115",
+                      "accessibilityLabel": "€3,078 total",
+                      "price": "€3,078",
                       "qualifier": "total",
                       "concatQualifierLeft": false,
                       "trailing": null
@@ -1098,8 +1098,8 @@
                           "items": [
                             {
                               "__typename": "DefaultExplanationLineItem",
-                              "description": "5 nights x €622.81",
-                              "priceString": "€3,114.04",
+                              "description": "5 nights x €615.41",
+                              "priceString": "€3,077.03",
                               "explanationData": null
                             }
                           ],
@@ -1900,8 +1900,8 @@
                     "__typename": "StructuredDisplayPrice",
                     "primaryLine": {
                       "__typename": "QualifiedDisplayPriceLine",
-                      "accessibilityLabel": "€3,247 total",
-                      "price": "€3,247",
+                      "accessibilityLabel": "€3,384 total",
+                      "price": "€3,384",
                       "qualifier": "total",
                       "concatQualifierLeft": false,
                       "trailing": null
@@ -1917,8 +1917,8 @@
                           "items": [
                             {
                               "__typename": "DefaultExplanationLineItem",
-                              "description": "5 nights x €649.36",
-                              "priceString": "€3,246.78",
+                              "description": "5 nights x €676.64",
+                              "priceString": "€3,383.22",
                               "explanationData": null
                             }
                           ],
@@ -2490,8 +2490,8 @@
                     "__typename": "StructuredDisplayPrice",
                     "primaryLine": {
                       "__typename": "QualifiedDisplayPriceLine",
-                      "accessibilityLabel": "€3,274 total",
-                      "price": "€3,274",
+                      "accessibilityLabel": "€3,235 total",
+                      "price": "€3,235",
                       "qualifier": "total",
                       "concatQualifierLeft": false,
                       "trailing": null
@@ -2507,8 +2507,8 @@
                           "items": [
                             {
                               "__typename": "DefaultExplanationLineItem",
-                              "description": "5 nights x €654.63",
-                              "priceString": "€3,273.14",
+                              "description": "5 nights x €646.85",
+                              "priceString": "€3,234.23",
                               "explanationData": null
                             }
                           ],
@@ -2526,8 +2526,8 @@
                   "title": "Villa in Borrby",
                   "titleLocale": "en",
                   "subtitle": "Wonderful villa on Österlen, 150 meters from the sea",
-                  "avgRatingLocalized": "4.92",
-                  "avgRatingA11yLabel": "4.92 out of 5 average rating",
+                  "avgRatingLocalized": "4.93",
+                  "avgRatingA11yLabel": "4.93 out of 5 average rating",
                   "pdpType": "MARKETPLACE",
                   "pdpUrlType": "ROOMS",
                   "tierId": 0,
@@ -2819,8 +2819,8 @@
                     "__typename": "StructuredDisplayPrice",
                     "primaryLine": {
                       "__typename": "QualifiedDisplayPriceLine",
-                      "accessibilityLabel": "€2,414 total",
-                      "price": "€2,414",
+                      "accessibilityLabel": "€2,385 total",
+                      "price": "€2,385",
                       "qualifier": "total",
                       "concatQualifierLeft": false,
                       "trailing": null
@@ -2836,8 +2836,8 @@
                           "items": [
                             {
                               "__typename": "DefaultExplanationLineItem",
-                              "description": "5 nights x €482.67",
-                              "priceString": "€2,413.34",
+                              "description": "5 nights x €476.93",
+                              "priceString": "€2,384.67",
                               "explanationData": null
                             }
                           ],
@@ -3079,8 +3079,8 @@
                     "__typename": "StructuredDisplayPrice",
                     "primaryLine": {
                       "__typename": "QualifiedDisplayPriceLine",
-                      "accessibilityLabel": "€3,085 total",
-                      "price": "€3,085",
+                      "accessibilityLabel": "€3,048 total",
+                      "price": "€3,048",
                       "qualifier": "total",
                       "concatQualifierLeft": false,
                       "trailing": null
@@ -3096,8 +3096,8 @@
                           "items": [
                             {
                               "__typename": "DefaultExplanationLineItem",
-                              "description": "5 nights x €616.81",
-                              "priceString": "€3,084.06",
+                              "description": "5 nights x €609.47",
+                              "priceString": "€3,047.37",
                               "explanationData": null
                             }
                           ],
@@ -3512,8 +3512,8 @@
                     "__typename": "StructuredDisplayPrice",
                     "primaryLine": {
                       "__typename": "QualifiedDisplayPriceLine",
-                      "accessibilityLabel": "€2,066 total",
-                      "price": "€2,066",
+                      "accessibilityLabel": "€2,041 total",
+                      "price": "€2,041",
                       "qualifier": "total",
                       "concatQualifierLeft": false,
                       "trailing": null
@@ -3529,8 +3529,8 @@
                           "items": [
                             {
                               "__typename": "DefaultExplanationLineItem",
-                              "description": "5 nights x €413.03",
-                              "priceString": "€2,065.15",
+                              "description": "5 nights x €408.12",
+                              "priceString": "€2,040.60",
                               "explanationData": null
                             }
                           ],
@@ -3838,8 +3838,8 @@
                     "__typename": "StructuredDisplayPrice",
                     "primaryLine": {
                       "__typename": "QualifiedDisplayPriceLine",
-                      "accessibilityLabel": "€5,167 total",
-                      "price": "€5,167",
+                      "accessibilityLabel": "€5,106 total",
+                      "price": "€5,106",
                       "qualifier": "total",
                       "concatQualifierLeft": false,
                       "trailing": null
@@ -3855,8 +3855,8 @@
                           "items": [
                             {
                               "__typename": "DefaultExplanationLineItem",
-                              "description": "5 nights x €1,033.38",
-                              "priceString": "€5,166.90",
+                              "description": "5 nights x €1,021.09",
+                              "priceString": "€5,105.47",
                               "explanationData": null
                             }
                           ],
@@ -3874,8 +3874,8 @@
                   "title": "Home in Löderup",
                   "titleLocale": "en",
                   "subtitle": "House 500m2 Spa, Sauna, Gym, Billiards, Padel Court Golf",
-                  "avgRatingLocalized": "4.78",
-                  "avgRatingA11yLabel": "4.78 out of 5 average rating",
+                  "avgRatingLocalized": "4.79",
+                  "avgRatingA11yLabel": "4.79 out of 5 average rating",
                   "pdpType": "MARKETPLACE",
                   "pdpUrlType": "ROOMS",
                   "tierId": 0,
@@ -4173,8 +4173,8 @@
                     "__typename": "StructuredDisplayPrice",
                     "primaryLine": {
                       "__typename": "QualifiedDisplayPriceLine",
-                      "accessibilityLabel": "€5,352 total",
-                      "price": "€5,352",
+                      "accessibilityLabel": "€5,289 total",
+                      "price": "€5,289",
                       "qualifier": "total",
                       "concatQualifierLeft": false,
                       "trailing": null
@@ -4190,8 +4190,8 @@
                           "items": [
                             {
                               "__typename": "DefaultExplanationLineItem",
-                              "description": "5 nights x €1,070.36",
-                              "priceString": "€5,351.81",
+                              "description": "5 nights x €1,057.63",
+                              "priceString": "€5,288.17",
                               "explanationData": null
                             }
                           ],
@@ -4298,8 +4298,8 @@
                       "5 bedrooms"
                     ]
                   },
-                  "id": "2731494566",
-                  "picture": "https://a0.muscache.com/im/pictures/hosting/Hosting-1671670810787993416/original/b579e854-4cf5-4472-8072-6b44f7700b89.jpeg?im_w=720"
+                  "id": "2607068392",
+                  "picture": "https://a0.muscache.com/im/pictures/hosting/Hosting-1671670810787993416/original/107e863b-4787-42e7-8fd5-e5fb5907f8da.jpeg?im_w=720"
                 },
                 {
                   "__typename": "ExplorePicture",
@@ -4310,8 +4310,8 @@
                       "4 baths"
                     ]
                   },
-                  "id": "2607068392",
-                  "picture": "https://a0.muscache.com/im/pictures/hosting/Hosting-1671670810787993416/original/107e863b-4787-42e7-8fd5-e5fb5907f8da.jpeg?im_w=720"
+                  "id": "2607069972",
+                  "picture": "https://a0.muscache.com/im/pictures/hosting/Hosting-1671670810787993416/original/42e7177c-bba7-41c0-b10f-b744272ba547.jpeg?im_w=720"
                 },
                 {
                   "__typename": "ExplorePicture",
@@ -4324,8 +4324,8 @@
                       "more"
                     ]
                   },
-                  "id": "2607069972",
-                  "picture": "https://a0.muscache.com/im/pictures/hosting/Hosting-1671670810787993416/original/42e7177c-bba7-41c0-b10f-b744272ba547.jpeg?im_w=720"
+                  "id": "2607068389",
+                  "picture": "https://a0.muscache.com/im/pictures/hosting/Hosting-1671670810787993416/original/f165b1e6-94a8-4bdb-a5cd-18ecef64c045.jpeg?im_w=720"
                 },
                 {
                   "__typename": "ExplorePicture",
@@ -4336,12 +4336,6 @@
                       "Rated 4.7 out of 5 for cleanliness"
                     ]
                   },
-                  "id": "2607068389",
-                  "picture": "https://a0.muscache.com/im/pictures/hosting/Hosting-1671670810787993416/original/f165b1e6-94a8-4bdb-a5cd-18ecef64c045.jpeg?im_w=720"
-                },
-                {
-                  "__typename": "ExplorePicture",
-                  "caption": null,
                   "id": "2740268008",
                   "picture": "https://a0.muscache.com/im/pictures/hosting/Hosting-1671670810787993416/original/ba7ccacd-c615-451d-9d50-25e34ba52e13.jpeg?im_w=720"
                 },
@@ -4356,6 +4350,12 @@
                   "caption": null,
                   "id": "2607069134",
                   "picture": "https://a0.muscache.com/im/pictures/hosting/Hosting-1671670810787993416/original/2dfbb34a-946c-400d-ac28-48f016c590c7.jpeg?im_w=720"
+                },
+                {
+                  "__typename": "ExplorePicture",
+                  "caption": null,
+                  "id": "2607069118",
+                  "picture": "https://a0.muscache.com/im/pictures/hosting/Hosting-1671670810787993416/original/849099dc-d32a-49fc-a188-d676f160e518.jpeg?im_w=720"
                 },
                 {
                   "__typename": "ExplorePicture",
@@ -4416,12 +4416,6 @@
                   "caption": null,
                   "id": "2607069836",
                   "picture": "https://a0.muscache.com/im/pictures/hosting/Hosting-1671670810787993416/original/83c2dded-d139-4e58-9328-ac1f51892d91.jpeg?im_w=720"
-                },
-                {
-                  "__typename": "ExplorePicture",
-                  "caption": null,
-                  "id": "2607069118",
-                  "picture": "https://a0.muscache.com/im/pictures/hosting/Hosting-1671670810787993416/original/849099dc-d32a-49fc-a188-d676f160e518.jpeg?im_w=720"
                 },
                 {
                   "__typename": "ExplorePicture",
@@ -4488,6 +4482,12 @@
                   "caption": null,
                   "id": "2607069971",
                   "picture": "https://a0.muscache.com/im/pictures/hosting/Hosting-1671670810787993416/original/32c63c53-4fd7-427f-8208-63583efe30f2.jpeg?im_w=720"
+                },
+                {
+                  "__typename": "ExplorePicture",
+                  "caption": null,
+                  "id": "2607069754",
+                  "picture": "https://a0.muscache.com/im/pictures/hosting/Hosting-1671670810787993416/original/4e0c4c5b-3842-4474-8ae0-7eb560465bbc.jpeg?im_w=720"
                 }
               ]
             }
@@ -4497,6 +4497,6 @@
     }
   },
   "extensions": {
-    "traceId": "YEa8Ivxrt8HLocydP4QI2g=="
+    "traceId": "-xGePJg7x-8MFcsArKTfyg=="
   }
 }

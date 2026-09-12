@@ -991,7 +991,7 @@
         <div id="vidmidDetails" style="display: none;" class="vidmid-details-box">
           <span>👥 14 manns (13 fullorðnir, 1 barn)</span>
           <span class="header-info-sep">·</span>
-          <span>💰 ~$3.000 / vika</span>
+          <span>💰 ~€3.000 / vika</span>
           <span class="header-info-sep">·</span>
           <span>📅 19. jún – 28. ágú 2027 (Lau–Lau)</span>
           <span class="header-info-sep">·</span>
@@ -1099,7 +1099,7 @@
               <button class="filter-btn" onclick="filterHouses('sweden', this)">Svíþjóð (<span id="countSwe">0</span>)</button>
               <button class="filter-btn" onclick="filterHouses('denmark', this)">Danmörk (<span id="countDen">0</span>)</button>
               <button class="filter-btn" onclick="filterHouses('gemini', this)" style="background: #faf5ff; border-color: #d8b4fe; color: #7e22ce; font-weight: 700;">✨ Tillögur Gemini (<span id="countGemini">0</span>)</button>
-              <button class="filter-btn" onclick="filterHouses('budget', this)">Bara ~$3.000 (<span id="countBudget">0</span>)</button>
+              <button class="filter-btn" onclick="filterHouses('budget', this)">Bara ≤ €3.000 (<span id="countBudget">0</span>)</button>
               <button class="filter-btn" onclick="filterHouses('custom', this)">Fjölskyldutillögur (<span id="countCustom">0</span>)</button>
             </div>
             <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
@@ -1189,7 +1189,7 @@
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
           <div>
             <label style="font-size: 0.8rem; font-weight:700; display:block; margin-bottom:4px;">Áætlað verð á viku</label>
-            <input type="text" id="newHousePrice" placeholder="t.d. ~$2.800 eða €2.500">
+            <input type="text" id="newHousePrice" placeholder="t.d. €2.800 / vika">
           </div>
           <div>
             <label style="font-size: 0.8rem; font-weight:700; display:block; margin-bottom:4px;">Fjöldi herbergja / rúma</label>
@@ -1967,6 +1967,7 @@
               let changedHouse = (CUSTOM_HOUSES.length !== prevCustomLen);
 
               cloudData.customHouses.forEach(ch => {
+                normalizeHouse(ch);
                 const cIdx = CUSTOM_HOUSES.findIndex(h => h.id === ch.id);
                 if (cIdx === -1) {
                   CUSTOM_HOUSES.push(ch);
@@ -1982,6 +1983,7 @@
                   }
                 }
               });
+              HOUSES.forEach(normalizeHouse);
               if (changedHouse) {
                 localStorage.setItem("sweeden_2027_custom_houses", JSON.stringify(CUSTOM_HOUSES));
                 renderAllHouses(currentFilter);
@@ -2085,6 +2087,38 @@
       document.getElementById("lockOverlay").style.display = "flex";
     }
 
+    function normalizeHouse(h) {
+      if (!h) return h;
+      if (!h.priceEur && h.priceFormatted) {
+        const raw = String(h.priceFormatted);
+        const m = raw.replace(/[.,\s]/g, "").match(/\d+/);
+        if (m) {
+          let num = parseInt(m[0], 10);
+          if (raw.includes("$") || raw.toLowerCase().includes("usd")) {
+            num = Math.round(num * 0.91);
+          }
+          h.priceEur = num;
+        } else {
+          h.priceEur = 3000;
+        }
+      } else if (!h.priceEur) {
+        h.priceEur = 3000;
+      }
+      
+      if (!h.pricePerNightEur && h.priceEur) {
+        h.pricePerNightEur = Math.round(h.priceEur / 7);
+      }
+
+      // Tryggja að eingöngu sé notað Euro (enga dollara eða brotna strengi)
+      if (!h.priceFormatted || h.priceFormatted.includes("$") || !h.priceFormatted.includes("€") || h.priceFormatted.includes("~,")) {
+        h.priceFormatted = `€${h.priceEur.toLocaleString('de-DE')} / vika`;
+      }
+
+      // Viðmiðunarfjárhagsáætlun: <= 3000 Euro á viku
+      h.isBudgetFit = (h.priceEur <= 3000);
+      return h;
+    }
+
     async function initApp() {
       // Lesa custom hús staðbundið
       const storedCustom = localStorage.getItem("sweeden_2027_custom_houses");
@@ -2097,10 +2131,12 @@
               ch.availableWeeks = allWeekIds;
               ch.availabilitySummary = "Laust allar vikur (19. jún – 28. ágú 2027)";
             }
+            normalizeHouse(ch);
             if (!HOUSES.some(h => h.id === ch.id)) HOUSES.unshift(ch);
           });
         } catch (e) {}
       }
+      HOUSES.forEach(normalizeHouse);
       populateHouseWeekFilterSelect();
 
       // Lesa atkvæði staðbundið
@@ -3865,9 +3901,9 @@
           return (parseFloat(b.rating) || 0) - (parseFloat(a.rating) || 0);
         });
       } else if (sortKey === 'price-asc') {
-        sorted.sort((a, b) => (a.priceUsdApprox || 99999) - (b.priceUsdApprox || 99999));
+        sorted.sort((a, b) => (a.priceEur || a.priceUsdApprox || 99999) - (b.priceEur || b.priceUsdApprox || 99999));
       } else if (sortKey === 'price-desc') {
-        sorted.sort((a, b) => (b.priceUsdApprox || 0) - (a.priceUsdApprox || 0));
+        sorted.sort((a, b) => (b.priceEur || b.priceUsdApprox || 0) - (a.priceEur || a.priceUsdApprox || 0));
       } else if (sortKey === 'rating') {
         sorted.sort((a, b) => (parseFloat(b.rating) || 0) - (parseFloat(a.rating) || 0));
       }
@@ -4306,7 +4342,7 @@
             <div class="house-badge-loc">${h.region}</div>
             <div id="pop-badge-${h.id}" style="display:contents;">${getHouseBadgeHTML(h)}</div>
             ${h.suggestedBy ? `<div class="house-badge-custom" style="${h.suggestedBy.toLowerCase().includes('gemini') ? 'background: linear-gradient(135deg, #4f46e5, #9333ea); color: #fff; font-weight: 800; border: 1px solid rgba(255,255,255,0.4); box-shadow: 0 2px 8px rgba(147, 51, 234, 0.4);' : ''}">✨ Tillaga: ${h.suggestedBy}</div>` : (h.isCustom ? `<div class="house-badge-custom">Tillaga: ${h.suggestedBy || 'Fjölskylda'}</div>` : '')}
-            <div class="house-badge-price">${h.priceFormatted}</div>
+            <div class="house-badge-price" title="${h.pricePerNightEur ? `€${h.pricePerNightEur} á nótt · €${(h.priceEur || 0).toLocaleString('de-DE')} fyrir 7 nætur (1 viku)` : (h.priceFormatted || '')}">${h.priceFormatted}</div>
           </div>
           <div class="house-body">
             <h3 class="house-title">${h.title}</h3>
@@ -4614,6 +4650,9 @@
       const isAll = WEEKS && WEEKS.length > 0 && availWeeks.length === WEEKS.length;
       const availSummary = isAll ? "Laust allar vikur (15. jún – 31. ágúst 2027)" : `Laust í ${availWeeks.length} vikum`;
 
+      const numMatch = price.replace(/[.,\s]/g, "").match(/\d+/);
+      const parsedEur = numMatch ? parseInt(numMatch[0]) : null;
+
       if (editingHouseId) {
         // Breyta fyrirliggjandi húsi
         const idxH = HOUSES.findIndex(x => x.id === editingHouseId);
@@ -4625,7 +4664,10 @@
           city: region,
           region: `${region} (${country})`,
           country: country,
+          priceEur: parsedEur || (HOUSES[idxH] ? HOUSES[idxH].priceEur : null),
+          pricePerNightEur: parsedEur ? Math.round(parsedEur / 7) : (HOUSES[idxH] ? HOUSES[idxH].pricePerNightEur : null),
           priceFormatted: price,
+          isBudgetFit: parsedEur ? (parsedEur <= 3000) : true,
           specs: specs ? [specs] : ["Tillaga"],
           suggestedBy: person,
           pin: pin,
@@ -4655,10 +4697,12 @@
           specs: specs ? [specs] : ["Tillaga"],
           rating: "Nýtt",
           ratingLabel: "",
+          priceEur: parsedEur || 3000,
+          pricePerNightEur: parsedEur ? Math.round(parsedEur / 7) : null,
           priceFormatted: price,
           photo: photo,
           url: url,
-          isBudgetFit: true,
+          isBudgetFit: parsedEur ? (parsedEur <= 3000) : true,
           isCustom: true,
           suggestedBy: person,
           pin: pin,
