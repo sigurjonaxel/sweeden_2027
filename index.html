@@ -247,14 +247,26 @@
       flex: 1; padding: 7px 12px; border: 1.5px solid var(--border); border-radius: 8px;
       background: white; font-family: inherit; font-size: 0.8rem; font-weight: 600; cursor: pointer;
     }
-    .choice-btn[data-val="yes"]:hover, .choice-btn[data-val="yes"].active {
+    .choice-btn[data-val="yes"]:hover {
       background: var(--success-light); border-color: var(--success); color: #15803d;
     }
-    .choice-btn[data-val="maybe"]:hover, .choice-btn[data-val="maybe"].active {
+    .choice-btn[data-val="yes"].active {
+      background: #16a34a !important; border-color: #15803d !important; color: white !important;
+      font-weight: 800 !important; box-shadow: 0 2px 6px rgba(22, 163, 74, 0.35) !important;
+    }
+    .choice-btn[data-val="maybe"]:hover {
       background: var(--warning-light); border-color: var(--warning); color: #a16207;
     }
-    .choice-btn[data-val="no"]:hover, .choice-btn[data-val="no"].active {
+    .choice-btn[data-val="maybe"].active {
+      background: #d97706 !important; border-color: #b45309 !important; color: white !important;
+      font-weight: 800 !important; box-shadow: 0 2px 6px rgba(217, 119, 6, 0.35) !important;
+    }
+    .choice-btn[data-val="no"]:hover {
       background: var(--danger-light); border-color: var(--danger); color: #b91c1c;
+    }
+    .choice-btn[data-val="no"].active {
+      background: #dc2626 !important; border-color: #b91c1c !important; color: white !important;
+      font-weight: 800 !important; box-shadow: 0 2px 6px rgba(220, 38, 38, 0.35) !important;
     }
 
     /* Houses */
@@ -1241,6 +1253,58 @@
       if (isSigurjon(currentPerson) || isMasterSession) return true;
       return isSamePerson(currentPerson, person);
     }
+
+    function findVotesKey(obj, personName) {
+      if (!obj || !personName) return null;
+      if (obj[personName]) return personName;
+      for (const k of Object.keys(obj)) {
+        if (isSamePerson(k, personName)) return k;
+      }
+      return null;
+    }
+
+    function getUniqueVotersList() {
+      const result = [];
+      const allKeys = Object.keys(allVotes);
+      if (currentPerson && !allKeys.includes(currentPerson)) allKeys.unshift(currentPerson);
+      
+      for (const k of allKeys) {
+        if (!k) continue;
+        const already = result.some(existing => isSamePerson(existing, k));
+        if (!already) {
+          result.push(k);
+        }
+      }
+      return result;
+    }
+
+    function normalizeAllVotes() {
+      const canonicalMembers = (FAMILY_MEMBERS && FAMILY_MEMBERS.length > 0) ? FAMILY_MEMBERS : [
+        "Sigurjón Axel (Sissi)", "Ólafía Rósbjörg (Lóa)", "Axel Bjarkar", "Anna Huyen Ngo",
+        "Rannveig Arna", "Þórhildur Soffía", "Birkir Evan", "Viktor Ingi", "Vala Björk", "Sara Kristín"
+      ];
+      let changed = false;
+      const keys = Object.keys(allVotes);
+      for (const key of keys) {
+        const canon = canonicalMembers.find(m => isSamePerson(m, key));
+        if (canon && canon !== key) {
+          if (!allVotes[canon]) {
+            allVotes[canon] = allVotes[key];
+          } else {
+            allVotes[canon].weeks = Object.assign({}, allVotes[key].weeks || {}, allVotes[canon].weeks || {});
+            allVotes[canon].houseVotes = Object.assign({}, allVotes[key].houseVotes || {}, allVotes[canon].houseVotes || {});
+            allVotes[canon].houseComments = Object.assign({}, allVotes[key].houseComments || {}, allVotes[canon].houseComments || {});
+            if (!allVotes[canon].comment && allVotes[key].comment) allVotes[canon].comment = allVotes[key].comment;
+            if (!allVotes[canon].weekNotes && allVotes[key].weekNotes) allVotes[canon].weekNotes = allVotes[key].weekNotes;
+          }
+          delete allVotes[key];
+          changed = true;
+        }
+      }
+      if (changed) {
+        localStorage.setItem("sweeden_2027_votes", JSON.stringify(allVotes));
+      }
+    }
     let PIN_RESET_REQUESTS = {};
     let selectingUser = "";
     let isMasterSession = false;
@@ -1407,15 +1471,16 @@
 
               // Fjarlægja úr allVotes alla sem var eytt í skýinu
               for (const p in allVotes) {
-                if (!cloudVoters.has(p) && p !== currentPerson) {
+                if (!cloudVoters.has(p) && (!currentPerson || !isSamePerson(p, currentPerson))) {
                   delete allVotes[p];
                   votesChanged = true;
                 }
               }
 
-              // Sameina atkvæði fyrir ALLA AÐRA í fjölskyldunni
+              // Sameina atkvæði fyrir alla aðra í fjölskyldunni
               for (const p in cloudData.votes) {
-                if (p !== currentPerson) {
+                const isCurrent = currentPerson && isSamePerson(p, currentPerson);
+                if (!isCurrent) {
                   if (JSON.stringify(allVotes[p]) !== JSON.stringify(cloudData.votes[p])) {
                     allVotes[p] = cloudData.votes[p];
                     votesChanged = true;
@@ -1423,15 +1488,19 @@
                 }
               }
 
-              // Fyrir núverandi notanda: AÐEINS taka úr skýi ef staðbundið er tómt (ekkert valið enn)
+              // Tryggja að öll atkvæði fari undir stöðluð heiti
+              normalizeAllVotes();
+
+              // Fyrir núverandi notanda: Taka úr skýi ef staðbundið er tómt (ekkert valið enn)
               const hasLocalVotes = currentVote && (
                 (currentVote.weeks && Object.keys(currentVote.weeks).length > 0) ||
                 (currentVote.houseVotes && Object.keys(currentVote.houseVotes).length > 0) ||
                 (currentVote.houseComments && Object.keys(currentVote.houseComments).length > 0)
               );
 
-              if (currentPerson && !hasLocalVotes && cloudData.votes[currentPerson]) {
-                allVotes[currentPerson] = cloudData.votes[currentPerson];
+              const cloudKeyForMe = currentPerson ? findVotesKey(cloudData.votes, currentPerson) : null;
+              if (currentPerson && !hasLocalVotes && cloudKeyForMe && cloudData.votes[cloudKeyForMe]) {
+                allVotes[currentPerson] = JSON.parse(JSON.stringify(cloudData.votes[cloudKeyForMe]));
                 currentVote = JSON.parse(JSON.stringify(allVotes[currentPerson]));
                 if (!currentVote.houseVotes) currentVote.houseVotes = {};
                 if (!currentVote.houseComments) currentVote.houseComments = {};
@@ -1441,12 +1510,14 @@
                   cEl.value = currentVote.comment || "";
                 }
                 votesChanged = true;
-              } else if (currentPerson && currentVote) {
+              } else if (currentPerson && currentVote && hasLocalVotes) {
                 allVotes[currentPerson] = currentVote;
               }
 
               localStorage.setItem("sweeden_2027_votes", JSON.stringify(allVotes));
               if (votesChanged) {
+                updateWeeksUI();
+                updateHouseVotesUI();
                 renderPersonChips();
                 renderWeeks();
                 renderResults();
@@ -2201,6 +2272,17 @@
       }
 
       currentPerson = name.trim();
+      normalizeAllVotes();
+
+      const canonicalMembers = (FAMILY_MEMBERS && FAMILY_MEMBERS.length > 0) ? FAMILY_MEMBERS : [
+        "Sigurjón Axel (Sissi)", "Ólafía Rósbjörg (Lóa)", "Axel Bjarkar", "Anna Huyen Ngo",
+        "Rannveig Arna", "Þórhildur Soffía", "Birkir Evan", "Viktor Ingi", "Vala Björk", "Sara Kristín"
+      ];
+      const canon = canonicalMembers.find(m => isSamePerson(m, currentPerson));
+      if (canon) {
+        currentPerson = canon;
+      }
+
       localStorage.setItem("sweeden_2027_current_person", currentPerson);
       localStorage.setItem("sweeden_2027_last_user", currentPerson);
       sessionStorage.setItem("sweeden_2027_session_person", currentPerson);
@@ -2219,18 +2301,24 @@
       const desc = document.getElementById("profileUserDesc");
       if (desc) desc.textContent = "Þú ert innskráð(ur) og svörin þín vistast sjálfkrafa við hvern smell.";
 
-      const isMasterUser = (currentPerson === "Sigurjón Axel" || currentPerson === "Sigurjón" || isMasterSession);
+      const isMasterUser = (isSigurjon(currentPerson) || isMasterSession);
       const masterSec = document.getElementById("masterAdminSection");
       if (masterSec) {
         masterSec.style.display = isMasterUser ? "block" : "none";
         if (isMasterUser) renderMasterResets();
       }
 
-      if (allVotes[currentPerson]) {
-        currentVote = JSON.parse(JSON.stringify(allVotes[currentPerson]));
+      const voteKey = findVotesKey(allVotes, currentPerson) || currentPerson;
+      if (voteKey && allVotes[voteKey]) {
+        currentVote = JSON.parse(JSON.stringify(allVotes[voteKey]));
         if (!currentVote.houseVotes) currentVote.houseVotes = {};
         if (!currentVote.houseComments) currentVote.houseComments = {};
         if (!currentVote.weeks) currentVote.weeks = {};
+        if (voteKey !== currentPerson) {
+          allVotes[currentPerson] = currentVote;
+          delete allVotes[voteKey];
+          localStorage.setItem("sweeden_2027_votes", JSON.stringify(allVotes));
+        }
       } else {
         currentVote = { weeks: {}, houseVotes: {}, houseComments: {}, comment: "" };
       }
@@ -2262,16 +2350,30 @@
 
     function getWeekStats(weekId) {
       let yes = [], maybe = [], no = [];
-      const voters = new Set(Object.keys(allVotes));
-      if (currentPerson) voters.add(currentPerson);
+      const uniqueVoters = getUniqueVotersList();
 
-      voters.forEach(p => {
-        const v = (p === currentPerson && currentVote && currentVote.weeks)
-          ? currentVote.weeks[weekId]
-          : allVotes[p]?.weeks?.[weekId];
-        if (v === 'yes') yes.push(p);
-        else if (v === 'maybe') maybe.push(p);
-        else if (v === 'no') no.push(p);
+      uniqueVoters.forEach(p => {
+        let voteVal = null;
+        if (currentPerson && isSamePerson(p, currentPerson)) {
+          voteVal = (currentVote && currentVote.weeks) ? currentVote.weeks[weekId] : null;
+          if (!voteVal) {
+            const k = findVotesKey(allVotes, currentPerson);
+            if (k && allVotes[k]?.weeks) voteVal = allVotes[k].weeks[weekId];
+          }
+        } else {
+          const k = findVotesKey(allVotes, p) || p;
+          if (allVotes[k]?.weeks) voteVal = allVotes[k].weeks[weekId];
+        }
+
+        const canonicalName = (FAMILY_MEMBERS && FAMILY_MEMBERS.find(m => isSamePerson(m, p))) || p;
+
+        if (voteVal === 'yes') {
+          if (!yes.some(x => isSamePerson(x, canonicalName))) yes.push(canonicalName);
+        } else if (voteVal === 'maybe') {
+          if (!maybe.some(x => isSamePerson(x, canonicalName))) maybe.push(canonicalName);
+        } else if (voteVal === 'no') {
+          if (!no.some(x => isSamePerson(x, canonicalName))) no.push(canonicalName);
+        }
       });
 
       // Ef einhver kemst EKKI (no), fær vikan mikinn mínus (-100 stig per nei)
@@ -2643,9 +2745,12 @@
       const el = document.getElementById("familyAvailabilityOverview");
       if (!el) return;
 
-      const voters = Object.keys(allVotes).filter(p => {
-        const v = allVotes[p];
-        return v && v.weeks && Object.keys(v.weeks).length > 0;
+      const uniqueVoters = getUniqueVotersList();
+      const voters = uniqueVoters.filter(p => {
+        const v = (currentPerson && isSamePerson(p, currentPerson))
+          ? (currentVote?.weeks || allVotes[findVotesKey(allVotes, currentPerson)]?.weeks)
+          : (allVotes[findVotesKey(allVotes, p) || p]?.weeks);
+        return v && Object.keys(v).length > 0;
       });
 
       if (voters.length === 0) {
@@ -2655,7 +2760,9 @@
 
       // Greining á útilokunum og árekstrum
       const personStats = voters.map(p => {
-        const wVotes = allVotes[p]?.weeks || {};
+        const wVotes = (currentPerson && isSamePerson(p, currentPerson))
+          ? (currentVote?.weeks || allVotes[findVotesKey(allVotes, currentPerson)]?.weeks || {})
+          : (allVotes[findVotesKey(allVotes, p) || p]?.weeks || {});
         let yesCount = 0, maybeCount = 0, noCount = 0;
         WEEKS.forEach(w => {
           const val = wVotes[w.id];
@@ -2663,8 +2770,12 @@
           else if (val === 'maybe') maybeCount++;
           else if (val === 'no') noCount++;
         });
-        const notesCount = Object.keys(allVotes[p]?.weekNotes || {}).length;
-        return { name: p, yesCount, maybeCount, noCount, notesCount, total: yesCount + maybeCount + noCount };
+        const notesObj = (currentPerson && isSamePerson(p, currentPerson))
+          ? (currentVote?.weekNotes || allVotes[findVotesKey(allVotes, currentPerson)]?.weekNotes || {})
+          : (allVotes[findVotesKey(allVotes, p) || p]?.weekNotes || {});
+        const notesCount = Object.keys(notesObj).length;
+        const canonicalName = (FAMILY_MEMBERS && FAMILY_MEMBERS.find(m => isSamePerson(m, p))) || p;
+        return { name: canonicalName, yesCount, maybeCount, noCount, notesCount, total: yesCount + maybeCount + noCount };
       });
 
       // Raða eftir flestum 'no' útilokunum (Rannveig fyrst)
@@ -3060,6 +3171,10 @@
       }
       if (currentPerson) {
         allVotes[currentPerson] = currentVote;
+        const legacyKey = findVotesKey(allVotes, currentPerson);
+        if (legacyKey && legacyKey !== currentPerson) {
+          delete allVotes[legacyKey];
+        }
         localStorage.setItem("sweeden_2027_votes", JSON.stringify(allVotes));
       }
       updateWeeksUI();
@@ -3099,16 +3214,32 @@
 
     function getHousePopularity(houseId) {
       let love = [], like = [], dislike = [];
-      const voters = new Set(Object.keys(allVotes));
-      if (currentPerson) voters.add(currentPerson);
-      voters.forEach(p => {
-        const hv = (p === currentPerson && currentVote && currentVote.houseVotes)
-          ? currentVote.houseVotes[houseId]
-          : allVotes[p]?.houseVotes?.[houseId];
-        if (hv === 'love') love.push(p);
-        else if (hv === 'like') like.push(p);
-        else if (hv === 'dislike') dislike.push(p);
+      const uniqueVoters = getUniqueVotersList();
+
+      uniqueVoters.forEach(p => {
+        let hv = null;
+        if (currentPerson && isSamePerson(p, currentPerson)) {
+          hv = (currentVote && currentVote.houseVotes) ? currentVote.houseVotes[houseId] : null;
+          if (!hv) {
+            const k = findVotesKey(allVotes, currentPerson);
+            if (k && allVotes[k]?.houseVotes) hv = allVotes[k].houseVotes[houseId];
+          }
+        } else {
+          const k = findVotesKey(allVotes, p) || p;
+          if (allVotes[k]?.houseVotes) hv = allVotes[k].houseVotes[houseId];
+        }
+
+        const canonicalName = (FAMILY_MEMBERS && FAMILY_MEMBERS.find(m => isSamePerson(m, p))) || p;
+
+        if (hv === 'love') {
+          if (!love.some(x => isSamePerson(x, canonicalName))) love.push(canonicalName);
+        } else if (hv === 'like') {
+          if (!like.some(x => isSamePerson(x, canonicalName))) like.push(canonicalName);
+        } else if (hv === 'dislike') {
+          if (!dislike.some(x => isSamePerson(x, canonicalName))) dislike.push(canonicalName);
+        }
       });
+
       const score = (love.length * 3) + (like.length * 1) - (dislike.length * 2);
       const totalVotes = love.length + like.length + dislike.length;
       return { love, like, dislike, score, totalVotes };
@@ -3273,14 +3404,26 @@
 
     function getHouseComments(houseId) {
       const list = [];
-      const voters = new Set(Object.keys(allVotes));
-      if (currentPerson) voters.add(currentPerson);
-      voters.forEach(p => {
-        const c = (p === currentPerson && currentVote && currentVote.houseComments)
-          ? currentVote.houseComments[houseId]
-          : allVotes[p]?.houseComments?.[houseId];
+      const uniqueVoters = getUniqueVotersList();
+
+      uniqueVoters.forEach(p => {
+        let c = null;
+        if (currentPerson && isSamePerson(p, currentPerson)) {
+          c = (currentVote && currentVote.houseComments) ? currentVote.houseComments[houseId] : null;
+          if (!c) {
+            const k = findVotesKey(allVotes, currentPerson);
+            if (k && allVotes[k]?.houseComments) c = allVotes[k].houseComments[houseId];
+          }
+        } else {
+          const k = findVotesKey(allVotes, p) || p;
+          if (allVotes[k]?.houseComments) c = allVotes[k].houseComments[houseId];
+        }
+
         if (c && typeof c === 'string' && c.trim()) {
-          list.push({ person: p, text: c.trim(), isMe: p === currentPerson });
+          const canonicalName = (FAMILY_MEMBERS && FAMILY_MEMBERS.find(m => isSamePerson(m, p))) || p;
+          if (!list.some(item => isSamePerson(item.person, canonicalName))) {
+            list.push({ person: canonicalName, text: c.trim(), isMe: currentPerson && isSamePerson(p, currentPerson) });
+          }
         }
       });
       return list;
@@ -3355,6 +3498,10 @@
       }
 
       allVotes[currentPerson] = currentVote;
+      const legacyKeySave = findVotesKey(allVotes, currentPerson);
+      if (legacyKeySave && legacyKeySave !== currentPerson) {
+        delete allVotes[legacyKeySave];
+      }
       localStorage.setItem("sweeden_2027_votes", JSON.stringify(allVotes));
 
       const commentsEl = document.getElementById(`house-comments-${houseId}`);
@@ -3379,6 +3526,10 @@
       delete currentVote.houseComments[houseId];
       if (currentPerson) {
         allVotes[currentPerson] = currentVote;
+        const legacyKeyDel = findVotesKey(allVotes, currentPerson);
+        if (legacyKeyDel && legacyKeyDel !== currentPerson) {
+          delete allVotes[legacyKeyDel];
+        }
         localStorage.setItem("sweeden_2027_votes", JSON.stringify(allVotes));
       }
       const commentsEl = document.getElementById(`house-comments-${houseId}`);
@@ -3604,6 +3755,10 @@
       }
       if (currentPerson) {
         allVotes[currentPerson] = currentVote;
+        const legacyKey = findVotesKey(allVotes, currentPerson);
+        if (legacyKey && legacyKey !== currentPerson) {
+          delete allVotes[legacyKey];
+        }
         localStorage.setItem("sweeden_2027_votes", JSON.stringify(allVotes));
       }
       updateSingleHouseCard(houseId);
@@ -4091,20 +4246,39 @@
     function renderComments() {
       const commentsDiv = document.getElementById("commentsList");
       if (!commentsDiv) return;
-      const voters = Object.keys(allVotes);
-      const withGeneralComments = voters.filter(p => allVotes[p] && allVotes[p].comment && allVotes[p].comment.trim());
+      const uniqueVoters = getUniqueVotersList();
+      const list = [];
+      uniqueVoters.forEach(p => {
+        let comment = null;
+        if (currentPerson && isSamePerson(p, currentPerson)) {
+          comment = (currentVote && currentVote.comment) ? currentVote.comment : null;
+          if (!comment) {
+            const k = findVotesKey(allVotes, currentPerson);
+            if (k && allVotes[k]?.comment) comment = allVotes[k].comment;
+          }
+        } else {
+          const k = findVotesKey(allVotes, p) || p;
+          if (allVotes[k]?.comment) comment = allVotes[k].comment;
+        }
+        if (comment && comment.trim()) {
+          const canonicalName = (FAMILY_MEMBERS && FAMILY_MEMBERS.find(m => isSamePerson(m, p))) || p;
+          if (!list.some(item => isSamePerson(item.author, canonicalName))) {
+            list.push({ author: canonicalName, text: comment.trim() });
+          }
+        }
+      });
 
-      if (withGeneralComments.length === 0) {
+      if (list.length === 0) {
         commentsDiv.innerHTML = `<p style="color: var(--text-muted); font-size: 0.85rem; font-style: italic;">Engar athugasemdir skráðar enn.</p>`;
         return;
       }
 
       let html = `
         <div style="display:flex; flex-direction:column; gap:8px;">
-          ${withGeneralComments.map(p => `
+          ${list.map(item => `
             <div class="comment-item">
-              <div class="comment-author">${escapeHtml(p)}</div>
-              <div class="comment-text">${escapeHtml(allVotes[p].comment)}</div>
+              <div class="comment-author">${escapeHtml(item.author)}</div>
+              <div class="comment-text">${escapeHtml(item.text)}</div>
             </div>
           `).join("")}
         </div>
