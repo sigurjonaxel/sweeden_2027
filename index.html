@@ -2731,6 +2731,17 @@
       // Notandi er nú valinn í gegnum öruggan sprettiglugga með PIN
     }
 
+    function toggleVidmidInfo() {
+      const box = document.getElementById("vidmidDetails");
+      const btn = document.getElementById("toggleVidmidBtn");
+      if (!box) return;
+      const isHidden = (box.style.display === "none" || !box.style.display);
+      box.style.display = isHidden ? "flex" : "none";
+      if (btn) {
+        btn.textContent = isHidden ? "ℹ️ Viðmið −" : "ℹ️ Viðmið +";
+      }
+    }
+
     let tab1WeeksSort = "popularity";
 
     function getWeekStats(weekId) {
@@ -3286,47 +3297,45 @@
     }
 
     function openWeekNoteModal(weekId, person) {
+      if (!currentPerson) {
+        showToast("⚠️ Vinsamlegast veldu þitt nafn fyrst til að skrá forfallaskýringu.", "warning");
+        openChangeUserModal();
+        return;
+      }
+      const targetPerson = person || currentPerson;
+      if (!isSamePerson(currentPerson, targetPerson)) {
+        showToast("⚠️ Þú getur aðeins skráð skýringu á þínum eigin forföllum.", "warning");
+        return;
+      }
+
       const w = WEEKS.find(x => x.id === weekId);
       const weekLabel = w ? `${w.num} (${w.dates})` : weekId;
-      const canEdit = canEditPersonNotes(person);
-      const currentNote = (allVotes[person] && allVotes[person].weekNotes && allVotes[person].weekNotes[weekId]) || "";
+      const key = findVotesKey(allVotes, currentPerson) || currentPerson;
+      const currentNote = (currentVote?.weekNotes?.[weekId]) || (allVotes[key]?.weekNotes?.[weekId]) || "";
 
       document.getElementById("weekNoteTargetWeek").value = weekId;
-      document.getElementById("weekNoteTargetPerson").value = person;
+      document.getElementById("weekNoteTargetPerson").value = currentPerson;
 
       const inputWrap = document.getElementById("weekNoteInputWrap");
       const readOnlyWrap = document.getElementById("weekNoteReadOnlyWrap");
-      const readOnlyText = document.getElementById("weekNoteReadOnlyText");
       const saveBtn = document.getElementById("weekNoteSaveBtn");
       const deleteBtn = document.getElementById("weekNoteDeleteBtn");
       const cancelBtn = document.getElementById("weekNoteCancelBtn");
 
-      if (canEdit) {
-        document.getElementById("weekNoteModalTitle").textContent = `Skýring fyrir ${person} – ${w ? w.num : ''}`;
-        document.getElementById("weekNoteModalDesc").innerHTML = `Hvað kemur í veg fyrir að <strong>${escapeHtml(person)}</strong> komist í <strong>${weekLabel}</strong>? (t.d. sumarvinna, skóli, annað ferðalag):`;
-        if (inputWrap) inputWrap.style.display = "block";
-        if (readOnlyWrap) readOnlyWrap.style.display = "none";
-        document.getElementById("weekNoteInput").value = currentNote;
-        if (saveBtn) saveBtn.style.display = "inline-block";
-        if (deleteBtn) deleteBtn.style.display = currentNote ? "inline-block" : "none";
-        if (cancelBtn) cancelBtn.textContent = "Hætta við";
-      } else {
-        document.getElementById("weekNoteModalTitle").textContent = `Skýring: ${person} – ${w ? w.num : ''}`;
-        document.getElementById("weekNoteModalDesc").innerHTML = `Skráð skýring fyrir <strong>${escapeHtml(person)}</strong> í <strong>${weekLabel}</strong>:`;
-        if (inputWrap) inputWrap.style.display = "none";
-        if (readOnlyWrap) readOnlyWrap.style.display = "block";
-        if (readOnlyText) {
-          readOnlyText.textContent = currentNote ? `„${currentNote}“` : "Engin nánari skýring hefur verið skráð enn.";
-        }
-        if (saveBtn) saveBtn.style.display = "none";
-        if (deleteBtn) deleteBtn.style.display = "none";
-        if (cancelBtn) cancelBtn.textContent = "Loka";
-      }
+      document.getElementById("weekNoteModalTitle").textContent = `Skýring fyrir ${currentPerson} – ${w ? w.num : ''}`;
+      document.getElementById("weekNoteModalDesc").innerHTML = `Hvað kemur í veg fyrir að <strong>${escapeHtml(currentPerson)}</strong> komist í <strong>${weekLabel}</strong>? (t.d. sumarvinna, skóli, annað ferðalag):`;
+      if (inputWrap) inputWrap.style.display = "block";
+      if (readOnlyWrap) readOnlyWrap.style.display = "none";
+      document.getElementById("weekNoteInput").value = currentNote;
+      if (saveBtn) saveBtn.style.display = "inline-block";
+      if (deleteBtn) deleteBtn.style.display = currentNote ? "inline-block" : "none";
+      if (cancelBtn) cancelBtn.textContent = "Hætta við";
 
       document.getElementById("weekNoteModal").style.display = "flex";
-      if (canEdit) {
-        setTimeout(() => document.getElementById("weekNoteInput").focus(), 60);
-      }
+      setTimeout(() => {
+        const inp = document.getElementById("weekNoteInput");
+        if (inp) inp.focus();
+      }, 60);
     }
 
     function closeWeekNoteModal() {
@@ -3343,33 +3352,32 @@
       const person = document.getElementById("weekNoteTargetPerson").value;
       const note = document.getElementById("weekNoteInput").value.trim();
 
-      if (!person || !weekId) return;
-      if (!canEditPersonNotes(person)) {
+      if (!currentPerson || !person || !weekId) return;
+      if (!isSamePerson(currentPerson, person)) {
         showToast("⚠️ Þú hefur aðeins aðgang að breyta þínum eigin svörum.", "warning");
         closeWeekNoteModal();
         return;
       }
 
-      if (!allVotes[person]) allVotes[person] = { weeks: {}, houseVotes: {}, houseComments: {}, comment: "" };
-      if (!allVotes[person].weekNotes) allVotes[person].weekNotes = {};
+      const voteKey = findVotesKey(allVotes, currentPerson) || currentPerson;
+      if (!allVotes[voteKey]) allVotes[voteKey] = { weeks: {}, houseVotes: {}, houseComments: {}, comment: "" };
+      if (!allVotes[voteKey].weekNotes) allVotes[voteKey].weekNotes = {};
 
       if (note) {
-        allVotes[person].weekNotes[weekId] = note;
+        allVotes[voteKey].weekNotes[weekId] = note;
       } else {
-        delete allVotes[person].weekNotes[weekId];
+        delete allVotes[voteKey].weekNotes[weekId];
       }
 
-      if (isSamePerson(person, currentPerson)) {
-        if (!currentVote.weekNotes) currentVote.weekNotes = {};
-        if (note) currentVote.weekNotes[weekId] = note;
-        else delete currentVote.weekNotes[weekId];
-      }
+      if (!currentVote.weekNotes) currentVote.weekNotes = {};
+      if (note) currentVote.weekNotes[weekId] = note;
+      else delete currentVote.weekNotes[weekId];
 
       localStorage.setItem("sweeden_2027_votes", JSON.stringify(allVotes));
       closeWeekNoteModal();
       renderWeeks();
       await pushToCloud();
-      showToast(note ? `💾 Skýring vistuð fyrir ${person}!` : `🗑️ Skýring fjarlægð fyrir ${person}!`);
+      showToast(note ? "✅ Skýring vistuð og samstillt!" : "🗑️ Skýring fjarlægð.");
     }
 
     function filterAndScrollToWeek(weekId) {
@@ -3484,11 +3492,14 @@
                   notesHtml = noteEntries.map(([wkId, nText]) => {
                     const wk = WEEKS.find(x => x.id === wkId);
                     const wkNum = wk ? wk.num.replace("Vika ", "V") : wkId;
-                    const canEdit = canEditPersonNotes(ps.name);
-                    return `<button type="button" onclick="openWeekNoteModal('${wkId}', '${escapeHtml(ps.name)}')" style="display: inline-flex; align-items: center; gap: 3px; background: #fee2e2; color: #991b1b; padding: 2px 7px; border-radius: 6px; font-size: 0.72rem; margin: 1px 2px; border: 1px solid #fca5a5; cursor: pointer; font-family: inherit; font-weight: 600;" title="${canEdit ? 'Smelltu til að breyta skýringu' : 'Smelltu til að lesa skýringu'}"><strong>${wkNum}:</strong> ${escapeHtml(nText)}</button>`;
+                    if (ps.isMe) {
+                      return `<button type="button" onclick="openWeekNoteModal('${wkId}', '${escapeHtml(ps.name)}')" style="display: inline-flex; align-items: center; gap: 3px; background: #fee2e2; color: #991b1b; padding: 2px 7px; border-radius: 6px; font-size: 0.72rem; margin: 1px 2px; border: 1px solid #fca5a5; cursor: pointer; font-family: inherit; font-weight: 600;" title="Smelltu til að breyta skýringu"><strong>${wkNum}:</strong> ${escapeHtml(nText)} ✏️</button>`;
+                    } else {
+                      return `<span style="display: inline-flex; align-items: center; gap: 3px; background: #fee2e2; color: #991b1b; padding: 2px 7px; border-radius: 6px; font-size: 0.72rem; margin: 1px 2px; border: 1px solid #fca5a5; font-weight: 600;" title="${escapeHtml(ps.name)}: ${wkNum} – ${escapeHtml(nText)}"><strong>${wkNum}:</strong> ${escapeHtml(nText)}</span>`;
+                    }
                   }).join(" ");
                 } else if (ps.noCount > 0) {
-                  if (canEditPersonNotes(ps.name)) {
+                  if (ps.isMe) {
                     const firstNoWk = WEEKS.find(x => ps.votes[x.id] === 'no');
                     notesHtml = `<button type="button" onclick="openWeekNoteModal('${firstNoWk ? firstNoWk.id : 'w25'}', '${escapeHtml(ps.name)}')" style="background: #fff5f5; border: 1px dashed #f87171; border-radius: 6px; padding: 2px 7px; color: #b91c1c; font-size: 0.72rem; cursor: pointer; font-family: inherit; font-style: italic;">+ Skrá skýringu ✏️</button>`;
                   } else {
@@ -3533,12 +3544,7 @@
                         } else if (val === 'maybe') {
                           return `<td class="matrix-td-cell"><span class="matrix-cell-maybe" title="${escapeHtml(ps.name)}: Gæti gengið í ${w.num}">🟡</span></td>`;
                         } else if (val === 'no') {
-                          const canEdit = canEditPersonNotes(ps.name);
-                          return `<td class="matrix-td-cell">
-                            <button type="button" class="matrix-cell-no" onclick="openWeekNoteModal('${w.id}', '${escapeHtml(ps.name)}')" title="${escapeHtml(ps.name)}: Kemst ekki í ${w.num}${note ? ` – „${escapeHtml(note)}“` : ''} (Smelltu til að ${canEdit ? 'breyta' : 'lesa'})" style="cursor: pointer; border: 1px solid #fca5a5; font-family: inherit;">
-                              ❌${note ? ' 💬' : ''}
-                            </button>
-                          </td>`;
+                          return `<td class="matrix-td-cell"><span class="matrix-cell-no" title="${escapeHtml(ps.name)}: Kemst ekki í ${w.num}${note ? ` – „${escapeHtml(note)}“` : ''}">❌${note ? ' 💬' : ''}</span></td>`;
                         } else {
                           return `<td class="matrix-td-cell"><span class="matrix-cell-empty">—</span></td>`;
                         }
