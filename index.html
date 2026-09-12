@@ -1465,6 +1465,8 @@
         <button type="button" id="weekNoteSaveBtn" onclick="saveWeekNote()" style="padding: 8px 20px; background: #dc2626; color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 0.85rem; cursor: pointer; box-shadow: 0 2px 4px rgba(220,38,38,0.25);">Vista skýringu 💾</button>
       </div>
     </div>
+  </div>
+
   <!-- Modal: Fljótlegt vikuval (Quick Vote) -->
   <div class="modal-overlay" id="quickVoteModal" style="display: none; z-index: 10004; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(5px);" onclick="if(event.target===this) closeQuickVoteModal()">
     <div class="modal-box" style="max-width: 380px; padding: 22px; text-align: center; border-radius: 18px; box-shadow: var(--shadow-lg);">
@@ -1667,6 +1669,24 @@
           changed = true;
         }
       }
+      // Hreinsa út w35 úr öllum atkvæðum þar sem vika 35 hefur verið felld niður
+      Object.keys(allVotes).forEach(k => {
+        if (allVotes[k]?.weeks?.["w35"]) {
+          delete allVotes[k].weeks["w35"];
+          changed = true;
+        }
+        if (allVotes[k]?.weekNotes?.["w35"]) {
+          delete allVotes[k].weekNotes["w35"];
+          changed = true;
+        }
+      });
+      if (currentVote?.weeks?.["w35"]) {
+        delete currentVote.weeks["w35"];
+      }
+      if (currentVote?.weekNotes?.["w35"]) {
+        delete currentVote.weekNotes["w35"];
+      }
+
       if (changed) {
         localStorage.setItem("sweeden_2027_votes", JSON.stringify(allVotes));
       }
