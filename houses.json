@@ -396,40 +396,6 @@
     "availabilitySummary": "Laust í 3 af 11 vikum á Airbnb (V25, V26, V30)"
   },
   {
-    "id": "1155672325686872007",
-    "title": "Ringkøbing: Afþreyingar-resort m. innilaug, bíósal, leikjasal & mínígolfi",
-    "propertyType": "Lúxus orlofshús í Ringkøbing",
-    "city": "Ringkøbing",
-    "region": "Danmörk (Vestur-Jótland)",
-    "country": "Danmörk",
-    "specs": [
-      "30 gestir",
-      "9 svefnherb. + 6 loft",
-      "30 rúm",
-      "4 baðherbergi"
-    ],
-    "rating": "4.92",
-    "ratingLabel": "4.92 af 5 (13 umsagnir)",
-    "priceEur": 4670,
-    "priceUsdApprox": 5140,
-    "priceFormatted": "€4,670 (~,140)",
-    "photo": "https://a0.muscache.com/im/pictures/prohost-api/Hosting-1155672325686872007/original/e12cc08b-65ee-4727-b66b-fe5eeb38abda.jpeg?im_w=1200",
-    "url": "https://www.airbnb.com/rooms/1155672325686872007",
-    "coordinates": {
-      "lat": 56.1249,
-      "lng": 8.1287
-    },
-    "isBudgetFit": false,
-    "suggestedBy": "Gemini",
-    "availableWeeks": [
-      "w25",
-      "w26",
-      "w34",
-      "w35"
-    ],
-    "availabilitySummary": "Laust í 4 af 11 vikum á Airbnb (V25, V26, V34, V35)"
-  },
-  {
     "id": "1767296663427055904",
     "title": "Brantevik: Glæsilegt strandsetur m. sér sundlaugahúsi & sauna við sjóinn",
     "propertyType": "Lúxus gistiheimili í Brantevik",
