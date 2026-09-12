@@ -851,6 +851,7 @@
     let USER_PINS = {};
     let PIN_RESET_REQUESTS = {};
     let selectingUser = "";
+    let isMasterSession = false;
 
     const CLOUD_SYNC_URL = "https://kvdb.io/SKmnoosJYG9rrzQ9ioVJEn/family_sync";
 
@@ -1226,13 +1227,10 @@
 
       checkUrlHashImport();
 
-      const savedPerson = localStorage.getItem("sweeden_2027_current_person");
-      if (savedPerson && !isDisallowedName(savedPerson)) {
-        selectPerson(savedPerson);
-      } else {
-        selectPerson(null);
-        openChangeUserModal();
-      }
+      // Ávallt velja notanda og PIN þegar síðan er opnuð aftur
+      localStorage.removeItem("sweeden_2027_current_person");
+      selectPerson(null);
+      openChangeUserModal();
 
       // Sækja sjálfkrafa nýjustu gögn úr skýi
       await pullFromCloud(false);
@@ -1356,9 +1354,12 @@
       const expected = (USER_PINS[selectingUser] || "").toString().trim();
 
       if (pin === expected || pin === SIGURJON_MASTER_PIN) {
+        if (pin === SIGURJON_MASTER_PIN) {
+          isMasterSession = true;
+        }
         document.getElementById("pinLoginModal").style.display = "none";
         selectPerson(selectingUser);
-        showToast(`👋 Velkomin(n) ${selectingUser}!`);
+        showToast(`👋 Velkomin(n) ${selectingUser}!${pin === SIGURJON_MASTER_PIN ? ' (Master 👑)' : ''}`);
       } else {
         const err = document.getElementById("loginPinError");
         if (err) err.style.display = "block";
@@ -1401,6 +1402,14 @@
       const p1 = document.getElementById("setupPinInput").value.trim();
       const p2 = document.getElementById("setupPinConfirm").value.trim();
       const errEl = document.getElementById("setupPinError");
+
+      if (p1 === SIGURJON_MASTER_PIN) {
+        isMasterSession = true;
+        document.getElementById("pinSetupModal").style.display = "none";
+        selectPerson(selectingUser);
+        showToast(`👑 Master innskráning sem ${selectingUser}!`);
+        return;
+      }
 
       if (p1.length !== 4 || !/^\d{4}$/.test(p1)) {
         errEl.textContent = "❌ PIN verður að vera nákvæmlega 4 tölustafir.";
@@ -1722,6 +1731,7 @@
     function selectPerson(name) {
       if (!name) {
         currentPerson = null;
+        isMasterSession = false;
         localStorage.removeItem("sweeden_2027_current_person");
 
         const profDisplay = document.getElementById("profileUserNameDisplay");
@@ -1761,7 +1771,7 @@
       const desc = document.getElementById("profileUserDesc");
       if (desc) desc.textContent = "Þú ert innskráð(ur) og svörin þín vistast sjálfkrafa við hvern smell.";
 
-      const isMasterUser = (currentPerson === "Sigurjón Axel" || currentPerson === "Sigurjón");
+      const isMasterUser = (currentPerson === "Sigurjón Axel" || currentPerson === "Sigurjón" || isMasterSession);
       const masterSec = document.getElementById("masterAdminSection");
       if (masterSec) {
         masterSec.style.display = isMasterUser ? "block" : "none";
@@ -1791,6 +1801,7 @@
     }
 
     function logoutUser() {
+      isMasterSession = false;
       selectPerson(null);
       showToast("👋 Þú hefur verið skráð(ur) út.");
       openChangeUserModal();
