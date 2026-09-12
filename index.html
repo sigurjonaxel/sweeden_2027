@@ -317,16 +317,19 @@
     .vote-btn.active-like { background: #bbf7d0; border-color: #22c55e; }
     .vote-btn.active-dislike { background: #fecaca; border-color: #ef4444; }
 
-    /* Floating Save bar */
-    .save-bar {
-      position: sticky; bottom: 20px; z-index: 100;
-      background: rgba(15, 23, 42, 0.92); backdrop-filter: blur(10px);
-      padding: 14px 20px; border-radius: 14px; box-shadow: var(--shadow-lg);
-      display: flex; align-items: center; justify-content: space-between; color: white; margin-top: 24px;
+    /* Floating Feedback button */
+    .floating-feedback-btn {
+      position: fixed; bottom: 24px; right: 24px; z-index: 999;
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      color: white; border: 1.5px solid rgba(255, 255, 255, 0.35);
+      padding: 12px 22px; border-radius: 999px; font-weight: 700; font-size: 0.95rem;
+      box-shadow: 0 4px 18px rgba(2, 132, 199, 0.45), 0 2px 6px rgba(0,0,0,0.15);
+      cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+      transition: transform 0.2s, box-shadow 0.2s;
     }
-    .save-btn {
-      background: #38bdf8; color: #082f49; border: none; padding: 11px 24px;
-      border-radius: 10px; font-weight: 700; font-size: 0.95rem; cursor: pointer;
+    .floating-feedback-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 22px rgba(2, 132, 199, 0.6);
     }
 
     /* Modals */
@@ -526,7 +529,7 @@
         <div class="card">
           <div class="card-title">4. Athugasemdir, hugmyndir & óskir</div>
           <div class="card-desc">Hvað skiptir þig mestu máli? (Sundlaug, stutt á strönd, golf/padel, nálægt flugvelli, bílaleiga, matur/grill o.s.frv.)</div>
-          <textarea id="commentInput" rows="3" placeholder="Skrifaðu þínar pælingar eða óskir hér..."></textarea>
+          <textarea id="commentInput" rows="3" placeholder="Skrifaðu þínar pælingar eða óskir hér (vistast sjálfkrafa)..." oninput="onCommentChange(this.value)" onchange="pushToCloud()"></textarea>
 
           <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border);">
             <div style="font-size: 0.9rem; font-weight: 700; color: var(--text); margin-bottom: 8px;">💬 Athugasemdir & hugmyndir frá fjölskyldunni:</div>
@@ -545,19 +548,13 @@
           </div>
         </div>
 
-        <div class="save-bar">
-          <div>
-            <strong id="saveBarName">Enginn valinn</strong>
-            <div style="font-size: 0.85rem; opacity: 0.85;" id="saveBarStatus">Samstillist sjálfkrafa við alla í fjölskyldunni ☁️</div>
-          </div>
-          <div style="display: flex; gap: 10px; align-items: center;">
-            <button class="save-btn" style="background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.3);" onclick="openFeedbackModal()">💡 Ábending</button>
-            <button class="save-btn" onclick="saveCurrentVote()">Vista mitt val ✅</button>
-          </div>
-        </div>
-
     </main>
   </div>
+
+  <!-- Fljótandi ábendingarhnappur -->
+  <button type="button" onclick="openFeedbackModal()" class="floating-feedback-btn" title="Senda inn ábendingu eða verkefni">
+    💡 Ábending
+  </button>
 
   <!-- Modal: Bæta við húsi -->
   <div class="modal-overlay" id="addHouseModal">
@@ -1751,8 +1748,6 @@
         const masterSec = document.getElementById("masterAdminSection");
         if (masterSec) masterSec.style.display = "none";
 
-        document.getElementById("saveBarName").textContent = "Enginn valinn";
-        document.getElementById("saveBarStatus").textContent = "Veldu nafn til að skrá svör";
         currentVote = { weeks: {}, houseVotes: {}, houseComments: {}, comment: "" };
         const cEl = document.getElementById("commentInput");
         if (cEl) cEl.value = "";
@@ -1783,9 +1778,6 @@
         masterSec.style.display = isMasterUser ? "block" : "none";
         if (isMasterUser) renderMasterResets();
       }
-
-      document.getElementById("saveBarName").textContent = currentPerson;
-      document.getElementById("saveBarStatus").textContent = "Skráir svör fyrir " + currentPerson;
 
       if (allVotes[currentPerson]) {
         currentVote = JSON.parse(JSON.stringify(allVotes[currentPerson]));
@@ -2036,7 +2028,7 @@
       }
       updateWeeksUI();
       updateSingleWeekRow(weekId);
-      scheduleCloudPush();
+      pushToCloud();
     }
 
     function updateWeeksUI() {
@@ -2428,7 +2420,7 @@
       }
       updateSingleHouseCard(houseId);
       updateHouseCounts();
-      scheduleCloudPush();
+      pushToCloud();
     }
 
     function updateHouseVotesUI() {
@@ -2604,6 +2596,16 @@
         await pushToCloud();
         showToast(`🏡 Glæsilegt! „${title}“ hefur verið bætt við og samstillt við alla!`);
       }
+    }
+
+    function onCommentChange(val) {
+      if (!ensureUserSelected("skrifa athugasemd")) return;
+      currentVote.comment = val;
+      if (currentPerson) {
+        allVotes[currentPerson] = currentVote;
+        localStorage.setItem("sweeden_2027_votes", JSON.stringify(allVotes));
+      }
+      scheduleCloudPush();
     }
 
     async function saveCurrentVote() {
