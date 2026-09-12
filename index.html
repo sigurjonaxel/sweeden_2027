@@ -1243,7 +1243,9 @@
 
     function isDisallowedName(name) {
       if (!name) return true;
-      const lower = name.trim().toLowerCase();
+      const clean = name.trim();
+      if (clean.length < 2) return true;
+      const lower = clean.toLowerCase();
       return lower === "gestur" || lower === "gest" || lower === "guest" || lower === "gestir" || lower === "guests" || lower === "gesti";
     }
 
