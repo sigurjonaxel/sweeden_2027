@@ -26,10 +26,9 @@
       "w26",
       "w32",
       "w33",
-      "w34",
-      "w35"
+      "w34"
     ],
-    "availabilitySummary": "Laust í 5 af 11 vikum á Airbnb (V26, V32, V33, V34, V35)"
+    "availabilitySummary": "Laust í 4 af 11 vikum á Airbnb (V26, V32, V33, V34)"
   },
   {
     "id": "1626731935043177678",
@@ -64,10 +63,9 @@
       "w31",
       "w32",
       "w33",
-      "w34",
-      "w35"
+      "w34"
     ],
-    "availabilitySummary": "Laust allar vikur tímabilsins samkvæmt Airbnb (15. jún – 31. ágúst 2027)"
+    "availabilitySummary": "Laust í 10 af 11 vikum á Airbnb (V25, V26, V27, V28, V29, V30, V31, V32, V33, V34)"
   },
   {
     "id": "1327640733143373140",
@@ -93,14 +91,14 @@
     },
     "isBudgetFit": false,
     "availableWeeks": [
+      "w29",
       "w30",
       "w31",
       "w32",
       "w33",
-      "w34",
-      "w35"
+      "w34"
     ],
-    "availabilitySummary": "Laust í 6 af 11 vikum á Airbnb (V30, V31, V32, V33, V34, V35)"
+    "availabilitySummary": "Laust í 6 af 11 vikum á Airbnb (V29, V30, V31, V32, V33, V34)"
   },
   {
     "id": "1689999064583921885",
@@ -126,6 +124,7 @@
     },
     "isBudgetFit": true,
     "availableWeeks": [
+      "w25",
       "w26",
       "w27",
       "w28",
@@ -134,10 +133,9 @@
       "w31",
       "w32",
       "w33",
-      "w34",
-      "w35"
+      "w34"
     ],
-    "availabilitySummary": "Laust í 10 af 11 vikum á Airbnb (V26, V27, V28, V29, V30, V31, V32, V33, V34, V35)"
+    "availabilitySummary": "Laust í 10 af 11 vikum á Airbnb (V25, V26, V27, V28, V29, V30, V31, V32, V33, V34)"
   },
   {
     "id": "1735771750873059110",
@@ -162,10 +160,8 @@
       "lng": 13.37295621171522
     },
     "isBudgetFit": false,
-    "availableWeeks": [
-      "w25"
-    ],
-    "availabilitySummary": "Laust í 1 af 11 vikum á Airbnb (V25)"
+    "availableWeeks": [],
+    "availabilitySummary": "Uppbókað eða lokað allar vikur á laugardögum á Airbnb"
   },
   {
     "id": "1090334101923876759",
@@ -200,10 +196,9 @@
       "w31",
       "w32",
       "w33",
-      "w34",
-      "w35"
+      "w34"
     ],
-    "availabilitySummary": "Laust allar vikur tímabilsins samkvæmt Airbnb (15. jún – 31. ágúst 2027)"
+    "availabilitySummary": "Laust í 10 af 11 vikum á Airbnb (V25, V26, V27, V28, V29, V30, V31, V32, V33, V34)"
   },
   {
     "id": "683762981373209125",
@@ -229,7 +224,7 @@
     },
     "isBudgetFit": false,
     "availableWeeks": [],
-    "availabilitySummary": "Uppbókað eða lokað allar vikur tímabilsins á Airbnb"
+    "availabilitySummary": "Uppbókað eða lokað allar vikur á laugardögum á Airbnb"
   },
   {
     "id": "1125419478579319668",
@@ -255,15 +250,14 @@
     },
     "isBudgetFit": true,
     "availableWeeks": [
-      "w25",
       "w27",
+      "w29",
       "w30",
       "w31",
       "w32",
-      "w33",
-      "w34"
+      "w33"
     ],
-    "availabilitySummary": "Laust í 7 af 11 vikum á Airbnb (V25, V27, V30, V31, V32, V33, V34)"
+    "availabilitySummary": "Laust í 6 af 11 vikum á Airbnb (V27, V29, V30, V31, V32, V33)"
   },
   {
     "id": "1619593928568816076",
@@ -289,11 +283,11 @@
     },
     "isBudgetFit": true,
     "availableWeeks": [
+      "w32",
       "w33",
-      "w34",
-      "w35"
+      "w34"
     ],
-    "availabilitySummary": "Laust í 3 af 11 vikum á Airbnb (V33, V34, V35)"
+    "availabilitySummary": "Laust í 3 af 11 vikum á Airbnb (V32, V33, V34)"
   },
   {
     "id": "7838623",
@@ -319,11 +313,13 @@
     },
     "isBudgetFit": true,
     "availableWeeks": [
+      "w26",
       "w27",
+      "w31",
       "w32",
       "w33"
     ],
-    "availabilitySummary": "Laust í 3 af 11 vikum á Airbnb (V27, V32, V33)"
+    "availabilitySummary": "Laust í 5 af 11 vikum á Airbnb (V26, V27, V31, V32, V33)"
   },
   {
     "id": "959289088240377688",
@@ -360,10 +356,9 @@
       "w31",
       "w32",
       "w33",
-      "w34",
-      "w35"
+      "w34"
     ],
-    "availabilitySummary": "Laust allar vikur tímabilsins samkvæmt Airbnb (15. jún – 31. ágúst 2027)"
+    "availabilitySummary": "Laust í 10 af 11 vikum á Airbnb (V25, V26, V27, V28, V29, V30, V31, V32, V33, V34)"
   },
   {
     "id": "1671670810787993416",
@@ -424,10 +419,10 @@
     "availableWeeks": [
       "w25",
       "w26",
-      "w34",
-      "w35"
+      "w33",
+      "w34"
     ],
-    "availabilitySummary": "Laust í 4 af 11 vikum á Airbnb (V25, V26, V34, V35)"
+    "availabilitySummary": "Laust í 4 af 11 vikum á Airbnb (V25, V26, V33, V34)"
   },
   {
     "id": "1236701408674132678",
@@ -456,6 +451,7 @@
     "isBudgetFit": true,
     "suggestedBy": "Gemini",
     "availableWeeks": [
+      "w26",
       "w27",
       "w28",
       "w29",
@@ -463,9 +459,8 @@
       "w31",
       "w32",
       "w33",
-      "w34",
-      "w35"
+      "w34"
     ],
-    "availabilitySummary": "Laust í 9 af 11 vikum á Airbnb (V27, V28, V29, V30, V31, V32, V33, V34, V35)"
+    "availabilitySummary": "Laust í 9 af 11 vikum á Airbnb (V26, V27, V28, V29, V30, V31, V32, V33, V34)"
   }
 ]
