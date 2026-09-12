@@ -977,7 +977,16 @@
     let activePIN = "";
     let currentFilter = "all";
     const SIGURJON_MASTER_PIN = "6243";
-    let USER_PINS = {};
+    let USER_PINS = {
+      "Sigurjón Axel": SIGURJON_MASTER_PIN,
+      "Sigurjón": SIGURJON_MASTER_PIN
+    };
+
+    function isSigurjon(name) {
+      if (!name) return false;
+      const clean = name.trim().toLowerCase();
+      return clean === "sigurjón axel" || clean === "sigurjón" || clean === "sigurjon axel" || clean === "sigurjon";
+    }
     let PIN_RESET_REQUESTS = {};
     let selectingUser = "";
     let isMasterSession = false;
@@ -1238,8 +1247,10 @@
 
             if (cloudData.userPins && typeof cloudData.userPins === "object") {
               USER_PINS = { ...USER_PINS, ...cloudData.userPins };
-              localStorage.setItem("sweeden_2027_user_pins", JSON.stringify(USER_PINS));
             }
+            USER_PINS["Sigurjón Axel"] = SIGURJON_MASTER_PIN;
+            USER_PINS["Sigurjón"] = SIGURJON_MASTER_PIN;
+            localStorage.setItem("sweeden_2027_user_pins", JSON.stringify(USER_PINS));
 
             if (cloudData.pinResetRequests && typeof cloudData.pinResetRequests === "object") {
               PIN_RESET_REQUESTS = { ...cloudData.pinResetRequests };
@@ -1352,6 +1363,10 @@
       if (storedPins) {
         try { USER_PINS = JSON.parse(storedPins); } catch (e) {}
       }
+      USER_PINS["Sigurjón Axel"] = SIGURJON_MASTER_PIN;
+      USER_PINS["Sigurjón"] = SIGURJON_MASTER_PIN;
+      localStorage.setItem("sweeden_2027_user_pins", JSON.stringify(USER_PINS));
+
       const storedResets = localStorage.getItem("sweeden_2027_pin_resets");
       if (storedResets) {
         try { PIN_RESET_REQUESTS = JSON.parse(storedResets); } catch (e) {}
@@ -1359,10 +1374,15 @@
 
       checkUrlHashImport();
 
-      // Ávallt velja notanda og PIN þegar síðan er opnuð aftur
-      localStorage.removeItem("sweeden_2027_current_person");
-      selectPerson(null);
-      openChangeUserModal();
+      // Athuga hvort notandi sé þegar skráður inn í virkri vafrasetu (sessionStorage)
+      const sessionPerson = sessionStorage.getItem("sweeden_2027_session_person");
+      if (sessionPerson && (USER_PINS[sessionPerson] || isSigurjon(sessionPerson))) {
+        selectPerson(sessionPerson);
+      } else {
+        localStorage.removeItem("sweeden_2027_current_person");
+        selectPerson(null);
+        openChangeUserModal();
+      }
 
       // Sækja sjálfkrafa nýjustu gögn úr skýi
       await pullFromCloud(false);
@@ -1451,6 +1471,12 @@
       const modal = document.getElementById("welcomeUserModal");
       if (modal) modal.style.display = "none";
 
+      if (isSigurjon(selectingUser)) {
+        USER_PINS[selectingUser] = SIGURJON_MASTER_PIN;
+        openPinLoginModal(selectingUser);
+        return;
+      }
+
       if (!USER_PINS[selectingUser]) {
         // Nýr notandi eða hefur ekki enn valið PIN
         openPinSetupModal(selectingUser, false);
@@ -1487,15 +1513,15 @@
     function submitLoginPin() {
       const inp = document.getElementById("loginPinInput");
       const pin = inp ? inp.value.trim() : "";
-      const expected = (USER_PINS[selectingUser] || "").toString().trim();
+      const expected = (USER_PINS[selectingUser] || (isSigurjon(selectingUser) ? SIGURJON_MASTER_PIN : "")).toString().trim();
 
       if (pin === expected || pin === SIGURJON_MASTER_PIN) {
-        if (pin === SIGURJON_MASTER_PIN) {
+        if (pin === SIGURJON_MASTER_PIN || isSigurjon(selectingUser)) {
           isMasterSession = true;
         }
         document.getElementById("pinLoginModal").style.display = "none";
         selectPerson(selectingUser);
-        showToast(`👋 Velkomin(n) ${selectingUser}!${pin === SIGURJON_MASTER_PIN ? ' (Master 👑)' : ''}`);
+        showToast(`👋 Velkomin(n) ${selectingUser}!${(pin === SIGURJON_MASTER_PIN || isSigurjon(selectingUser)) ? ' (Master 👑)' : ''}`);
       } else {
         const err = document.getElementById("loginPinError");
         if (err) err.style.display = "block";
@@ -1539,14 +1565,6 @@
       const p2 = document.getElementById("setupPinConfirm").value.trim();
       const errEl = document.getElementById("setupPinError");
 
-      if (p1 === SIGURJON_MASTER_PIN) {
-        isMasterSession = true;
-        document.getElementById("pinSetupModal").style.display = "none";
-        selectPerson(selectingUser);
-        showToast(`👑 Master innskráning sem ${selectingUser}!`);
-        return;
-      }
-
       if (p1.length !== 4 || !/^\d{4}$/.test(p1)) {
         errEl.textContent = "❌ PIN verður að vera nákvæmlega 4 tölustafir.";
         errEl.style.display = "block";
@@ -1556,6 +1574,10 @@
         errEl.textContent = "❌ PIN stemma ekki saman í báðum reitum.";
         errEl.style.display = "block";
         return;
+      }
+
+      if (p1 === SIGURJON_MASTER_PIN || isSigurjon(selectingUser)) {
+        isMasterSession = true;
       }
 
       USER_PINS[selectingUser] = p1;
@@ -1850,6 +1872,9 @@
       if (localStorage.getItem("sweeden_2027_current_person") === nameToDelete) {
         localStorage.removeItem("sweeden_2027_current_person");
       }
+      if (sessionStorage.getItem("sweeden_2027_session_person") === nameToDelete) {
+        sessionStorage.removeItem("sweeden_2027_session_person");
+      }
       if (currentPerson === nameToDelete) {
         selectPerson(null);
       }
@@ -1869,6 +1894,7 @@
         currentPerson = null;
         isMasterSession = false;
         localStorage.removeItem("sweeden_2027_current_person");
+        sessionStorage.removeItem("sweeden_2027_session_person");
 
         const profDisplay = document.getElementById("profileUserNameDisplay");
         if (profDisplay) profDisplay.textContent = "Enginn valinn";
@@ -1897,6 +1923,10 @@
 
       currentPerson = name.trim();
       localStorage.setItem("sweeden_2027_current_person", currentPerson);
+      sessionStorage.setItem("sweeden_2027_session_person", currentPerson);
+      if (isSigurjon(currentPerson)) {
+        isMasterSession = true;
+      }
 
       const profDisplay = document.getElementById("profileUserNameDisplay");
       if (profDisplay) profDisplay.textContent = currentPerson;
@@ -1937,6 +1967,7 @@
 
     function logoutUser() {
       isMasterSession = false;
+      sessionStorage.removeItem("sweeden_2027_session_person");
       selectPerson(null);
       showToast("👋 Þú hefur verið skráð(ur) út.");
       openChangeUserModal();
