@@ -2138,12 +2138,11 @@
         const renderList = (arr) => arr.map(n => `<span style="display: inline-flex; align-items: center; gap: 4px; background: rgba(255,255,255,0.7); padding: 1px 6px 1px 2px; border-radius: 999px; margin: 1px 2px;">${getUserAvatarHTML(n, 18)}<span>${n}</span></span>`).join(" ");
         const renderNoList = (arr) => arr.map(n => {
           const note = allVotes[n]?.weekNotes?.[weekId];
-          const canEdit = (n === currentPerson || currentPerson === "Sigurjón Axel");
-          return `<span style="display: inline-flex; align-items: center; gap: 4px; background: rgba(254,226,226,0.85); border: 1px solid #fca5a5; padding: 2px 8px 2px 3px; border-radius: 999px; margin: 2px 2px;">
+          return `<span style="display: inline-flex; align-items: center; gap: 4px; background: rgba(254,226,226,0.9); border: 1px solid #fca5a5; padding: 3px 8px 3px 4px; border-radius: 999px; margin: 2px 2px;">
             ${getUserAvatarHTML(n, 18)}
             <strong>${n}</strong>
             ${note ? `<span style="font-size: 0.76rem; color: #991b1b; font-style: italic;">(„${escapeHtml(note)}“)</span>` : `<span style="font-size: 0.72rem; color: #b91c1c; opacity: 0.85;">(engin skýring)</span>`}
-            ${canEdit ? `<button type="button" onclick="openWeekNoteModal('${weekId}', '${n}')" title="Skrifa eða breyta skýringu" style="background: white; border: 1px solid #ef4444; border-radius: 4px; color: #b91c1c; font-size: 0.7rem; font-weight: 700; cursor: pointer; padding: 1px 5px; margin-left: 3px;">✏️ Skýring</button>` : ''}
+            <button type="button" onclick="openWeekNoteModal('${weekId}', '${escapeHtml(n)}')" title="Skrifa eða breyta skýringu" style="background: white; border: 1.5px solid #ef4444; border-radius: 6px; color: #b91c1c; font-size: 0.72rem; font-weight: 700; cursor: pointer; padding: 1px 7px; margin-left: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.06);">✏️ Skýring</button>
           </span>`;
         }).join(" ");
 
@@ -2358,11 +2357,10 @@
     }
 
     function openWeekNoteModal(weekId, person) {
-      if (!ensureUserSelected("skrá skýringu")) return;
       const w = WEEKS.find(x => x.id === weekId);
       const weekLabel = w ? `${w.num} (${w.dates})` : weekId;
       document.getElementById("weekNoteModalTitle").textContent = `Skýring fyrir ${person} – ${w ? w.num : ''}`;
-      document.getElementById("weekNoteModalDesc").innerHTML = `Hvað er <strong>${escapeHtml(person)}</strong> að gera í <strong>${weekLabel}</strong> sem kemur í veg fyrir ferðina? (t.d. vinna, skóli, annað ferðalag):`;
+      document.getElementById("weekNoteModalDesc").innerHTML = `Hvað kemur í veg fyrir að <strong>${escapeHtml(person)}</strong> komist í <strong>${weekLabel}</strong>? (t.d. sumarvinna, skóli, annað ferðalag):`;
       document.getElementById("weekNoteTargetWeek").value = weekId;
       document.getElementById("weekNoteTargetPerson").value = person;
       const currentNote = (allVotes[person] && allVotes[person].weekNotes && allVotes[person].weekNotes[weekId]) || "";
@@ -2495,12 +2493,26 @@
                   <th>Komast (✅)</th>
                   <th>Gætu (🟡)</th>
                   <th>Kemst ekki (❌)</th>
+                  <th style="text-align: left; padding-left: 10px;">Skýringar á forföllum</th>
                 </tr>
               </thead>
               <tbody>
                 ${personStats.map(ps => {
                   const votes = allVotes[ps.name]?.weeks || {};
                   const isTopBlocker = ps.noCount >= 4;
+                  const userNotes = Object.entries(allVotes[ps.name]?.weekNotes || {});
+                  let notesCol = "";
+                  if (userNotes.length > 0) {
+                    notesCol = userNotes.map(([wkId, nText]) => {
+                      const wk = WEEKS.find(x => x.id === wkId);
+                      return `<span style="display: inline-flex; align-items: center; gap: 3px; background: #fee2e2; color: #991b1b; padding: 2px 7px; border-radius: 4px; font-size: 0.72rem; margin: 1px 2px; border: 1px solid #fca5a5;"><strong>${wk ? wk.num : wkId}:</strong> ${escapeHtml(nText)}</span>`;
+                    }).join(" ");
+                  } else if (ps.noCount > 0) {
+                    notesCol = `<span style="color: #b91c1c; font-style: italic; font-size: 0.75rem;">Engin skýring skráð</span>`;
+                  } else {
+                    notesCol = `<span style="color: #94a3b8; font-size: 0.75rem;">—</span>`;
+                  }
+
                   return `
                     <tr style="${isTopBlocker ? 'background: #fff5f5;' : ''}">
                       <td style="text-align: left; padding-left: 12px; font-weight: 700; white-space: nowrap;">
@@ -2515,12 +2527,19 @@
                         const note = allVotes[ps.name]?.weekNotes?.[w.id];
                         if (val === 'yes') return `<td><span class="matrix-cell-yes" title="${ps.name}: Kemst vel í ${w.num}">✅</span></td>`;
                         if (val === 'maybe') return `<td><span class="matrix-cell-maybe" title="${ps.name}: Gæti gengið í ${w.num}">🟡</span></td>`;
-                        if (val === 'no') return `<td><span class="matrix-cell-no" title="${ps.name}: Kemst ekki í ${w.num}${note ? ` (${note})` : ' (Engin skýring)'}">❌</span></td>`;
+                        if (val === 'no') {
+                          return `<td>
+                            <button type="button" onclick="openWeekNoteModal('${w.id}', '${escapeHtml(ps.name)}')" class="matrix-cell-no" style="cursor: pointer; border: 1px solid #f87171; font-family: inherit; font-size: 0.78rem; transition: all 0.15s; display: inline-flex; align-items: center; gap: 2px; padding: 2px 5px;" title="${ps.name}: Kemst ekki í ${w.num} — Smelltu til að ${note ? 'skoða/breyta skýringu' : 'bæta við skýringu'}">
+                              <span>❌</span><span style="font-size: 0.68rem;">✏️</span>
+                            </button>
+                          </td>`;
+                        }
                         return `<td><span class="matrix-cell-empty">—</span></td>`;
                       }).join("")}
                       <td style="font-weight: 700; color: #166534;">${ps.yesCount}</td>
                       <td style="font-weight: 700; color: #854d0e;">${ps.maybeCount}</td>
                       <td style="font-weight: 800; color: ${ps.noCount > 0 ? '#b91c1c' : '#94a3b8'};">${ps.noCount}</td>
+                      <td style="text-align: left; padding-left: 10px; max-width: 250px;">${notesCol}</td>
                     </tr>
                   `;
                 }).join("")}
@@ -2528,7 +2547,7 @@
             </table>
             <div style="padding: 10px 14px; background: #f8fafc; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 0.78rem; color: var(--text-muted);">
               <div>
-                💡 <strong>Skýringar:</strong> Smelltu á <code>✏️ Skýring</code> við hliðina á nafni í rauðu reitunum hér að neðan til að skrá ástæðu fyrir forföllum.
+                💡 <strong>Skýringar:</strong> Smelltu beint á rauðu <code>❌ ✏️</code> reitina í töflunni hér að ofan eða á <code>✏️ Skýring</code> hnappana í vikutöflunni hér að neðan til að skrá ástæðu fyrir forföllum.
               </div>
               <button onclick="toggleMatrixTable()" style="background: none; border: none; color: var(--primary); font-weight: 700; cursor: pointer;">
                 ▲ Fela töflu
