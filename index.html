@@ -1547,6 +1547,23 @@
     </div>
   </div>
 
+  <!-- Modal: Skoða forfallaskýringu (Read-only popup á Android og PC) -->
+  <div class="modal-overlay" id="noteViewModal" style="display: none; z-index: 10005; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(5px);" onclick="if(event.target===this) closeNoteViewModal()">
+    <div class="modal-box" style="max-width: 380px; text-align: center; border-radius: 18px; padding: 22px; box-shadow: var(--shadow-lg); border: 1.5px solid #fca5a5;">
+      <div style="font-size: 2.2rem; margin-bottom: 6px;">💬</div>
+      <div id="noteViewAvatar" style="margin-bottom: 8px;"></div>
+      <h3 id="noteViewTitle" style="font-size: 1.15rem; font-weight: 800; color: #0f172a; margin: 0 0 4px 0;"></h3>
+      <p id="noteViewSubtitle" style="font-size: 0.84rem; color: var(--text-muted); margin: 0 0 14px 0;"></p>
+      
+      <div id="noteViewBody" style="background: #fef2f2; border: 1.5px solid #fecaca; border-radius: 12px; padding: 14px 16px; color: #991b1b; font-size: 0.96rem; font-weight: 600; line-height: 1.45; margin-bottom: 16px; word-break: break-word; text-align: left;">
+      </div>
+
+      <button type="button" onclick="closeNoteViewModal()" style="width: 100%; padding: 10px 16px; background: #0f172a; color: white; border: none; border-radius: 10px; font-weight: 700; font-size: 0.9rem; cursor: pointer;">
+        Loka ✕
+      </button>
+    </div>
+  </div>
+
   <script>
     let FAMILY_MEMBERS = [];
     let FAMILY_BIRTHDAYS = [];
@@ -3392,6 +3409,54 @@
       document.getElementById("weekNoteModal").style.display = "none";
     }
 
+    function showNotePopup(weekId, personName) {
+      const w = WEEKS.find(x => x.id === weekId);
+      const weekTitle = w ? `${w.num} (${w.dates})` : weekId;
+      const key = findVotesKey(allVotes, personName) || personName;
+      let note = "";
+      if (allVotes[key]?.weekNotes?.[weekId]) {
+        note = allVotes[key].weekNotes[weekId];
+      } else if (currentVote && isSamePerson(personName, currentPerson) && currentVote.weekNotes?.[weekId]) {
+        note = currentVote.weekNotes[weekId];
+      }
+
+      const modal = document.getElementById("noteViewModal");
+      const titleEl = document.getElementById("noteViewTitle");
+      const subtitleEl = document.getElementById("noteViewSubtitle");
+      const bodyEl = document.getElementById("noteViewBody");
+      const avatarEl = document.getElementById("noteViewAvatar");
+
+      if (avatarEl) avatarEl.innerHTML = getUserAvatarHTML(personName, 46);
+      if (titleEl) titleEl.textContent = personName;
+      if (subtitleEl) subtitleEl.textContent = weekTitle;
+      
+      if (bodyEl) {
+        if (note && note.trim()) {
+          bodyEl.innerHTML = `
+            <div style="font-size: 0.74rem; font-weight: 700; color: #b91c1c; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">
+              Skráð forfallaskýring:
+            </div>
+            <div style="font-size: 1.05rem; font-weight: 600; color: #991b1b; line-height: 1.45;">
+              „${escapeHtml(note.trim())}“
+            </div>
+          `;
+        } else {
+          bodyEl.innerHTML = `
+            <div style="font-size: 0.88rem; color: #64748b; font-style: italic; line-height: 1.4;">
+              ❌ ${escapeHtml(personName)} er skráð(ur) að komast ekki í þessari viku, en engin nánari skýring hefur verið skráð enn.
+            </div>
+          `;
+        }
+      }
+
+      if (modal) modal.style.display = "flex";
+    }
+
+    function closeNoteViewModal() {
+      const modal = document.getElementById("noteViewModal");
+      if (modal) modal.style.display = "none";
+    }
+
     async function deleteWeekNote() {
       document.getElementById("weekNoteInput").value = "";
       await saveWeekNote();
@@ -3555,7 +3620,7 @@
                           if (ps.isMe) {
                             return `<button type="button" onclick="openWeekNoteModal('${wkId}', '${escapeHtml(ps.name)}')" style="display: inline-flex; align-items: center; gap: 3px; background: #fee2e2; color: #991b1b; padding: 2px 7px; border-radius: 6px; font-size: 0.72rem; border: 1px solid #fca5a5; cursor: pointer; font-family: inherit; font-weight: 600;" title="Smelltu til að breyta skýringu"><strong>${wkNum}:</strong> ${escapeHtml(nText)} ✏️</button>`;
                           } else {
-                            return `<span style="display: inline-flex; align-items: center; gap: 3px; background: #fee2e2; color: #991b1b; padding: 2px 7px; border-radius: 6px; font-size: 0.72rem; border: 1px solid #fca5a5; font-weight: 600;" title="${escapeHtml(ps.name)}: ${wkNum} – ${escapeHtml(nText)}"><strong>${wkNum}:</strong> ${escapeHtml(nText)}</span>`;
+                            return `<button type="button" onclick="showNotePopup('${wkId}', '${escapeHtml(ps.name)}')" class="compact-note-chip" style="cursor: pointer;" title="${escapeHtml(ps.name)}: ${wkNum} – ${escapeHtml(nText)}"><strong>${wkNum}:</strong> ${escapeHtml(nText)}</button>`;
                           }
                         }).join("")}
                         <button type="button" onclick="togglePersonNotesExpand('${escapeHtml(ps.name)}')" style="background: none; border: none; font-size: 0.68rem; color: #64748b; cursor: pointer; text-decoration: underline; padding: 0 2px;" title="Þjappa skýringu">Fela ▲</button>
@@ -3584,9 +3649,9 @@
                     } else {
                       notesHtml = `
                         <div style="display: inline-flex; align-items: center; gap: 4px; max-width: 100%; vertical-align: middle;">
-                          <span class="compact-note-chip" onclick="togglePersonNotesExpand('${escapeHtml(ps.name)}')" style="cursor: pointer;" title="${escapeHtml(tooltipText)} (Smelltu til að stækka)">
+                          <button type="button" onclick="showNotePopup('${firstEntry[0]}', '${escapeHtml(ps.name)}')" class="compact-note-chip" style="cursor: pointer;" title="${escapeHtml(tooltipText)}">
                             <strong>${firstWkNum}:</strong> ${escapeHtml(firstText)}
-                          </span>
+                          </button>
                           ${moreCount > 0 ? `<button type="button" onclick="togglePersonNotesExpand('${escapeHtml(ps.name)}')" class="compact-more-pill" title="${escapeHtml(tooltipText)} (Smelltu til að sjá allt)">+${moreCount} ▼</button>` : ''}
                         </div>
                       `;
@@ -3638,7 +3703,7 @@
                         } else if (val === 'maybe') {
                           return `<td class="matrix-td-cell"><span class="matrix-cell-maybe" title="${escapeHtml(ps.name)}: Gæti gengið í ${w.num}">🟡</span></td>`;
                         } else if (val === 'no') {
-                          return `<td class="matrix-td-cell"><span class="matrix-cell-no" title="${escapeHtml(ps.name)}: Kemst ekki í ${w.num}${note ? ` – „${escapeHtml(note)}“` : ''}">❌${note ? ' 💬' : ''}</span></td>`;
+                          return `<td class="matrix-td-cell"><button type="button" class="matrix-cell-no" onclick="showNotePopup('${w.id}', '${escapeHtml(ps.name)}')" style="cursor: pointer; border: 1px solid #fca5a5; font-family: inherit;" title="${escapeHtml(ps.name)}: Kemst ekki í ${w.num}${note ? ` – „${escapeHtml(note)}“` : ''}">❌${note ? ' 💬' : ''}</button></td>`;
                         } else {
                           return `<td class="matrix-td-cell"><span class="matrix-cell-empty">—</span></td>`;
                         }
