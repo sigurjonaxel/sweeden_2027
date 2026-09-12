@@ -1053,16 +1053,9 @@
         </div>
 
         <div class="card" id="weeksMatrixCard">
-          <div class="card-title" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span style="font-size: 1.3rem;">📅</span>
-              <span>2. Vikuval & Dagsetningar 2027 (Laugardagur – Laugardagur)</span>
-            </div>
-            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-              <button type="button" onclick="markAllWeeksYes()" style="background: #f0fdf4; border: 1.5px solid #86efac; color: #166534; font-size: 0.8rem; font-weight: 700; padding: 7px 14px; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
-                ✅ Merkja allar vikur vel
-              </button>
-            </div>
+          <div class="card-title" style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 1.3rem;">📅</span>
+            <span>2. Vikuval & Dagsetningar 2027 (Laugardagur – Laugardagur)</span>
           </div>
           <div class="card-desc" style="margin-bottom: 12px;">
             Smelltu beint á reitina í þinni línu (merkt <strong>„Þú“</strong>) til að velja: <strong>✅ Kemst vel</strong>, <strong>🟡 Gæti gengið</strong> eða <strong>❌ Kemst ekki</strong>. Smelltu á dálkhaus vikunnar (t.d. <strong>🥇 #1</strong>) til að sjá nánar tölur og laus hús.
@@ -1539,12 +1532,9 @@
         </button>
       </div>
 
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border);">
-        <button type="button" onclick="openNoteFromQuickVote()" style="background: #fee2e2; border: 1px solid #fca5a5; border-radius: 6px; padding: 5px 10px; font-size: 0.8rem; font-weight: 700; color: #b91c1c; cursor: pointer;">
+      <div style="display: flex; justify-content: center; align-items: center; margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border);">
+        <button type="button" onclick="openNoteFromQuickVote()" style="background: #fee2e2; border: 1px solid #fca5a5; border-radius: 6px; padding: 6px 14px; font-size: 0.82rem; font-weight: 700; color: #b91c1c; cursor: pointer;">
           ✏️ Skrifa skýringu
-        </button>
-        <button type="button" onclick="setWeekVoteFromQuick(null)" style="background: none; border: none; font-size: 0.82rem; font-weight: 600; color: var(--text-muted); cursor: pointer; text-decoration: underline;">
-          ✕ Hreinsa val
         </button>
       </div>
     </div>
@@ -3692,20 +3682,8 @@
             </tfoot>
           </table>
 
-          <div style="padding: 12px 16px; background: #f8fafc; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; font-size: 0.8rem;">
-            <div style="display: flex; align-items: center; gap: 6px; color: var(--text-muted);">
-              <span>💡 <strong>Ábending:</strong> Smelltu á <strong>reitina í þinni línu</strong> til að velja, eða á <strong>dálkhausa viknanna (t.d. 🥇 #1)</strong> til að sjá tölur og laus hús.</span>
-            </div>
-            ${currentPerson ? `
-              <div style="display: flex; gap: 8px; align-items: center;">
-                <button type="button" onclick="markAllWeeksYes()" style="background: #f0fdf4; border: 1px solid #86efac; color: #166534; font-size: 0.78rem; font-weight: 700; padding: 5px 12px; border-radius: 6px; cursor: pointer;">
-                  ✅ Merkja allar vikur
-                </button>
-                <button type="button" onclick="clearMyWeekVotes()" style="background: white; border: 1px solid #cbd5e1; color: #64748b; font-size: 0.78rem; font-weight: 600; padding: 5px 10px; border-radius: 6px; cursor: pointer;">
-                  ✕ Hreinsa mitt val
-                </button>
-              </div>
-            ` : ''}
+          <div style="padding: 10px 16px; background: #f8fafc; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--text-muted);">
+            <span>💡 <strong>Ábending:</strong> Smelltu á <strong>reitina í þinni línu</strong> til að velja, eða á <strong>dálkhausa viknanna (t.d. 🥇 #1)</strong> til að sjá tölur og laus hús.</span>
           </div>
         </div>
       `;
