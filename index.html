@@ -143,31 +143,270 @@
     .header-info-sep { color: rgba(255, 255, 255, 0.35); font-weight: 300; }
 
     /* Availability Matrix Styles */
+    .matrix-legend-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 14px;
+      padding: 9px 14px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 14px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #475569;
+      align-items: center;
+    }
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .legend-icon { font-size: 0.95rem; }
+
     .matrix-table-wrap {
-      overflow-x: auto; background: white; border: 1px solid var(--border);
-      border-radius: 12px; margin-top: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+      overflow-x: auto;
+      background: white;
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+      position: relative;
+      margin-top: 10px;
+      -webkit-overflow-scrolling: touch;
     }
     .matrix-table {
-      width: 100%; border-collapse: collapse; font-size: 0.82rem; text-align: center; min-width: 650px;
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 0.82rem;
+      text-align: center;
+      min-width: 950px;
     }
-    .matrix-table th {
-      background: #f8fafc; padding: 8px 6px; border-bottom: 1.5px solid var(--border);
-      font-weight: 700; color: var(--text-muted); white-space: nowrap;
+    .matrix-th-name, .matrix-td-name {
+      position: sticky;
+      left: 0;
+      z-index: 3;
+      background: white;
+      text-align: left;
+      padding: 10px 14px;
+      border-right: 2px solid var(--border);
+      border-bottom: 1px solid #f1f5f9;
+      min-width: 180px;
+      max-width: 230px;
     }
-    .matrix-table td {
-      padding: 7px 5px; border-bottom: 1px solid #f1f5f9; vertical-align: middle;
+    .matrix-table thead .matrix-th-name {
+      z-index: 5;
+      background: #f8fafc;
+      border-bottom: 2px solid var(--border);
     }
-    .matrix-table tr:hover td { background: #f8fafc; }
+    .matrix-th-week {
+      background: #f8fafc;
+      padding: 8px 6px 10px;
+      border-bottom: 2px solid var(--border);
+      border-left: 1px solid #e2e8f0;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s;
+      min-width: 76px;
+      vertical-align: top;
+    }
+    .matrix-th-week:hover {
+      background: #f1f5f9;
+      transform: translateY(-1px);
+    }
+    .matrix-th-week.th-week-top1 {
+      background: #fefce8;
+      border-bottom: 2px solid #f59e0b;
+    }
+    .matrix-th-week.th-week-top1:hover {
+      background: #fef9c3;
+    }
+    .th-week-num-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      font-weight: 800;
+      font-size: 0.88rem;
+      color: #0f172a;
+    }
+    .th-bday-badge {
+      font-size: 0.95rem;
+      cursor: help;
+      display: inline-block;
+    }
+    .th-rank-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      margin: 2px 0;
+      font-size: 0.74rem;
+      font-weight: 800;
+      color: #1e293b;
+    }
+    .th-medal { font-size: 1rem; line-height: 1; }
+    .th-rank-lbl { font-size: 0.74rem; font-weight: 800; }
+    .th-dates-row {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      margin-bottom: 3px;
+    }
+    .th-count-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      white-space: nowrap;
+    }
+    .pill-best {
+      background: #dcfce7;
+      color: #166534;
+      border-color: #86efac;
+    }
+    .pill-single-block {
+      background: #ffedd5;
+      color: #9a3412;
+      border-color: #fdba74;
+    }
+    .pill-conflict {
+      background: #fee2e2;
+      color: #991b1b;
+      border-color: #fca5a5;
+    }
+
+    /* Row styles */
+    .matrix-row-me {
+      background: #f0fdf4 !important;
+    }
+    .matrix-row-me .matrix-td-name {
+      background: #f0fdf4 !important;
+      border-left: 4px solid #16a34a;
+    }
+    .badge-you {
+      background: #16a34a;
+      color: white;
+      padding: 1px 6px;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-left: 5px;
+    }
+    .matrix-td-cell {
+      padding: 6px 4px;
+      border-bottom: 1px solid #f1f5f9;
+      border-left: 1px solid #f8fafc;
+      vertical-align: middle;
+    }
+
     .matrix-cell-yes {
-      background: #dcfce7; color: #166534; font-weight: 700; border-radius: 6px; padding: 2px 6px; display: inline-block;
+      background: #dcfce7; color: #166534; font-weight: 700; border-radius: 6px; padding: 3px 6px; display: inline-block; font-size: 0.8rem;
     }
     .matrix-cell-maybe {
-      background: #fef9c3; color: #854d0e; font-weight: 700; border-radius: 6px; padding: 2px 6px; display: inline-block;
+      background: #fef9c3; color: #854d0e; font-weight: 700; border-radius: 6px; padding: 3px 6px; display: inline-block; font-size: 0.8rem;
     }
     .matrix-cell-no {
-      background: #fee2e2; color: #b91c1c; font-weight: 700; border-radius: 6px; padding: 2px 6px; display: inline-block;
+      background: #fee2e2; color: #b91c1c; font-weight: 700; border-radius: 6px; padding: 3px 6px; display: inline-block; font-size: 0.8rem;
     }
-    .matrix-cell-empty { color: #cbd5e1; }
+    .matrix-cell-empty { color: #cbd5e1; font-weight: 600; }
+
+    /* Interactive cell buttons for current user */
+    .cell-btn-vote {
+      width: 100%;
+      min-width: 66px;
+      padding: 6px 4px;
+      border-radius: 8px;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.78rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      border: 1.5px solid transparent;
+      transition: all 0.15s;
+    }
+    .cell-btn-vote.vote-yes {
+      background: #16a34a;
+      color: white;
+      border-color: #15803d;
+      box-shadow: 0 1px 3px rgba(22, 163, 74, 0.3);
+    }
+    .cell-btn-vote.vote-maybe {
+      background: #d97706;
+      color: white;
+      border-color: #b45309;
+      box-shadow: 0 1px 3px rgba(217, 119, 6, 0.3);
+    }
+    .cell-btn-vote.vote-no {
+      background: #dc2626;
+      color: white;
+      border-color: #b91c1c;
+      box-shadow: 0 1px 3px rgba(220, 38, 38, 0.3);
+    }
+    .cell-btn-vote.vote-empty {
+      background: white;
+      color: #64748b;
+      border: 1.5px dashed #cbd5e1;
+    }
+    .cell-btn-vote:hover {
+      transform: scale(1.05);
+      filter: brightness(1.06);
+    }
+
+    /* Quick choice modal buttons */
+    .quick-choice-btn {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.15s;
+      border: 1.5px solid transparent;
+    }
+    .btn-choice-yes {
+      background: #dcfce7;
+      color: #166534;
+      border-color: #86efac;
+    }
+    .btn-choice-yes:hover {
+      background: #16a34a;
+      color: white;
+    }
+    .btn-choice-maybe {
+      background: #fef9c3;
+      color: #854d0e;
+      border-color: #fde047;
+    }
+    .btn-choice-maybe:hover {
+      background: #d97706;
+      color: white;
+    }
+    .btn-choice-no {
+      background: #fee2e2;
+      color: #991b1b;
+      border-color: #fca5a5;
+    }
+    .btn-choice-no:hover {
+      background: #dc2626;
+      color: white;
+    }
 
     .container { max-width: 1040px; margin: 18px auto 0; padding: 0 16px; }
 
@@ -734,23 +973,38 @@
           </div>
         </div>
 
-        <div class="card">
+        <div class="card" id="weeksMatrixCard">
           <div class="card-title" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-            <span>2. Hvenær kemstu milli 19. júní og 4. september 2027? (Laugardagur – Laugardagur)</span>
-            <div style="display: flex; gap: 8px; align-items: center;">
-              <select id="sortTab1WeeksSelect" onchange="changeTab1WeeksSort(this.value)" style="padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border); font-size: 0.8rem; font-weight: 600; background: white; cursor: pointer;">
-                <option value="popularity">🔥 Vinsælustu vikur efst</option>
-                <option value="chronological">📅 Í tímaröð (júní – ágúst)</option>
-              </select>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 1.3rem;">📅</span>
+              <span>2. Vikuval & Dagsetningar 2027 (Laugardagur – Laugardagur)</span>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+              <button type="button" onclick="markAllWeeksYes()" style="background: #f0fdf4; border: 1.5px solid #86efac; color: #166534; font-size: 0.8rem; font-weight: 700; padding: 7px 14px; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
+                ✅ Merkja allar vikur vel
+              </button>
             </div>
           </div>
-          <div class="card-desc">Merktu við allar vikur sem gætu hentað þér. Vikur þar sem allir komast raðast sjálfkrafa efst, en árekstrar (ef einhver kemst ekki) fá rauða viðvörun!</div>
-          <div id="familyBirthdaysSection" style="margin-bottom: 16px;"></div>
-          <div id="weekConflictSummary"></div>
-          <div id="familyAvailabilityOverview" style="margin-bottom: 16px;"></div>
-          <div id="weeksVsHousesAlignment" style="margin-bottom: 16px;"></div>
-          <div class="weeks-grid" id="weeksGrid"></div>
-          <div id="weeksExpandWrap" style="text-align: center; margin-top: 14px;"></div>
+          <div class="card-desc" style="margin-bottom: 12px;">
+            Smelltu beint á reitina í þinni línu (merkt <strong>„Þú“</strong>) til að velja: <strong>✅ Kemst vel</strong>, <strong>🟡 Gæti gengið</strong> eða <strong>❌ Kemst ekki</strong>. Smelltu á dálkhaus vikunnar (t.d. <strong>🥇 #1</strong>) til að sjá nánar tölur og laus hús.
+          </div>
+
+          <!-- Quick Legend Bar -->
+          <div class="matrix-legend-bar">
+            <span class="legend-item"><span class="legend-icon">🌟</span> Bestu vikur (0 nei)</span>
+            <span class="legend-item"><span class="legend-icon">⛔</span> Stoppar á 1</span>
+            <span class="legend-item"><span class="legend-icon">❌</span> Árekstur</span>
+            <span class="legend-item"><span class="legend-icon">🎂</span> Afmæli í vikunni</span>
+            <span class="legend-item"><span class="legend-icon">🥇🥈🥉</span> Röðun hópsins</span>
+            <span class="legend-item" style="color: var(--primary);"><span class="legend-icon">ℹ️</span> Smelltu á vikuhaus eða rank fyrir tölur & hús</span>
+          </div>
+
+          <div id="familyAvailabilityOverview"></div>
+          <div id="weeksGrid" style="display:none;"></div>
+          <div id="weekConflictSummary" style="display:none;"></div>
+          <div id="familyBirthdaysSection" style="display:none;"></div>
+          <div id="weeksVsHousesAlignment" style="display:none;"></div>
+          <div id="weeksExpandWrap" style="display:none;"></div>
         </div>
 
         <div class="card">
@@ -1167,6 +1421,54 @@
         <button type="button" id="weekNoteCancelBtn" onclick="closeWeekNoteModal()" style="padding: 8px 16px; border: 1px solid var(--border); background: white; border-radius: 8px; font-size: 0.85rem; cursor: pointer; font-weight: 600;">Hætta við</button>
         <button type="button" id="weekNoteSaveBtn" onclick="saveWeekNote()" style="padding: 8px 20px; background: #dc2626; color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 0.85rem; cursor: pointer; box-shadow: 0 2px 4px rgba(220,38,38,0.25);">Vista skýringu 💾</button>
       </div>
+    </div>
+  <!-- Modal: Fljótlegt vikuval (Quick Vote) -->
+  <div class="modal-overlay" id="quickVoteModal" style="display: none; z-index: 10004; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(5px);" onclick="if(event.target===this) closeQuickVoteModal()">
+    <div class="modal-box" style="max-width: 380px; padding: 22px; text-align: center; border-radius: 18px; box-shadow: var(--shadow-lg);">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+        <div style="text-align: left;">
+          <h3 id="quickVoteTitle" style="font-size: 1.25rem; margin: 0; font-weight: 800; color: #0f172a;">Vika 25</h3>
+          <p id="quickVoteSubtitle" style="font-size: 0.85rem; color: var(--text-muted); margin: 2px 0 0 0;">19. jún – 26. jún 2027</p>
+        </div>
+        <button type="button" onclick="closeQuickVoteModal()" style="background:none; border:none; font-size: 1.5rem; cursor:pointer; color:var(--text-muted); padding: 0 4px; line-height: 1;">&times;</button>
+      </div>
+
+      <div id="quickVoteBdayCallout" style="display: none; margin: 10px 0; padding: 6px 10px; background: #fefce8; border: 1px solid #fef08a; border-radius: 8px; font-size: 0.8rem; color: #854d0e; font-weight: 700;"></div>
+
+      <div style="margin: 14px 0 10px; font-size: 0.88rem; font-weight: 700; color: #334155; text-align: left;">
+        Hvernig hentar þessi vika þér?
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <button type="button" id="quickBtnYes" class="quick-choice-btn btn-choice-yes" onclick="setWeekVoteFromQuick('yes')">
+          <span style="font-size: 1.2rem;">✅</span>
+          <span>Kemst vel</span>
+        </button>
+        <button type="button" id="quickBtnMaybe" class="quick-choice-btn btn-choice-maybe" onclick="setWeekVoteFromQuick('maybe')">
+          <span style="font-size: 1.2rem;">🟡</span>
+          <span>Gæti gengið</span>
+        </button>
+        <button type="button" id="quickBtnNo" class="quick-choice-btn btn-choice-no" onclick="setWeekVoteFromQuick('no')">
+          <span style="font-size: 1.2rem;">❌</span>
+          <span>Kemst ekki</span>
+        </button>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border);">
+        <button type="button" onclick="openNoteFromQuickVote()" style="background: #fee2e2; border: 1px solid #fca5a5; border-radius: 6px; padding: 5px 10px; font-size: 0.8rem; font-weight: 700; color: #b91c1c; cursor: pointer;">
+          ✏️ Skrifa skýringu
+        </button>
+        <button type="button" onclick="setWeekVoteFromQuick(null)" style="background: none; border: none; font-size: 0.82rem; font-weight: 600; color: var(--text-muted); cursor: pointer; text-decoration: underline;">
+          ✕ Hreinsa val
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Nánari upplýsingar um Viku, Tölur & Hús -->
+  <div class="modal-overlay" id="weekDetailsModal" style="display: none; z-index: 10003; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(6px);" onclick="if(event.target===this) closeWeekDetailsModal()">
+    <div class="modal-box" style="max-width: 540px; max-height: 88vh; overflow-y: auto; border-radius: 20px; padding: 24px; box-shadow: var(--shadow-lg);">
+      <div id="weekDetailsModalContent"></div>
     </div>
   </div>
 
@@ -2479,179 +2781,295 @@
       return "";
     }
 
-    function updateWeekConflictSummary() {
-      const el = document.getElementById("weekConflictSummary");
-      if (!el) return;
+    function getWeekBirthdayInfo(weekId) {
+      if (weekId === "w25") return { name: "Axel Bjarkar", day: "22. júní", age: 24, text: "Axel á afmæli 22. júní (verður 24 ára)" };
+      if (weekId === "w29") return { name: "Sara Kristín", day: "18. júlí", age: 17, text: "Sara á afmæli 18. júlí (verður 17 ára)" };
+      if (weekId === "w32") return { name: "Þórhildur Soffía", day: "10. ágúst", age: 17, text: "Þórhildur á afmæli 10. ágúst (verður 17 ára)" };
+      if (weekId === "w35") return { name: "Rannveig Arna", day: "5. september", age: 22, text: "Rannveig á afmæli 5. september (verður 22 ára)" };
+      return null;
+    }
 
-      const activeWeeks = WEEKS.map(w => ({ ...w, stats: getWeekStats(w.id) })).filter(w => w.stats.totalVotes > 0);
-      if (activeWeeks.length === 0) {
-        el.innerHTML = "";
-        return;
+    function getWeekRankData(weekId) {
+      const sorted = sortWeeksList(WEEKS, 'popularity');
+      const rankIdx = sorted.findIndex(w => w.id === weekId);
+      const stats = getWeekStats(weekId);
+
+      let medal = "";
+      if (rankIdx === 0) medal = "🥇";
+      else if (rankIdx === 1) medal = "🥈";
+      else if (rankIdx === 2) medal = "🥉";
+
+      let statusIcon = "";
+      let statusClass = "";
+      let statusText = "";
+
+      if (stats.totalVotes > 0) {
+        if (stats.no.length === 0 && stats.yes.length > 0) {
+          statusIcon = "🌟";
+          statusClass = "pill-best";
+          statusText = "Best vika (0 árekstrar – allir komast!)";
+        } else if (stats.no.length === 1 && stats.yes.length >= 4) {
+          statusIcon = "⛔";
+          statusClass = "pill-single-block";
+          statusText = `Stoppar á 1 manneskju (${stats.no[0]} kemst ekki)`;
+        } else if (stats.no.length > 0) {
+          statusIcon = "❌";
+          statusClass = "pill-conflict";
+          statusText = `Árekstur (${stats.no.length} komast ekki)`;
+        }
       }
 
-      // Vikur þar sem allir sem hafa svarað komast (enginn sagði 'no')
-      const zeroConflicts = activeWeeks
-        .filter(w => w.stats.no.length === 0 && w.stats.yes.length > 0)
-        .sort((a, b) => b.stats.yes.length - a.stats.yes.length);
+      return { rankIdx, rank: rankIdx + 1, medal, statusIcon, statusClass, statusText, stats };
+    }
 
-      // Vikur þar sem 4+ vilja en nákvæmlega 1 stoppar
-      const singleBlockerWeeks = activeWeeks
-        .filter(w => w.stats.no.length === 1 && w.stats.yes.length >= 4)
-        .sort((a, b) => b.stats.yes.length - a.stats.yes.length);
+    let currentQuickVoteWeekId = null;
 
-      let html = "";
+    function openQuickVoteModal(weekId) {
+      if (!ensureUserSelected("velja viku")) return;
+      currentQuickVoteWeekId = weekId;
+      const w = WEEKS.find(x => x.id === weekId);
+      if (!w) return;
 
-      if (zeroConflicts.length > 0) {
-        const bestList = zeroConflicts.map(w => `• <strong>${w.num} (${w.dates}${w.tag ? ` · ${w.tag}` : ''})</strong>: ${w.stats.yes.length} komast vel${w.stats.maybe.length > 0 ? `, ${w.stats.maybe.length} gætu` : ''} (0 árekstrar)`).join("<br>");
-        html += `
-          <div style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 12px; padding: 12px 16px; margin-bottom: 12px; font-size: 0.88rem; color: #166534;">
-            <div style="font-weight: 800; font-size: 0.95rem; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
-              <span>🎉 Bestu vikurnar — ALLIR komast (0 árekstrar):</span>
+      const titleEl = document.getElementById("quickVoteTitle");
+      const subEl = document.getElementById("quickVoteSubtitle");
+      const bdayEl = document.getElementById("quickVoteBdayCallout");
+
+      if (titleEl) titleEl.textContent = `${w.num}`;
+      if (subEl) subEl.textContent = `${w.dates}${w.tag ? ` · ${w.tag}` : ''}`;
+
+      const bday = getWeekBirthdayInfo(weekId);
+      if (bdayEl) {
+        if (bday) {
+          bdayEl.style.display = "block";
+          bdayEl.innerHTML = `🎂 <strong>Afmæli í vikunni:</strong> ${bday.name} (${bday.day} · ${bday.age} ára)`;
+        } else {
+          bdayEl.style.display = "none";
+        }
+      }
+
+      const curVal = (currentVote && currentVote.weeks) ? currentVote.weeks[weekId] : null;
+      const btnYes = document.getElementById("quickBtnYes");
+      const btnMaybe = document.getElementById("quickBtnMaybe");
+      const btnNo = document.getElementById("quickBtnNo");
+
+      if (btnYes) btnYes.style.outline = (curVal === 'yes') ? "3px solid #15803d" : "none";
+      if (btnMaybe) btnMaybe.style.outline = (curVal === 'maybe') ? "3px solid #b45309" : "none";
+      if (btnNo) btnNo.style.outline = (curVal === 'no') ? "3px solid #b91c1c" : "none";
+
+      const modal = document.getElementById("quickVoteModal");
+      if (modal) modal.style.display = "flex";
+    }
+
+    function closeQuickVoteModal() {
+      const modal = document.getElementById("quickVoteModal");
+      if (modal) modal.style.display = "none";
+      currentQuickVoteWeekId = null;
+    }
+
+    function setWeekVoteFromQuick(val) {
+      if (!currentQuickVoteWeekId) return;
+      const wkId = currentQuickVoteWeekId;
+      closeQuickVoteModal();
+      setWeekVote(wkId, val);
+    }
+
+    function openNoteFromQuickVote() {
+      if (!currentQuickVoteWeekId) return;
+      const wkId = currentQuickVoteWeekId;
+      closeQuickVoteModal();
+      openWeekNoteModal(wkId, currentPerson);
+    }
+
+    function markAllWeeksYes() {
+      if (!ensureUserSelected("skrá vikur")) return;
+      if (!currentVote.weeks) currentVote.weeks = {};
+      WEEKS.forEach(w => {
+        currentVote.weeks[w.id] = 'yes';
+      });
+      if (currentPerson) {
+        allVotes[currentPerson] = currentVote;
+        const legacyKey = findVotesKey(allVotes, currentPerson);
+        if (legacyKey && legacyKey !== currentPerson) delete allVotes[legacyKey];
+        localStorage.setItem("sweeden_2027_votes", JSON.stringify(allVotes));
+      }
+      renderWeeks();
+      updateAllHouseAvailabilityBadges();
+      pushToCloud();
+      showToast("🎉 Merkti allar 11 vikurnar sem ✅ Kemst vel!");
+    }
+
+    function clearMyWeekVotes() {
+      if (!ensureUserSelected("hreinsa val")) return;
+      if (!confirm("Viltu hreinsa val þitt á öllum vikum?")) return;
+      currentVote.weeks = {};
+      if (currentPerson) {
+        allVotes[currentPerson] = currentVote;
+        const legacyKey = findVotesKey(allVotes, currentPerson);
+        if (legacyKey && legacyKey !== currentPerson) delete allVotes[legacyKey];
+        localStorage.setItem("sweeden_2027_votes", JSON.stringify(allVotes));
+      }
+      renderWeeks();
+      updateAllHouseAvailabilityBadges();
+      pushToCloud();
+      showToast("🗑️ Vikuval þitt hefur verið hreinsað.");
+    }
+
+    function openWeekDetailsModal(weekId) {
+      const w = WEEKS.find(x => x.id === weekId);
+      if (!w) return;
+      const rankData = getWeekRankData(weekId);
+      const stats = rankData.stats;
+      const bday = getWeekBirthdayInfo(weekId);
+      const availHouses = HOUSES.filter(h => (h.availableWeeks || ["w25","w26","w27","w28","w29","w30","w31","w32","w33","w34","w35"]).includes(weekId));
+      const topHouses = sortHousesList(availHouses, 'popularity').slice(0, 3);
+      const myVote = (currentVote && currentVote.weeks) ? currentVote.weeks[weekId] : null;
+
+      const contentEl = document.getElementById("weekDetailsModalContent");
+      if (!contentEl) return;
+
+      const isConflictFree = stats.no.length === 0 && stats.yes.length > 0;
+
+      contentEl.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+              <span style="font-size: 1.5rem; line-height: 1;">${rankData.medal || '📅'}</span>
+              <h3 style="font-size: 1.3rem; margin: 0; font-weight: 800; color: #0f172a;">${w.num}</h3>
+              <span style="font-size: 0.78rem; font-weight: 800; padding: 2px 8px; border-radius: 6px; ${isConflictFree ? 'background: #dcfce7; color: #166534; border: 1px solid #86efac;' : (stats.no.length === 1 ? 'background: #ffedd5; color: #9a3412; border: 1px solid #fdba74;' : 'background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5;')}">
+                ${rankData.rank}. val hópsins
+              </span>
             </div>
-            <div style="line-height: 1.6; margin-bottom: 4px;">
-              ${bestList}
-            </div>
-            <div style="font-size: 0.78rem; opacity: 0.85; margin-top: 6px;">
-              ⭐ Enginn hefur merkt við ❌ Kemst ekki á þessum vikum!
+            <div style="font-size: 0.9rem; color: var(--text-muted); font-weight: 600; margin-top: 3px;">
+              ${w.dates}${w.tag ? ` · <em>${w.tag}</em>` : ''}
             </div>
           </div>
-        `;
-      }
+          <button type="button" onclick="closeWeekDetailsModal()" style="background:none; border:none; font-size: 1.6rem; cursor:pointer; color:var(--text-muted); padding: 0 4px; line-height: 1;">&times;</button>
+        </div>
 
-      if (singleBlockerWeeks.length > 0) {
-        const blockerList = singleBlockerWeeks.map(w => {
-          const blocker = w.stats.no[0];
-          const note = allVotes[blocker]?.weekNotes?.[w.id];
-          return `• <strong>${w.num} (${w.dates}${w.tag ? ` · ${w.tag}` : ''})</strong>: <strong>${w.stats.yes.length} manns komast vel</strong> (${w.stats.yes.join(', ')}), en <strong>${blocker}</strong> er eina sem merkti ❌ Kemst ekki${note ? ` <em>(Skýring: „${escapeHtml(note)}“)</em>` : ' <em>(engin skýring skráð)</em>'}`;
-        }).join("<br>");
-
-        html += `
-          <div style="background: #fff7ed; border: 1.5px solid #fdba74; border-radius: 12px; padding: 12px 16px; margin-bottom: 12px; font-size: 0.88rem; color: #9a3412;">
-            <div style="font-weight: 800; font-size: 0.95rem; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
-              <span>⚠️ Vinsælustu vikurnar sem stoppa á 1 manneskju:</span>
-            </div>
-            <div style="line-height: 1.6; margin-bottom: 4px;">
-              ${blockerList}
-            </div>
-            <div style="font-size: 0.78rem; opacity: 0.9; margin-top: 6px;">
-              💡 Ef sá sem merkti ❌ gæti komið með eða hnikað til, væru þetta sterkustu vikurnar fyrir allan hópinn!
-            </div>
-          </div>
-        `;
-      }
-
-      el.innerHTML = html;
-    }
-
-    function updateSingleWeekRow(weekId) {
-      const attendeesEl = document.getElementById(`week-attendees-${weekId}`);
-      if (attendeesEl) attendeesEl.innerHTML = getWeekAttendeesHTML(weekId);
-      const rankEl = document.getElementById(`week-rank-badge-${weekId}`);
-      if (rankEl) rankEl.innerHTML = getWeekRankBadgeHTML(weekId);
-      updateWeekConflictSummary();
-      renderFamilyAvailabilityOverview();
-      renderWeeksVsHousesAlignment();
-    }
-
-    let showAllBirthdaysExpanded = false;
-
-    function toggleAllBirthdays() {
-      showAllBirthdaysExpanded = !showAllBirthdaysExpanded;
-      renderFamilyBirthdays();
-    }
-
-    function renderFamilyBirthdays() {
-      const container = document.getElementById("familyBirthdaysSection");
-      if (!container) return;
-
-      const birthdays = (FAMILY_BIRTHDAYS && FAMILY_BIRTHDAYS.length > 0) ? FAMILY_BIRTHDAYS : [
-        { name: "Ólafía Rósbjörg (Lóa)", shortName: "Lóa", date: "10. janúar 1974", dayMonth: "10. jan", year: 1974, age2027: 53 },
-        { name: "Vala Björk", shortName: "Vala", date: "1. febrúar 2005", dayMonth: "1. feb", year: 2005, age2027: 22 },
-        { name: "Sigurjón Axel", shortName: "Sigurjón", date: "4. febrúar 1974", dayMonth: "4. feb", year: 1974, age2027: 53 },
-        { name: "Viktor Ingi", shortName: "Viktor", date: "14. mars 1999", dayMonth: "14. mar", year: 1999, age2027: 28 },
-        { name: "Birkir Evan", shortName: "Birkir", date: "6. maí 2014", dayMonth: "6. maí", year: 2014, age2027: 13 },
-        { name: "Axel Bjarkar", shortName: "Axel", date: "22. júní 2003", dayMonth: "22. jún", year: 2003, age2027: 24, inSummer: true },
-        { name: "Sara Kristín", shortName: "Sara", date: "18. júlí 2010", dayMonth: "18. júl", year: 2010, age2027: 17, inSummer: true },
-        { name: "Þórhildur Soffía", shortName: "Þórhildur", date: "10. ágúst 2010", dayMonth: "10. ágú", year: 2010, age2027: 17, inSummer: true },
-        { name: "Rannveig Arna", shortName: "Rannveig", date: "5. september 2005", dayMonth: "5. sep", year: 2005, age2027: 22 },
-        { name: "Anna Huyen Ngo", shortName: "Anna", date: "2003", dayMonth: "2003", year: 2003, age2027: 24 }
-      ];
-
-      const summerBirthdays = birthdays.filter(b => b.inSummer);
-
-      container.innerHTML = `
-        <div style="background: #fffbeb; border: 1.5px solid #fef3c7; border-left: 4px solid #f59e0b; border-radius: 12px; padding: 14px 16px; margin-top: 6px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+        ${bday ? `
+          <div style="background: #fffbeb; border: 1.5px solid #fde047; border-radius: 12px; padding: 10px 14px; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; gap: 8px;">
             <div style="display: flex; align-items: center; gap: 8px;">
-              <span style="font-size: 1.25rem;">🎂</span>
-              <span style="font-weight: 800; font-size: 0.95rem; color: #92400e;">Afmælisdagar í ferðatímanum (sumarið 2027):</span>
+              <span style="font-size: 1.3rem;">🎂</span>
+              <div>
+                <strong style="color: #92400e; font-size: 0.88rem;">Afmælisdagur í þessari viku!</strong>
+                <div style="font-size: 0.8rem; color: #b45309;">${bday.text}</div>
+              </div>
             </div>
-            <div style="display: flex; align-items: center; gap: 10px;">
-              <a href="https://sigurjonaxel.github.io/ancestry/" target="_blank" rel="noopener" style="font-size: 0.78rem; color: #b45309; text-decoration: none; font-weight: 700; background: rgba(245,158,11,0.12); padding: 3px 8px; border-radius: 6px;">
-                🌳 Sag ættartré ↗
-              </a>
-              <button type="button" onclick="toggleAllBirthdays()" style="background: none; border: none; font-size: 0.8rem; font-weight: 700; color: #d97706; cursor: pointer; text-decoration: underline; padding: 0;">
-                ${showAllBirthdaysExpanded ? "Fela önnur afmæli ▴" : "Sýna öll afmælin úr Sag ▾"}
+            <a href="https://sigurjonaxel.github.io/ancestry/" target="_blank" rel="noopener" style="font-size: 0.75rem; color: #b45309; text-decoration: none; font-weight: 700; background: rgba(245,158,11,0.15); padding: 3px 8px; border-radius: 6px;">
+              🌳 Sag ↗
+            </a>
+          </div>
+        ` : ''}
+
+        <!-- Staða hópsins -->
+        <div style="background: #f8fafc; border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 14px;">
+          <div style="font-weight: 800; font-size: 0.88rem; color: #1e293b; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
+            <span>👥 Svör fjölskyldunnar (${stats.totalVotes} af ${FAMILY_MEMBERS.length || 10} hafa svarað):</span>
+            <span style="font-size: 0.78rem; font-weight: 700; color: ${isConflictFree ? '#166534' : '#b91c1c'};">
+              ${isConflictFree ? '🎉 0 árekstrar' : `⚠️ ${stats.no.length} kemst ekki`}
+            </span>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.85rem;">
+            <div style="display: flex; align-items: flex-start; gap: 8px;">
+              <span style="font-weight: 700; color: #166534; min-width: 105px;">✅ Kemst vel (${stats.yes.length}):</span>
+              <div style="display: flex; flex-wrap: wrap; gap: 4px;">
+                ${stats.yes.length > 0 ? stats.yes.map(n => `<span style="display: inline-flex; align-items: center; gap: 4px; background: #dcfce7; border: 1px solid #bbf7d0; padding: 2px 7px; border-radius: 999px; font-size: 0.78rem; font-weight: 600;">${getUserAvatarHTML(n, 18)} ${escapeHtml(n)}</span>`).join("") : '<span style="color: var(--text-muted); font-style: italic;">Enginn enn</span>'}
+              </div>
+            </div>
+
+            <div style="display: flex; align-items: flex-start; gap: 8px;">
+              <span style="font-weight: 700; color: #854d0e; min-width: 105px;">🟡 Gæti (${stats.maybe.length}):</span>
+              <div style="display: flex; flex-wrap: wrap; gap: 4px;">
+                ${stats.maybe.length > 0 ? stats.maybe.map(n => `<span style="display: inline-flex; align-items: center; gap: 4px; background: #fef9c3; border: 1px solid #fde047; padding: 2px 7px; border-radius: 999px; font-size: 0.78rem; font-weight: 600;">${getUserAvatarHTML(n, 18)} ${escapeHtml(n)}</span>`).join("") : '<span style="color: var(--text-muted); font-style: italic;">Enginn</span>'}
+              </div>
+            </div>
+
+            <div style="display: flex; align-items: flex-start; gap: 8px;">
+              <span style="font-weight: 800; color: #b91c1c; min-width: 105px;">❌ Kemst ekki (${stats.no.length}):</span>
+              <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                ${stats.no.length > 0 ? stats.no.map(n => {
+                  const note = allVotes[n]?.weekNotes?.[weekId];
+                  return `<span style="display: inline-flex; align-items: center; gap: 4px; background: #fee2e2; border: 1px solid #fca5a5; padding: 3px 8px; border-radius: 999px; font-size: 0.78rem; font-weight: 700; color: #991b1b;">
+                    ${getUserAvatarHTML(n, 18)} ${escapeHtml(n)}
+                    ${note ? `<span style="font-weight: 500; font-style: italic; color: #7f1d1d;">(„${escapeHtml(note)}“)</span>` : ''}
+                  </span>`;
+                }).join("") : '<span style="color: #166534; font-weight: 700;">Enginn (Allir komast!) 🎉</span>'}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick vote for current user in this modal -->
+        ${currentPerson ? `
+          <div style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 12px; padding: 12px 14px; margin-bottom: 14px;">
+            <div style="font-weight: 800; font-size: 0.85rem; color: #166534; margin-bottom: 8px;">
+              Þitt val sem ${escapeHtml(currentPerson)}:
+            </div>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+              <button type="button" onclick="setWeekVote('${weekId}', 'yes'); openWeekDetailsModal('${weekId}');" style="flex: 1; padding: 8px 10px; border-radius: 8px; font-weight: 700; font-size: 0.82rem; cursor: pointer; border: 1.5px solid ${myVote === 'yes' ? '#15803d' : '#cbd5e1'}; background: ${myVote === 'yes' ? '#16a34a' : 'white'}; color: ${myVote === 'yes' ? 'white' : '#1e293b'};">
+                ✅ Kemst vel
+              </button>
+              <button type="button" onclick="setWeekVote('${weekId}', 'maybe'); openWeekDetailsModal('${weekId}');" style="flex: 1; padding: 8px 10px; border-radius: 8px; font-weight: 700; font-size: 0.82rem; cursor: pointer; border: 1.5px solid ${myVote === 'maybe' ? '#b45309' : '#cbd5e1'}; background: ${myVote === 'maybe' ? '#d97706' : 'white'}; color: ${myVote === 'maybe' ? 'white' : '#1e293b'};">
+                🟡 Gæti gengið
+              </button>
+              <button type="button" onclick="setWeekVote('${weekId}', 'no'); openWeekDetailsModal('${weekId}');" style="flex: 1; padding: 8px 10px; border-radius: 8px; font-weight: 700; font-size: 0.82rem; cursor: pointer; border: 1.5px solid ${myVote === 'no' ? '#b91c1c' : '#cbd5e1'}; background: ${myVote === 'no' ? '#dc2626' : 'white'}; color: ${myVote === 'no' ? 'white' : '#1e293b'};">
+                ❌ Kemst ekki
+              </button>
+              <button type="button" onclick="closeWeekDetailsModal(); openWeekNoteModal('${weekId}', '${escapeHtml(currentPerson)}');" style="padding: 8px 10px; border-radius: 8px; font-weight: 700; font-size: 0.82rem; cursor: pointer; border: 1px solid #fca5a5; background: #fff1f2; color: #b91c1c;">
+                ✏️ Skýring
               </button>
             </div>
           </div>
+        ` : ''}
 
-          <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;">
-            ${summerBirthdays.map(b => `
-              <div style="background: white; border: 1px solid #fde68a; border-radius: 10px; padding: 8px 14px; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.05);">
-                ${getUserAvatarHTML(b.name, 40)}
-                <div>
-                  <div style="font-weight: 800; font-size: 0.9rem; color: #78350f;">${b.name}</div>
-                  <div style="font-size: 0.78rem; color: #92400e;">
-                    <strong>${b.dayMonth}</strong> · verður <strong>${b.age2027} ára</strong>
-                  </div>
-                </div>
-              </div>
-            `).join("")}
+        <!-- Laus hús í þessari viku -->
+        <div style="border-top: 1px solid var(--border); padding-top: 14px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 6px;">
+            <span style="font-weight: 800; font-size: 0.9rem; color: #0f172a;">
+              🏡 Gisting: ${availHouses.length} af ${HOUSES.length} húsum laus í ${w.num}
+            </span>
+            <button type="button" onclick="closeWeekDetailsModal(); filterAndScrollToWeek('${weekId}');" style="padding: 5px 12px; background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; border-radius: 8px; font-weight: 700; font-size: 0.78rem; cursor: pointer;">
+              Skoða öll ${availHouses.length} húsin ➔
+            </button>
           </div>
 
-          ${showAllBirthdaysExpanded ? `
-            <div style="margin-top: 14px; padding-top: 12px; border-top: 1px dashed #fde68a;">
-              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; margin-bottom: 8px;">
-                <div style="font-size: 0.84rem; font-weight: 800; color: #92400e;">
-                  Öll afmæli fjölskyldunnar (úr Sag / Ancestry kerfinu):
-                </div>
-                <div style="font-size: 0.75rem; color: #78350f; background: rgba(245,158,11,0.18); padding: 2px 8px; border-radius: 6px; border: 1px solid #fde047;">
-                  🟡 <strong>Gulir reitir</strong> = Eiga afmæli yfir ferðatímabilið (15. júní – 31. ágúst)
-                </div>
-              </div>
-              <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 8px;">
-                ${birthdays.map(b => `
-                  <div style="background: ${b.inSummer ? '#fef3c7' : 'white'}; border: 1px solid ${b.inSummer ? '#f59e0b' : '#f1f5f9'}; border-radius: 8px; padding: 6px 10px; font-size: 0.82rem; display: flex; justify-content: space-between; align-items: center; gap: 8px;">
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                      ${getUserAvatarHTML(b.name, 26)}
-                      <span style="font-weight: 700; color: var(--text);">${b.name}</span>
-                      ${b.inSummer ? '<span style="font-size: 0.68rem; font-weight: 800; background: #fde047; color: #854d0e; padding: 1px 5px; border-radius: 4px; white-space: nowrap;">🎂 Í ferð</span>' : ''}
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            ${topHouses.map((h, hIdx) => {
+              const pop = getHousePopularity(h.id);
+              const hMedal = hIdx === 0 ? '🥇' : hIdx === 1 ? '🥈' : '🥉';
+              const defaultImg = "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&auto=format&fit=crop&q=80";
+              let photo = (h.photo && h.photo.trim()) ? h.photo.trim() : defaultImg;
+              if (photo.includes("airbnb.") && !photo.includes("muscache.com") && !photo.match(/\.(jpeg|jpg|png|webp)/i)) {
+                photo = defaultImg;
+              }
+              return `
+                <div style="display: flex; align-items: center; gap: 10px; background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; padding: 6px 10px; cursor: pointer;" onclick="closeWeekDetailsModal(); filterAndScrollToWeek('${weekId}');">
+                  <img src="${photo}" style="width: 44px; height: 44px; border-radius: 6px; object-fit: cover;" onerror="this.src='${defaultImg}'" alt="${escapeHtml(h.title)}">
+                  <div style="flex: 1; min-width: 0;">
+                    <div style="font-weight: 700; font-size: 0.85rem; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                      ${hMedal} ${escapeHtml(h.title)}
                     </div>
-                    <span style="color: var(--text-muted); font-size: 0.76rem; white-space: nowrap;">${b.dayMonth} (${b.age2027} ára)</span>
+                    <div style="font-size: 0.76rem; color: var(--text-muted); display: flex; gap: 8px;">
+                      <span>${escapeHtml(h.city || h.region || '')}</span>
+                      <strong style="color: ${pop.score > 0 ? '#15803d' : '#475569'};">${pop.score > 0 ? '+' : ''}${pop.score} stig</strong>
+                    </div>
                   </div>
-                `).join("")}
-              </div>
-            </div>
-          ` : ""}
+                  <span style="font-size: 0.8rem; color: var(--primary); font-weight: 700;">Skoða ↗</span>
+                </div>
+              `;
+            }).join("")}
+          </div>
         </div>
       `;
+
+      const modal = document.getElementById("weekDetailsModal");
+      if (modal) modal.style.display = "flex";
     }
 
-    let matrixTableOpen = true;
-
-    let vidmidExpanded = false;
-    function toggleVidmidInfo() {
-      vidmidExpanded = !vidmidExpanded;
-      const box = document.getElementById("vidmidDetails");
-      const btn = document.getElementById("toggleVidmidBtn");
-      if (box) box.style.display = vidmidExpanded ? "flex" : "none";
-      if (btn) btn.innerHTML = vidmidExpanded ? "ℹ️ Viðmið −" : "ℹ️ Viðmið +";
-    }
-
-    function toggleMatrixTable() {
-      matrixTableOpen = !matrixTableOpen;
-      renderFamilyAvailabilityOverview();
+    function closeWeekDetailsModal() {
+      const modal = document.getElementById("weekDetailsModal");
+      if (modal) modal.style.display = "none";
     }
 
     function openWeekNoteModal(weekId, person) {
@@ -2741,212 +3159,11 @@
       showToast(note ? `💾 Skýring vistuð fyrir ${person}!` : `🗑️ Skýring fjarlægð fyrir ${person}!`);
     }
 
-    function renderFamilyAvailabilityOverview() {
-      const el = document.getElementById("familyAvailabilityOverview");
-      if (!el) return;
-
-      const uniqueVoters = getUniqueVotersList();
-      const voters = uniqueVoters.filter(p => {
-        const v = (currentPerson && isSamePerson(p, currentPerson))
-          ? (currentVote?.weeks || allVotes[findVotesKey(allVotes, currentPerson)]?.weeks)
-          : (allVotes[findVotesKey(allVotes, p) || p]?.weeks);
-        return v && Object.keys(v).length > 0;
-      });
-
-      if (voters.length === 0) {
-        el.innerHTML = "";
-        return;
-      }
-
-      // Greining á útilokunum og árekstrum
-      const personStats = voters.map(p => {
-        const wVotes = (currentPerson && isSamePerson(p, currentPerson))
-          ? (currentVote?.weeks || allVotes[findVotesKey(allVotes, currentPerson)]?.weeks || {})
-          : (allVotes[findVotesKey(allVotes, p) || p]?.weeks || {});
-        let yesCount = 0, maybeCount = 0, noCount = 0;
-        WEEKS.forEach(w => {
-          const val = wVotes[w.id];
-          if (val === 'yes') yesCount++;
-          else if (val === 'maybe') maybeCount++;
-          else if (val === 'no') noCount++;
-        });
-        const notesObj = (currentPerson && isSamePerson(p, currentPerson))
-          ? (currentVote?.weekNotes || allVotes[findVotesKey(allVotes, currentPerson)]?.weekNotes || {})
-          : (allVotes[findVotesKey(allVotes, p) || p]?.weekNotes || {});
-        const notesCount = Object.keys(notesObj).length;
-        const canonicalName = (FAMILY_MEMBERS && FAMILY_MEMBERS.find(m => isSamePerson(m, p))) || p;
-        return { name: canonicalName, yesCount, maybeCount, noCount, notesCount, total: yesCount + maybeCount + noCount };
-      });
-
-      // Raða eftir flestum 'no' útilokunum (Rannveig fyrst)
-      personStats.sort((a, b) => b.noCount - a.noCount);
-      const topBlocker = personStats[0];
-
-      // Finna vikur sem 4+ vilja en 1 stoppar
-      const blockedHighInterestWeeks = [];
-      WEEKS.forEach(w => {
-        const stats = getWeekStats(w.id);
-        if (stats.yes.length >= 4 && stats.no.length === 1) {
-          blockedHighInterestWeeks.push({
-            week: w,
-            yes: stats.yes,
-            blocker: stats.no[0],
-            note: allVotes[stats.no[0]]?.weekNotes?.[w.id] || ""
-          });
-        }
-      });
-
-      let alertHtml = "";
-      if (blockedHighInterestWeeks.length > 0 || (topBlocker && topBlocker.noCount >= 3)) {
-        alertHtml = `
-          <div style="background: #fffbeb; border: 1.5px solid #fde047; border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(245, 158, 11, 0.08);">
-            <div style="display: flex; align-items: flex-start; gap: 10px;">
-              <span style="font-size: 1.5rem; line-height: 1;">🔍</span>
-              <div style="flex: 1;">
-                <div style="font-weight: 800; font-size: 0.95rem; color: #92400e; margin-bottom: 4px;">
-                  Hvað veldur árekstrum í dagsetningavali fjölskyldunnar?
-                </div>
-                <div style="font-size: 0.85rem; color: #334155; line-height: 1.5;">
-                  ${blockedHighInterestWeeks.map(item => `
-                    <div style="margin-bottom: 6px; padding: 7px 10px; background: rgba(255,255,255,0.75); border-radius: 8px; border: 1px solid #fef08a;">
-                      <strong>${item.week.num} (${item.week.dates}${item.week.tag ? ` · ${item.week.tag}` : ''})</strong>:
-                      <br>
-                      🌟 <strong>${item.yes.length} manns vilja þessa viku</strong> (${item.yes.join(', ')}).
-                      <br>
-                      ⛔ <strong>Stoppar á 1 manneskju:</strong> <span style="color: #b91c1c; font-weight: 800;">${item.blocker}</span> er eina sem merkti ❌ Kemst ekki!
-                      ${item.note ? `<br><em>Skýring frá ${item.blocker}: „${escapeHtml(item.note)}“</em>` : `<br><span style="color: #b91c1c; font-size: 0.8rem;">⚠️ Engin skýring eða ástæða skráð frá ${item.blocker}.</span>`}
-                    </div>
-                  `).join("")}
-                  ${topBlocker && topBlocker.noCount >= 3 ? `
-                    <div style="font-size: 0.82rem; color: #b45309; margin-top: 6px; padding-top: 4px; border-top: 1px dashed #fde68a;">
-                      📌 <strong>${topBlocker.name}</strong> er með flestar útilokanir í hópnum: <strong>${topBlocker.noCount} vikur</strong> af 11 merktar ❌ Kemst ekki.
-                    </div>
-                  ` : ''}
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-      }
-
-      // Matrix Table
-      let tableHtml = "";
-      if (matrixTableOpen) {
-        tableHtml = `
-          <div class="matrix-table-wrap">
-            <table class="matrix-table">
-              <thead>
-                <tr>
-                  <th style="text-align: left; padding-left: 12px;">Fjölskyldumeðlimur</th>
-                  ${WEEKS.map(w => `<th title="${w.num} (${w.dates})">${w.num.replace("Vika ", "V")}</th>`).join("")}
-                  <th>Komast (✅)</th>
-                  <th>Gætu (🟡)</th>
-                  <th>Kemst ekki (❌)</th>
-                  <th style="text-align: left; padding-left: 10px;">Skýringar á forföllum</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${personStats.map(ps => {
-                  const votes = allVotes[ps.name]?.weeks || {};
-                  const isTopBlocker = ps.noCount >= 4;
-                  const userNotes = Object.entries(allVotes[ps.name]?.weekNotes || {});
-                  const canEdit = canEditPersonNotes(ps.name);
-                  let notesCol = "";
-                  if (userNotes.length > 0) {
-                    notesCol = userNotes.map(([wkId, nText]) => {
-                      const wk = WEEKS.find(x => x.id === wkId);
-                      return `<button type="button" onclick="openWeekNoteModal('${wkId}', '${escapeHtml(ps.name)}')" style="display: inline-flex; align-items: center; gap: 3px; background: #fee2e2; color: #991b1b; padding: 2px 7px; border-radius: 4px; font-size: 0.72rem; margin: 1px 2px; border: 1px solid #fca5a5; cursor: pointer; font-family: inherit; font-weight: 500;" title="${canEdit ? 'Smelltu til að breyta skýringu' : 'Smelltu til að lesa skýringu'} fyrir ${wk ? wk.num : wkId}"><strong>${wk ? wk.num : wkId}:</strong> ${escapeHtml(nText)} <span style="font-size: 0.65rem; opacity: 0.8;">${canEdit ? '✏️' : '👁️'}</span></button>`;
-                    }).join(" ");
-                  } else if (ps.noCount > 0) {
-                    if (canEdit) {
-                      const firstNoWeek = WEEKS.find(x => votes[x.id] === 'no');
-                      const targetWkId = firstNoWeek ? firstNoWeek.id : '';
-                      notesCol = `<button type="button" onclick="openWeekNoteModal('${targetWkId}', '${escapeHtml(ps.name)}')" style="background: #fff5f5; border: 1px dashed #f87171; border-radius: 6px; padding: 2px 8px; color: #b91c1c; font-style: italic; font-size: 0.74rem; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-family: inherit;" title="Smelltu til að skrá skýringu">+ Skrá skýringu ✏️</button>`;
-                    } else {
-                      notesCol = `<span style="color: #b91c1c; font-style: italic; font-size: 0.74rem;">Engin skýring skráð</span>`;
-                    }
-                  } else {
-                    notesCol = `<span style="color: #94a3b8; font-size: 0.75rem;">—</span>`;
-                  }
-
-                  return `
-                    <tr style="${isTopBlocker ? 'background: #fff5f5;' : ''}">
-                      <td style="text-align: left; padding-left: 12px; font-weight: 700; white-space: nowrap;">
-                        <div style="display: flex; align-items: center; gap: 6px;">
-                          ${getUserAvatarHTML(ps.name, 22)}
-                          <span>${escapeHtml(ps.name)}</span>
-                          ${isTopBlocker ? '<span style="font-size: 0.7rem; background: #fee2e2; color: #b91c1c; padding: 1px 6px; border-radius: 4px; font-weight: 800;">Flest nei</span>' : ''}
-                        </div>
-                      </td>
-                      ${WEEKS.map(w => {
-                        const val = votes[w.id];
-                        const note = allVotes[ps.name]?.weekNotes?.[w.id];
-                        if (val === 'yes') return `<td><span class="matrix-cell-yes" title="${ps.name}: Kemst vel í ${w.num}">✅</span></td>`;
-                        if (val === 'maybe') return `<td><span class="matrix-cell-maybe" title="${ps.name}: Gæti gengið í ${w.num}">🟡</span></td>`;
-                        if (val === 'no') {
-                          if (canEdit) {
-                            return `<td>
-                              <button type="button" onclick="openWeekNoteModal('${w.id}', '${escapeHtml(ps.name)}')" class="matrix-cell-no" style="cursor: pointer; border: 1.5px solid #f87171; border-radius: 6px; font-family: inherit; font-size: 0.8rem; transition: all 0.15s; display: inline-flex; align-items: center; justify-content: center; gap: 3px; padding: 3px 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.06);" title="${ps.name}: Kemst ekki í ${w.num} — Smelltu til að ${note ? 'breyta skýringu' : 'bæta við skýringu'}">
-                                <span>❌</span><span style="font-size: 0.7rem;">✏️</span>
-                              </button>
-                            </td>`;
-                          } else if (note) {
-                            return `<td>
-                              <button type="button" onclick="openWeekNoteModal('${w.id}', '${escapeHtml(ps.name)}')" class="matrix-cell-no" style="cursor: pointer; border: 1px solid #fca5a5; border-radius: 6px; font-family: inherit; font-size: 0.8rem; transition: all 0.15s; display: inline-flex; align-items: center; justify-content: center; gap: 3px; padding: 3px 6px; background: #fee2e2;" title="${ps.name}: Kemst ekki í ${w.num} — „${escapeHtml(note)}“ (Smelltu til að lesa)">
-                                <span>❌</span><span style="font-size: 0.7rem;">💬</span>
-                              </button>
-                            </td>`;
-                          } else {
-                            return `<td><span class="matrix-cell-no" title="${ps.name}: Kemst ekki í ${w.num}">❌</span></td>`;
-                          }
-                        }
-                        return `<td><span class="matrix-cell-empty">—</span></td>`;
-                      }).join("")}
-                      <td style="font-weight: 700; color: #166534;">${ps.yesCount}</td>
-                      <td style="font-weight: 700; color: #854d0e;">${ps.maybeCount}</td>
-                      <td style="font-weight: 800; color: ${ps.noCount > 0 ? '#b91c1c' : '#94a3b8'};">${ps.noCount}</td>
-                      <td style="text-align: left; padding-left: 10px; max-width: 250px;">${notesCol}</td>
-                    </tr>
-                  `;
-                }).join("")}
-              </tbody>
-            </table>
-            <div style="padding: 10px 14px; background: #f8fafc; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 0.78rem; color: var(--text-muted);">
-              <div>
-                💡 <strong>Skýringar:</strong> Smelltu beint á rauðu <code>❌ ✏️</code> reitina í töflunni hér að ofan eða á <code>✏️ Skýring</code> hnappana í vikutöflunni hér að neðan til að skrá ástæðu fyrir forföllum.
-              </div>
-              <button onclick="toggleMatrixTable()" style="background: none; border: none; color: var(--primary); font-weight: 700; cursor: pointer;">
-                ▲ Fela töflu
-              </button>
-            </div>
-          </div>
-        `;
-      }
-
-      el.innerHTML = `
-        ${alertHtml}
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 6px;">
-          <button type="button" onclick="toggleMatrixTable()" style="padding: 7px 14px; background: #eff6ff; color: #1d4ed8; border: 1.5px solid #bfdbfe; border-radius: 8px; font-weight: 700; font-size: 0.82rem; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
-            📊 ${matrixTableOpen ? 'Fela yfirlitstöflu allra' : 'Sýna yfirlitstöflu: Hver kemst hvenær?'}
-          </button>
-          <span style="font-size: 0.78rem; color: var(--text-muted);">${voters.length} búnir að svara vikum</span>
-        </div>
-        ${tableHtml}
-      `;
-    }
-
-    let alignmentCardExpanded = true;
-
-    function toggleAlignmentCardExpand() {
-      alignmentCardExpanded = !alignmentCardExpanded;
-      renderWeeksVsHousesAlignment();
-    }
-
     function filterAndScrollToWeek(weekId) {
       const sel = document.getElementById("filterHouseWeekSelect");
       if (sel) sel.value = weekId;
       changeHouseWeekFilter(weekId);
-      const target = document.getElementById("allHousesGrid");
+      const target = document.getElementById("allHousesGrid") || document.getElementById("filterHouseWeekSelect");
       if (target) {
         target.scrollIntoView({ behavior: "smooth", block: "start" });
       }
@@ -2955,211 +3172,228 @@
       showToast(`📅 Sýni aðeins hús sem eru laus í ${wName}`);
     }
 
-    function renderWeeksVsHousesAlignment() {
-      const el = document.getElementById("weeksVsHousesAlignment");
+    function renderFamilyAvailabilityOverview() {
+      const el = document.getElementById("familyAvailabilityOverview");
       if (!el) return;
 
-      if (!WEEKS || WEEKS.length === 0 || !HOUSES || HOUSES.length === 0) {
-        el.innerHTML = "";
-        return;
-      }
+      const canonicalList = (FAMILY_MEMBERS && FAMILY_MEMBERS.length > 0) ? FAMILY_MEMBERS : [
+        "Sigurjón Axel (Sissi)", "Ólafía Rósbjörg (Lóa)", "Axel Bjarkar", "Anna Huyen Ngo",
+        "Rannveig Arna", "Þórhildur Soffía", "Birkir Evan", "Viktor Ingi", "Vala Björk", "Sara Kristín"
+      ];
 
-      // Greining á atkvæðum
-      const activeWeeksSorted = sortWeeksList(WEEKS, 'popularity').filter(w => getWeekStats(w.id).totalVotes > 0);
-      const topWeeks = activeWeeksSorted.length > 0 ? activeWeeksSorted.slice(0, 3) : WEEKS.slice(0, 3);
-
-      if (topWeeks.length === 0) {
-        el.innerHTML = "";
-        return;
-      }
-
-      // Persónulegt samræmi innskráðs notanda
-      let myCalloutHtml = "";
-      if (currentPerson && currentVote && currentVote.weeks) {
-        const myYesWeeks = WEEKS.filter(w => currentVote.weeks[w.id] === 'yes');
-        const myMaybeWeeks = WEEKS.filter(w => currentVote.weeks[w.id] === 'maybe');
-
-        if (myYesWeeks.length > 0 || myMaybeWeeks.length > 0) {
-          const housesFittingAllMyYes = HOUSES.filter(h => {
-            const hWeeks = h.availableWeeks || ["w25","w26","w27","w28","w29","w30","w31","w32","w33","w34","w35"];
-            return myYesWeeks.every(w => hWeeks.includes(w.id));
-          });
-
-          const top1 = topWeeks[0];
-          const myVoteOnTop1 = currentVote.weeks[top1.id];
-          let top1MatchText = "";
-          if (myVoteOnTop1 === 'yes') {
-            top1MatchText = `🎉 <strong>1. val hópsins (${top1.num})</strong> passar fullkomlega við þitt val (þú merktir ✅)!`;
-          } else if (myVoteOnTop1 === 'maybe') {
-            top1MatchText = `🟡 <strong>1. val hópsins (${top1.num})</strong> gæti gengið hjá þér (þú merktir 🟡).`;
-          } else if (myVoteOnTop1 === 'no') {
-            top1MatchText = `⚠️ <strong>1. val hópsins (${top1.num})</strong> rekst á hjá þér (þú merktir ❌).`;
-          }
-
-          myCalloutHtml = `
-            <div style="background: white; border: 1.5px solid #7dd3fc; border-radius: 10px; padding: 10px 14px; margin-bottom: 12px; font-size: 0.82rem; color: #0369a1; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
-              <div style="display: flex; align-items: center; gap: 8px;">
-                ${getUserAvatarHTML(currentPerson, 26)}
-                <div>
-                  <strong>Þitt samræmi (${escapeHtml(currentPerson)}):</strong> Þú hefur merkt ${myYesWeeks.length} vikur ✅ og ${myMaybeWeeks.length} vikur 🟡.
-                  <div style="font-size: 0.78rem; margin-top: 2px;">
-                    ${top1MatchText ? `<span>${top1MatchText} · </span>` : ''}
-                    <span>🏡 <strong>${housesFittingAllMyYes.length} af ${HOUSES.length} húsum</strong> eru laus í öllum þínum vikum.</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          `;
+      const uniqueVoters = getUniqueVotersList();
+      const allDisplayMembers = [...canonicalList];
+      uniqueVoters.forEach(uv => {
+        if (!allDisplayMembers.some(m => isSamePerson(m, uv))) {
+          allDisplayMembers.push(uv);
         }
-      }
+      });
 
-      // Reikna samræmis-dálka fyrir 3 efstu vikur
-      const weekColsHtml = topWeeks.map((w, idx) => {
-        const stats = getWeekStats(w.id);
-        const rankMedal = idx === 0 ? '🥇 1. val' : idx === 1 ? '🥈 2. val' : '🥉 3. val';
-        const isConflictFree = stats.no.length === 0 && stats.yes.length > 0;
-        const availHouses = HOUSES.filter(h => (h.availableWeeks || ["w25","w26","w27","w28","w29","w30","w31","w32","w33","w34","w35"]).includes(w.id));
-        const topHouses = sortHousesList(availHouses, 'popularity').slice(0, 3);
-        const isTopCol = idx === 0;
+      const personStats = allDisplayMembers.map(personName => {
+        const isMe = currentPerson && isSamePerson(personName, currentPerson);
+        const wVotes = isMe
+          ? (currentVote?.weeks || {})
+          : (allVotes[findVotesKey(allVotes, personName) || personName]?.weeks || {});
 
-        return `
-          <div class="alignment-week-col ${isTopCol ? 'col-top-1' : ''}">
-            <div class="alignment-week-header">
-              <div class="alignment-week-title">${rankMedal}: ${w.num}</div>
-              <span class="alignment-week-stats ${isConflictFree ? 'stats-good' : 'stats-mid'}">
-                ${isConflictFree ? `🎉 0 árekstrar (${stats.yes.length} ✅${stats.maybe.length > 0 ? `, ${stats.maybe.length} 🟡` : ''})` : `⚠️ ${stats.no.length} kemst ekki (${stats.yes.length} ✅)`}
-              </span>
-            </div>
-            <div class="alignment-week-dates">${w.dates}${w.tag ? ` · <em>${w.tag}</em>` : ''}</div>
-            <div style="font-size: 0.76rem; font-weight: 700; color: #166534; margin-bottom: 6px;">
-              🏡 ${availHouses.length} af ${HOUSES.length} húsum laus í þessari viku
-            </div>
+        let yesCount = 0, maybeCount = 0, noCount = 0;
+        WEEKS.forEach(w => {
+          const val = wVotes[w.id];
+          if (val === 'yes') yesCount++;
+          else if (val === 'maybe') maybeCount++;
+          else if (val === 'no') noCount++;
+        });
 
-            <div style="font-size: 0.72rem; font-weight: 800; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px;">
-              Vinsælustu hús hópsins í ${w.num.replace("Vika ", "V")}:
-            </div>
+        const notesObj = isMe
+          ? (currentVote?.weekNotes || allVotes[findVotesKey(allVotes, currentPerson)]?.weekNotes || {})
+          : (allVotes[findVotesKey(allVotes, personName) || personName]?.weekNotes || {});
 
-            <div class="alignment-top-houses-list">
-              ${topHouses.map((h, hIdx) => {
-                const pop = getHousePopularity(h.id);
-                const medal = hIdx === 0 ? '🥇' : hIdx === 1 ? '🥈' : '🥉';
-                const defaultImg = "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&auto=format&fit=crop&q=80";
-                let photo = (h.photo && h.photo.trim()) ? h.photo.trim() : defaultImg;
-                if (photo.includes("airbnb.") && !photo.includes("muscache.com") && !photo.match(/\.(jpeg|jpg|png|webp)/i)) {
-                  photo = defaultImg;
+        return {
+          name: personName,
+          isMe,
+          votes: wVotes,
+          yesCount,
+          maybeCount,
+          noCount,
+          notes: notesObj,
+          total: yesCount + maybeCount + noCount
+        };
+      });
+
+      el.innerHTML = `
+        <div class="matrix-table-wrap">
+          <table class="matrix-table">
+            <thead>
+              <tr>
+                <th class="matrix-th-name">
+                  <div style="font-weight: 800; color: #0f172a;">Fjölskyldumeðlimur</div>
+                  <div style="font-size: 0.68rem; color: var(--text-muted); font-weight: 500;">(Alls ${allDisplayMembers.length} manns)</div>
+                </th>
+                ${WEEKS.map(w => {
+                  const rankData = getWeekRankData(w.id);
+                  const bday = getWeekBirthdayInfo(w.id);
+                  const isTop1 = rankData.rankIdx === 0;
+                  const shortDate = `${w.dates.split("–")[0].trim()}–${w.dates.split("–")[1].trim().split(" ")[0]}`;
+                  const stats = rankData.stats;
+
+                  return `
+                    <th class="matrix-th-week ${isTop1 ? 'th-week-top1' : ''}" onclick="openWeekDetailsModal('${w.id}')" title="Smelltu til að skoða nánar um ${w.num} (tölur, hverjir komast og laus hús)">
+                      <div class="th-week-num-row">
+                        <span class="th-week-num">${w.num.replace("Vika ", "V")}</span>
+                        ${bday ? `<span class="th-bday-badge" title="${escapeHtml(bday.text)}">🎂</span>` : ''}
+                        ${rankData.statusIcon ? `<span class="th-status-badge" title="${escapeHtml(rankData.statusText)}">${rankData.statusIcon}</span>` : ''}
+                      </div>
+                      <div class="th-rank-row">
+                        <span class="th-medal">${rankData.medal}</span>
+                        <span class="th-rank-lbl">#${rankData.rank}</span>
+                      </div>
+                      <div class="th-dates-row">${shortDate}</div>
+                      <div class="th-count-pill ${rankData.statusClass}">
+                        <span>${stats.yes.length}✅</span>${stats.maybe.length > 0 ? ` <span>${stats.maybe.length}🟡</span>` : ''}${stats.no.length > 0 ? ` <span>${stats.no.length}❌</span>` : ''}
+                      </div>
+                    </th>
+                  `;
+                }).join("")}
+                <th style="background: #f8fafc; border-bottom: 2px solid var(--border); font-size: 0.76rem; font-weight: 800; color: #334155; padding: 8px 6px;">
+                  Samtals
+                </th>
+                <th style="background: #f8fafc; border-bottom: 2px solid var(--border); text-align: left; padding: 8px 12px; font-size: 0.76rem; font-weight: 800; color: #334155; min-width: 170px;">
+                  Skýringar á forföllum
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              ${personStats.map(ps => {
+                const noteEntries = Object.entries(ps.notes || {});
+                let notesHtml = "";
+                if (noteEntries.length > 0) {
+                  notesHtml = noteEntries.map(([wkId, nText]) => {
+                    const wk = WEEKS.find(x => x.id === wkId);
+                    const wkNum = wk ? wk.num.replace("Vika ", "V") : wkId;
+                    const canEdit = canEditPersonNotes(ps.name);
+                    return `<button type="button" onclick="openWeekNoteModal('${wkId}', '${escapeHtml(ps.name)}')" style="display: inline-flex; align-items: center; gap: 3px; background: #fee2e2; color: #991b1b; padding: 2px 7px; border-radius: 6px; font-size: 0.72rem; margin: 1px 2px; border: 1px solid #fca5a5; cursor: pointer; font-family: inherit; font-weight: 600;" title="${canEdit ? 'Smelltu til að breyta skýringu' : 'Smelltu til að lesa skýringu'}"><strong>${wkNum}:</strong> ${escapeHtml(nText)}</button>`;
+                  }).join(" ");
+                } else if (ps.noCount > 0) {
+                  if (canEditPersonNotes(ps.name)) {
+                    const firstNoWk = WEEKS.find(x => ps.votes[x.id] === 'no');
+                    notesHtml = `<button type="button" onclick="openWeekNoteModal('${firstNoWk ? firstNoWk.id : 'w25'}', '${escapeHtml(ps.name)}')" style="background: #fff5f5; border: 1px dashed #f87171; border-radius: 6px; padding: 2px 7px; color: #b91c1c; font-size: 0.72rem; cursor: pointer; font-family: inherit; font-style: italic;">+ Skrá skýringu ✏️</button>`;
+                  } else {
+                    notesHtml = `<span style="color: #94a3b8; font-size: 0.74rem; font-style: italic;">Engin skýring</span>`;
+                  }
+                } else {
+                  notesHtml = `<span style="color: #cbd5e1; font-size: 0.75rem;">—</span>`;
                 }
 
                 return `
-                  <div class="alignment-house-item" onclick="filterAndScrollToWeek('${w.id}')" style="cursor: pointer;" title="Smelltu til að skoða hús á listanum">
-                    <img src="${photo}" class="alignment-house-thumb" alt="${escapeHtml(h.title)}" onerror="this.src='${defaultImg}'" />
-                    <div class="alignment-house-info">
-                      <div class="alignment-house-name">${medal} ${escapeHtml(h.title)}</div>
-                      <div class="alignment-house-sub">
-                        <span>${escapeHtml(h.city || h.region || '')}</span>
-                        <strong style="color: ${pop.score > 0 ? '#15803d' : '#475569'};">${pop.score > 0 ? '+' : ''}${pop.score} stig (${pop.love.length} ❤️, ${pop.like.length} 👍)</strong>
+                  <tr class="${ps.isMe ? 'matrix-row-me' : ''}">
+                    <td class="matrix-td-name">
+                      <div style="display: flex; align-items: center; gap: 7px;">
+                        ${getUserAvatarHTML(ps.name, 26)}
+                        <span style="font-weight: ${ps.isMe ? '800' : '600'}; color: ${ps.isMe ? '#0f172a' : 'inherit'};">${escapeHtml(ps.name)}</span>
+                        ${ps.isMe ? '<span class="badge-you">Þú</span>' : ''}
                       </div>
-                    </div>
-                  </div>
+                    </td>
+                    ${WEEKS.map(w => {
+                      const val = ps.votes[w.id];
+                      const note = ps.notes[w.id];
+
+                      if (ps.isMe) {
+                        let btnHtml = "";
+                        if (val === 'yes') {
+                          btnHtml = `<button type="button" class="cell-btn-vote vote-yes" onclick="openQuickVoteModal('${w.id}')" title="Smelltu til að breyta vali">✅ Kemst</button>`;
+                        } else if (val === 'maybe') {
+                          btnHtml = `<button type="button" class="cell-btn-vote vote-maybe" onclick="openQuickVoteModal('${w.id}')" title="Smelltu til að breyta vali">🟡 Gæti</button>`;
+                        } else if (val === 'no') {
+                          btnHtml = `<button type="button" class="cell-btn-vote vote-no" onclick="openQuickVoteModal('${w.id}')" title="${note ? `„${escapeHtml(note)}“ – ` : ''}Smelltu til að breyta vali">❌ Nei${note ? ' 💬' : ''}</button>`;
+                        } else {
+                          btnHtml = `<button type="button" class="cell-btn-vote vote-empty" onclick="openQuickVoteModal('${w.id}')" title="Smelltu til að velja stöðu">+ Veldu</button>`;
+                        }
+                        return `<td class="matrix-td-cell">${btnHtml}</td>`;
+                      } else {
+                        if (val === 'yes') {
+                          return `<td class="matrix-td-cell"><span class="matrix-cell-yes" title="${escapeHtml(ps.name)}: Kemst vel í ${w.num}">✅</span></td>`;
+                        } else if (val === 'maybe') {
+                          return `<td class="matrix-td-cell"><span class="matrix-cell-maybe" title="${escapeHtml(ps.name)}: Gæti gengið í ${w.num}">🟡</span></td>`;
+                        } else if (val === 'no') {
+                          const canEdit = canEditPersonNotes(ps.name);
+                          return `<td class="matrix-td-cell">
+                            <button type="button" class="matrix-cell-no" onclick="openWeekNoteModal('${w.id}', '${escapeHtml(ps.name)}')" title="${escapeHtml(ps.name)}: Kemst ekki í ${w.num}${note ? ` – „${escapeHtml(note)}“` : ''} (Smelltu til að ${canEdit ? 'breyta' : 'lesa'})" style="cursor: pointer; border: 1px solid #fca5a5; font-family: inherit;">
+                              ❌${note ? ' 💬' : ''}
+                            </button>
+                          </td>`;
+                        } else {
+                          return `<td class="matrix-td-cell"><span class="matrix-cell-empty">—</span></td>`;
+                        }
+                      }
+                    }).join("")}
+                    <td style="font-size: 0.78rem; font-weight: 700; white-space: nowrap; padding: 6px 4px; border-bottom: 1px solid #f1f5f9;">
+                      <span style="color: #166534;">${ps.yesCount}✅</span>
+                      ${ps.maybeCount > 0 ? `<span style="color: #854d0e; margin-left: 2px;">${ps.maybeCount}🟡</span>` : ''}
+                      ${ps.noCount > 0 ? `<span style="color: #b91c1c; margin-left: 2px;">${ps.noCount}❌</span>` : ''}
+                    </td>
+                    <td style="text-align: left; padding: 6px 12px; border-bottom: 1px solid #f1f5f9; font-size: 0.78rem;">
+                      ${notesHtml}
+                    </td>
+                  </tr>
                 `;
               }).join("")}
+            </tbody>
+            <tfoot>
+              <tr style="background: #f8fafc; font-weight: 800; border-top: 2px solid var(--border);">
+                <td class="matrix-th-name" style="background: #f8fafc; padding: 10px 14px; font-weight: 800; color: #1e293b;">
+                  👥 Samtals sem komast:
+                </td>
+                ${WEEKS.map(w => {
+                  const stats = getWeekStats(w.id);
+                  const isZeroNo = stats.no.length === 0 && stats.yes.length > 0;
+                  return `
+                    <td onclick="openWeekDetailsModal('${w.id}')" style="cursor: pointer; padding: 8px 4px; border-left: 1px solid #f1f5f9;" title="Smelltu til að sjá nánar um ${w.num}">
+                      <div style="font-weight: 800; font-size: 0.82rem; color: ${isZeroNo ? '#166534' : (stats.no.length === 1 ? '#ea580c' : '#334155')};">
+                        ${stats.yes.length} / ${uniqueVoters.length || 10}
+                      </div>
+                      <div style="font-size: 0.68rem; color: ${isZeroNo ? '#166534' : (stats.no.length === 1 ? '#c2410c' : 'var(--text-muted)')}; font-weight: 700;">
+                        ${isZeroNo ? '🎉 0 nei' : `❌ ${stats.no.length} nei`}
+                      </div>
+                    </td>
+                  `;
+                }).join("")}
+                <td style="font-size: 0.75rem; color: var(--text-muted); padding: 8px 4px;">—</td>
+                <td style="font-size: 0.75rem; color: var(--text-muted); padding: 8px 10px; text-align: left;">—</td>
+              </tr>
+            </tfoot>
+          </table>
+
+          <div style="padding: 12px 16px; background: #f8fafc; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; font-size: 0.8rem;">
+            <div style="display: flex; align-items: center; gap: 6px; color: var(--text-muted);">
+              <span>💡 <strong>Ábending:</strong> Smelltu á <strong>reitina í þinni línu</strong> til að velja, eða á <strong>dálkhausa viknanna (t.d. 🥇 #1)</strong> til að sjá tölur og laus hús.</span>
             </div>
-
-            <button type="button" class="alignment-filter-btn" onclick="filterAndScrollToWeek('${w.id}')">
-              🔍 Sía hús eftir ${w.num.replace("Vika ", "V")} (${availHouses.length} laus) ↓
-            </button>
-          </div>
-        `;
-      }).join("");
-
-      el.innerHTML = `
-        <div class="weeks-houses-alignment-card">
-          <div class="alignment-card-header">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span style="font-size: 1.4rem;">🎯</span>
-              <div>
-                <h3 style="font-size: 1rem; font-weight: 800; color: #065f46; margin: 0;">
-                  Samræmi: Bestu vikur hópsins vs. Laus hús
-                </h3>
-                <div style="font-size: 0.78rem; color: #047857; margin-top: 1px;">
-                  Sýnir hvernig atkvæði fjölskyldunnar um vikur samræmast lausum húsum og hver eru vinsælust í hverri viku.
-                </div>
+            ${currentPerson ? `
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <button type="button" onclick="markAllWeeksYes()" style="background: #f0fdf4; border: 1px solid #86efac; color: #166534; font-size: 0.78rem; font-weight: 700; padding: 5px 12px; border-radius: 6px; cursor: pointer;">
+                  ✅ Merkja allar vikur
+                </button>
+                <button type="button" onclick="clearMyWeekVotes()" style="background: white; border: 1px solid #cbd5e1; color: #64748b; font-size: 0.78rem; font-weight: 600; padding: 5px 10px; border-radius: 6px; cursor: pointer;">
+                  ✕ Hreinsa mitt val
+                </button>
               </div>
-            </div>
-            <button type="button" onclick="toggleAlignmentCardExpand()" style="background: white; border: 1px solid #6ee7b7; border-radius: 8px; padding: 5px 12px; font-size: 0.76rem; font-weight: 700; color: #065f46; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">
-              ${alignmentCardExpanded ? '▲ Fela samræmi' : '▼ Sýna samræmi'}
-            </button>
+            ` : ''}
           </div>
-
-          ${myCalloutHtml}
-
-          ${alignmentCardExpanded ? `
-            <div class="alignment-weeks-grid">
-              ${weekColsHtml}
-            </div>
-          ` : ''}
         </div>
       `;
     }
 
-    function renderWeeks() {
-      renderFamilyBirthdays();
+    function updateSingleWeekRow(weekId) {
       renderFamilyAvailabilityOverview();
-      renderWeeksVsHousesAlignment();
-      const grid = document.getElementById("weeksGrid");
-      const expandWrap = document.getElementById("weeksExpandWrap");
-      const sortedWeeks = sortWeeksList(WEEKS, tab1WeeksSort);
-
-      const visibleWeeks = weeksExpanded ? sortedWeeks : sortedWeeks.slice(0, 4);
-
-      grid.innerHTML = visibleWeeks.map(w => {
-        return `
-          <div class="week-row" id="row-${w.id}">
-            <div style="flex: 1; min-width: 240px;">
-              <div class="week-info">
-                <div class="week-number">${w.num}</div>
-                <div class="week-dates">
-                  ${w.dates}
-                  ${w.tag ? `<span class="week-tag">${w.tag}</span>` : ""}
-                  <span id="week-rank-badge-${w.id}">${getWeekRankBadgeHTML(w.id)}</span>
-                </div>
-              </div>
-              <div class="week-attendees-box" id="week-attendees-${w.id}">
-                ${getWeekAttendeesHTML(w.id)}
-              </div>
-            </div>
-            <div class="btn-group">
-              <button class="choice-btn" data-week="${w.id}" data-val="yes" onclick="setWeekVote('${w.id}', 'yes')">✅ Kemst vel</button>
-              <button class="choice-btn" data-week="${w.id}" data-val="maybe" onclick="setWeekVote('${w.id}', 'maybe')">🟡 Gæti gengið</button>
-              <button class="choice-btn" data-week="${w.id}" data-val="no" onclick="setWeekVote('${w.id}', 'no')">❌ Kemst ekki</button>
-            </div>
-          </div>
-        `;
-      }).join("");
-
-      if (expandWrap) {
-        if (sortedWeeks.length > 4) {
-          expandWrap.innerHTML = `
-            <button type="button" onclick="toggleWeeksExpand()" style="padding: 10px 22px; background: #eff6ff; color: #1d4ed8; border: 1.5px solid #bfdbfe; border-radius: 10px; font-weight: 700; font-size: 0.88rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s;">
-              ${weeksExpanded ? '⬆️ Sýna færri vikur (aðeins efstu 4)' : `⬇️ Sýna fleiri vikur (+${sortedWeeks.length - 4} í viðbót)`}
-            </button>
-          `;
-        } else {
-          expandWrap.innerHTML = "";
-        }
-      }
-
-      updateWeeksUI();
-      updateWeekConflictSummary();
     }
 
-    function toggleWeeksExpand() {
-      weeksExpanded = !weeksExpanded;
-      renderWeeks();
-    }
+    function updateWeekConflictSummary() {}
+    function renderFamilyBirthdays() {}
+    function renderWeeksVsHousesAlignment() {}
+    function toggleAlignmentCardExpand() {}
+    function toggleWeeksExpand() {}
+    function changeTab1WeeksSort() {}
 
-    function changeTab1WeeksSort(val) {
-      tab1WeeksSort = val;
-      renderWeeks();
+    function renderWeeks() {
+      renderFamilyAvailabilityOverview();
     }
 
     function setWeekVote(weekId, val) {
