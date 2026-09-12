@@ -187,32 +187,45 @@
       left: 0;
       z-index: 3;
       background: white;
-      text-align: left;
-      padding: 10px 14px;
+      text-align: center;
+      padding: 6px 3px;
       border-right: 2px solid var(--border);
       border-bottom: 1px solid #f1f5f9;
-      min-width: 180px;
-      max-width: 230px;
+      width: 58px;
+      min-width: 52px;
+      max-width: 64px;
+      box-sizing: border-box;
     }
     .matrix-table thead .matrix-th-name {
       z-index: 5;
       background: #f8fafc;
       border-bottom: 2px solid var(--border);
+      padding: 8px 3px;
     }
     .matrix-th-week {
       background: #f8fafc;
-      padding: 8px 6px 10px;
+      padding: 8px 4px 10px;
       border-bottom: 2px solid var(--border);
       border-left: 1px solid #e2e8f0;
       cursor: pointer;
       user-select: none;
+      -webkit-tap-highlight-color: rgba(0,0,0,0.08);
       transition: all 0.15s;
-      min-width: 76px;
+      min-width: 72px;
       vertical-align: top;
     }
     .matrix-th-week:hover {
       background: #f1f5f9;
       transform: translateY(-1px);
+    }
+    .matrix-th-week:active {
+      background: #e2e8f0;
+    }
+    .matrix-th-week * {
+      pointer-events: none;
+    }
+    .matrix-table tfoot td * {
+      pointer-events: none;
     }
     .matrix-th-week.th-week-top1 {
       background: #fefce8;
@@ -1542,6 +1555,27 @@
       return `<span style="width: ${size}px; height: ${size}px; border-radius: 50%; background: #e0f2fe; color: #0369a1; display: inline-flex; align-items: center; justify-content: center; font-size: ${Math.round(size * 0.45)}px; font-weight: 700; vertical-align: middle; flex-shrink: 0;">${name.charAt(0)}</span>`;
     }
 
+    function getPersonInitials(name) {
+      if (!name) return "";
+      const lower = name.toLowerCase();
+      if (lower.includes("sigurjón") || lower.includes("sissi")) return "SA";
+      if (lower.includes("ólafía") || lower.includes("lóa")) return "ÓR";
+      if (lower.includes("axel bjarkar") || (lower.includes("axel") && !lower.includes("sigurjón"))) return "AB";
+      if (lower.includes("anna")) return "AH";
+      if (lower.includes("rannveig")) return "RA";
+      if (lower.includes("þórhildur") || lower.includes("tóta")) return "ÞS";
+      if (lower.includes("birkir")) return "BE";
+      if (lower.includes("viktor")) return "VI";
+      if (lower.includes("vala")) return "VB";
+      if (lower.includes("sara")) return "SK";
+
+      const parts = name.trim().split(/\s+/);
+      if (parts.length >= 2) {
+        return (parts[0][0] + parts[1][0]).toUpperCase();
+      }
+      return name.substring(0, 2).toUpperCase();
+    }
+
     let WEEKS = [];
     let HOUSES = [];
     let CUSTOM_HOUSES = [];
@@ -1950,13 +1984,13 @@
 
     async function verifyAndUnlock(pin) {
       try {
-        const resp = await fetch("encrypted_data.json");
+        const resp = await fetch("encrypted_data.json?v=" + Date.now(), { cache: "no-store" });
         if (resp.ok) {
           const payload = await resp.json();
           const data = await decryptPayload(pin, payload);
           FAMILY_MEMBERS = data.familyMembers;
           FAMILY_BIRTHDAYS = data.familyBirthdays || [];
-          WEEKS = data.weeks;
+          WEEKS = (data.weeks || []).filter(w => w.id !== "w35" && !w.num.includes("35"));
           HOUSES = data.houses;
 
           activePIN = pin;
@@ -3026,7 +3060,7 @@
       renderWeeks();
       updateAllHouseAvailabilityBadges();
       pushToCloud();
-      showToast("🎉 Merkti allar 11 vikurnar sem ✅ Kemst vel!");
+      showToast("🎉 Merkti allar vikurnar sem ✅ Kemst vel!");
     }
 
     function clearMyWeekVotes() {
@@ -3046,22 +3080,27 @@
     }
 
     function openWeekDetailsModal(weekId) {
-      const w = WEEKS.find(x => x.id === weekId);
-      if (!w) return;
-      const rankData = getWeekRankData(weekId);
-      const stats = rankData.stats;
-      const bday = getWeekBirthdayInfo(weekId);
-      const events = getWeekSpecialEvents(weekId);
-      const availHouses = HOUSES.filter(h => (h.availableWeeks || ["w25","w26","w27","w28","w29","w30","w31","w32","w33","w34"]).includes(weekId));
-      const topHouses = sortHousesList(availHouses, 'popularity').slice(0, 3);
-      const myVote = (currentVote && currentVote.weeks) ? currentVote.weeks[weekId] : null;
+      try {
+        if (!weekId) return;
+        const w = (WEEKS || []).find(x => x.id === weekId);
+        if (!w) {
+          console.warn("Vika fannst ekki:", weekId);
+          return;
+        }
+        const rankData = getWeekRankData(weekId);
+        const stats = rankData.stats;
+        const bday = getWeekBirthdayInfo(weekId);
+        const events = getWeekSpecialEvents(weekId);
+        const availHouses = (HOUSES || []).filter(h => (h.availableWeeks || ["w25","w26","w27","w28","w29","w30","w31","w32","w33","w34"]).includes(weekId));
+        const topHouses = sortHousesList(availHouses, 'popularity').slice(0, 3);
+        const myVote = (currentVote && currentVote.weeks) ? currentVote.weeks[weekId] : null;
 
-      const contentEl = document.getElementById("weekDetailsModalContent");
-      if (!contentEl) return;
+        const contentEl = document.getElementById("weekDetailsModalContent");
+        if (!contentEl) return;
 
-      const isConflictFree = stats.no.length === 0 && stats.yes.length > 0;
+        const isConflictFree = stats.no.length === 0 && stats.yes.length > 0;
 
-      contentEl.innerHTML = `
+        contentEl.innerHTML = `
         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
           <div>
             <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
@@ -3209,10 +3248,17 @@
             }).join("")}
           </div>
         </div>
-      `;
+        `;
 
-      const modal = document.getElementById("weekDetailsModal");
-      if (modal) modal.style.display = "flex";
+        const modal = document.getElementById("weekDetailsModal");
+        if (modal) {
+          modal.style.display = "flex";
+          const mBox = modal.querySelector(".modal-box");
+          if (mBox) mBox.scrollTop = 0;
+        }
+      } catch (err) {
+        console.error("Villa í openWeekDetailsModal:", err);
+      }
     }
 
     function closeWeekDetailsModal() {
@@ -3372,9 +3418,9 @@
           <table class="matrix-table">
             <thead>
               <tr>
-                <th class="matrix-th-name">
-                  <div style="font-weight: 800; color: #0f172a;">Fjölskyldumeðlimur</div>
-                  <div style="font-size: 0.68rem; color: var(--text-muted); font-weight: 500;">(Alls ${allDisplayMembers.length} manns)</div>
+                <th class="matrix-th-name" title="Fjölskyldumeðlimir (${allDisplayMembers.length} manns)">
+                  <div style="font-size: 0.85rem; line-height: 1;">👥</div>
+                  <div style="font-size: 0.65rem; font-weight: 800; color: #475569; margin-top: 2px;">Nafn</div>
                 </th>
                 ${WEEKS.map(w => {
                   const rankData = getWeekRankData(w.id);
@@ -3435,11 +3481,15 @@
 
                 return `
                   <tr class="${ps.isMe ? 'matrix-row-me' : ''}">
-                    <td class="matrix-td-name">
-                      <div style="display: flex; align-items: center; gap: 7px;">
-                        ${getUserAvatarHTML(ps.name, 26)}
-                        <span style="font-weight: ${ps.isMe ? '800' : '600'}; color: ${ps.isMe ? '#0f172a' : 'inherit'};">${escapeHtml(ps.name)}</span>
-                        ${ps.isMe ? '<span class="badge-you">Þú</span>' : ''}
+                    <td class="matrix-td-name" title="${escapeHtml(ps.name)}${ps.isMe ? ' (Þú)' : ''}">
+                      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;">
+                        <div style="position: relative; display: inline-block;">
+                          ${getUserAvatarHTML(ps.name, 28)}
+                          ${ps.isMe ? '<span style="position: absolute; bottom: -2px; right: -4px; background: #16a34a; color: white; font-size: 0.52rem; font-weight: 900; padding: 0 3px; border-radius: 999px; border: 1px solid white; line-height: 1.2;">ÞÚ</span>' : ''}
+                        </div>
+                        <span style="font-weight: 800; font-size: 0.74rem; color: ${ps.isMe ? '#166534' : '#1e293b'}; letter-spacing: 0.5px;">
+                          ${getPersonInitials(ps.name)}
+                        </span>
                       </div>
                     </td>
                     ${WEEKS.map(w => {
@@ -3489,8 +3539,9 @@
             </tbody>
             <tfoot>
               <tr style="background: #f8fafc; font-weight: 800; border-top: 2px solid var(--border);">
-                <td class="matrix-th-name" style="background: #f8fafc; padding: 10px 14px; font-weight: 800; color: #1e293b;">
-                  👥 Samtals sem komast:
+                <td class="matrix-th-name" style="background: #f8fafc; padding: 6px 2px; text-align: center;" title="Samtals fjölskyldumeðlimir sem komast">
+                  <div style="font-size: 0.85rem; line-height: 1;">👥</div>
+                  <div style="font-size: 0.62rem; font-weight: 800; color: #1e293b; margin-top: 2px;">Alls</div>
                 </td>
                 ${WEEKS.map(w => {
                   const stats = getWeekStats(w.id);
