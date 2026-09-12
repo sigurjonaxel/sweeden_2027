@@ -60,6 +60,10 @@
       width: 100%; text-align: center; font-size: 1.5rem; font-weight: 700;
       letter-spacing: 0.25em; padding: 12px; border: 2px solid var(--border);
       border-radius: 12px; outline: none; margin-bottom: 16px;
+      -webkit-text-security: disc; text-security: disc;
+    }
+    .pin-secure-field {
+      -webkit-text-security: disc; text-security: disc;
     }
     .pin-input:focus { border-color: var(--primary); }
     .unlock-btn {
@@ -516,7 +520,7 @@
       <div class="lock-icon">🔒</div>
       <h2 class="lock-title">Fjölskylduaðgangur</h2>
       <p class="lock-desc">Þessi síða er dulkóðuð með AES-256. Sláðu inn fjölskyldu-PIN til að opna dagatal og hús:</p>
-      <input type="password" id="pinInput" class="pin-input" placeholder="••••" maxlength="10" autofocus onkeydown="if(event.key==='Enter') submitPIN()">
+      <input type="text" id="pinInput" class="pin-input" inputmode="numeric" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" placeholder="••••" maxlength="10" autofocus onkeydown="if(event.key==='Enter') submitPIN()">
       <button class="unlock-btn" onclick="submitPIN()">Opna & Afkóða síðu 🔓</button>
       <div class="pin-error" id="pinError">Rangt PIN-númer. Reyndu aftur.</div>
     </div>
@@ -887,7 +891,7 @@
         Sláðu inn 4-stafa leyninúmerið þitt til að opna aðganginn:
       </p>
       <div style="margin-bottom: 14px;">
-        <input type="password" id="loginPinInput" maxlength="4" pattern="[0-9]{4}" inputmode="numeric" placeholder="••••"
+        <input type="text" id="loginPinInput" class="pin-secure-field" maxlength="4" pattern="[0-9]{4}" inputmode="numeric" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" placeholder="••••"
           style="font-size: 2rem; letter-spacing: 12px; text-align: center; width: 180px; padding: 8px 12px; border: 2px solid var(--border); border-radius: 12px;"
           oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 4);"
           onkeydown="if(event.key==='Enter') submitLoginPin()">
@@ -921,13 +925,13 @@
       <div style="display: flex; flex-direction: column; gap: 10px; max-width: 250px; margin: 0 auto 14px auto;">
         <div>
           <label style="font-size: 0.78rem; font-weight: 700; display: block; margin-bottom: 4px; color: var(--text-muted); text-align: left;">Nýtt PIN (4 tölustafir):</label>
-          <input type="password" id="setupPinInput" maxlength="4" pattern="[0-9]{4}" inputmode="numeric" placeholder="••••"
+          <input type="text" id="setupPinInput" class="pin-secure-field" maxlength="4" pattern="[0-9]{4}" inputmode="numeric" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" placeholder="••••"
             style="font-size: 1.6rem; letter-spacing: 10px; text-align: center; width: 100%; padding: 8px 10px; border: 2px solid var(--border); border-radius: 10px;"
             oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 4);">
         </div>
         <div>
           <label style="font-size: 0.78rem; font-weight: 700; display: block; margin-bottom: 4px; color: var(--text-muted); text-align: left;">Staðfesta PIN:</label>
-          <input type="password" id="setupPinConfirm" maxlength="4" pattern="[0-9]{4}" inputmode="numeric" placeholder="••••"
+          <input type="text" id="setupPinConfirm" class="pin-secure-field" maxlength="4" pattern="[0-9]{4}" inputmode="numeric" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" placeholder="••••"
             style="font-size: 1.6rem; letter-spacing: 10px; text-align: center; width: 100%; padding: 8px 10px; border: 2px solid var(--border); border-radius: 10px;"
             oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 4);"
             onkeydown="if(event.key==='Enter') submitSetupPin()">
@@ -977,8 +981,8 @@
         <div style="display: flex; flex-direction: column; gap: 8px;">
           <input type="text" id="resetTokenInput" placeholder="Sláðu inn Reset-kóðann..." style="padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.88rem;">
           <div style="display: flex; gap: 8px;">
-            <input type="password" id="resetNewPinInput" maxlength="4" pattern="[0-9]{4}" inputmode="numeric" placeholder="Nýtt 4-stafa PIN" style="flex: 1; padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.88rem;" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 4);">
-            <input type="password" id="resetNewPinConfirm" maxlength="4" pattern="[0-9]{4}" inputmode="numeric" placeholder="Staðfesta PIN" style="flex: 1; padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.88rem;" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 4);">
+            <input type="text" id="resetNewPinInput" class="pin-secure-field" maxlength="4" pattern="[0-9]{4}" inputmode="numeric" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" placeholder="Nýtt 4-stafa PIN" style="flex: 1; padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.88rem;" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 4);">
+            <input type="text" id="resetNewPinConfirm" class="pin-secure-field" maxlength="4" pattern="[0-9]{4}" inputmode="numeric" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" placeholder="Staðfesta PIN" style="flex: 1; padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.88rem;" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 4);">
           </div>
           <div id="resetPinError" style="display: none; color: var(--danger); font-size: 0.82rem; font-weight: 700;"></div>
           <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 4px;">
