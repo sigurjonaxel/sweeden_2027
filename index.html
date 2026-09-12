@@ -569,6 +569,13 @@
               </div>
             </div>
             <div id="masterPendingResetsList" style="font-size: 0.84rem;"></div>
+            <div id="masterRequestsWrap" style="margin-top: 12px; padding-top: 10px; border-top: 1px dashed #e2e8f0;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <span style="font-weight: 700; font-size: 0.82rem; color: #475569;">💡 Innsendar ábendingar frá vefnum:</span>
+                <button onclick="clearAllUserRequests()" style="background: none; border: none; font-size: 0.75rem; color: var(--text-muted); cursor: pointer; text-decoration: underline;">Hreinsa allar ✕</button>
+              </div>
+              <div id="userRequestsList">Engar ábendingar í bið.</div>
+            </div>
           </div>
         </div>
 
@@ -633,16 +640,6 @@
             <div id="commentsList">Engar athugasemdir skráðar enn.</div>
           </div>
 
-          <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
-              <div>
-                <div style="font-size: 0.95rem; font-weight: 700; color: var(--text);">💡 Skráð verkefni & ábendingar (GitHub Issues)</div>
-                <div style="font-size: 0.78rem; color: var(--text-muted);">Ábendingar frá vefnum breytast sjálfkrafa í verkefni á GitHub svo hægt sé að vinna úr þeim!</div>
-              </div>
-              <button class="add-house-btn" style="padding: 6px 14px; font-size: 0.8rem; background: #0284c7;" onclick="openFeedbackModal()">➕ Senda inn ábendingu</button>
-            </div>
-            <div id="userRequestsList">Engin verkefni skráð enn.</div>
-          </div>
         </div>
 
     </main>
@@ -1240,15 +1237,9 @@
             }
 
             if (cloudData.userRequests && Array.isArray(cloudData.userRequests)) {
-              cloudData.userRequests.forEach(cr => {
-                const idx = USER_REQUESTS.findIndex(r => r.id === cr.id);
-                if (idx === -1) {
-                  USER_REQUESTS.push(cr);
-                } else {
-                  USER_REQUESTS[idx] = { ...USER_REQUESTS[idx], ...cr };
-                }
-              });
+              USER_REQUESTS = [...cloudData.userRequests];
               localStorage.setItem("sweeden_2027_user_requests", JSON.stringify(USER_REQUESTS));
+              renderUserRequests();
             }
 
             if (cloudData.userPins && typeof cloudData.userPins === "object") {
@@ -1361,7 +1352,11 @@
       // Lesa ábendingar / verkefni staðbundið
       const storedRequests = localStorage.getItem("sweeden_2027_user_requests");
       if (storedRequests) {
-        try { USER_REQUESTS = JSON.parse(storedRequests); } catch (e) {}
+        try {
+          USER_REQUESTS = JSON.parse(storedRequests);
+          USER_REQUESTS = USER_REQUESTS.filter(r => r.title !== "Axel afmæli");
+          localStorage.setItem("sweeden_2027_user_requests", JSON.stringify(USER_REQUESTS));
+        } catch (e) {}
       }
 
       // Lesa user pins og reset-beiðnir staðbundið
@@ -2994,36 +2989,52 @@
       const el = document.getElementById("userRequestsList");
       if (!el) return;
       if (!USER_REQUESTS || USER_REQUESTS.length === 0) {
-        el.innerHTML = `
-          <div style="font-size: 0.82rem; color: var(--text-muted); font-style: italic; padding: 6px 0;">
-            Engin verkefni eða ábendingar skráðar enn. Smelltu á <strong>„➕ Senda inn ábendingu“</strong> ef þig vantar eitthvað!
-          </div>
-        `;
+        el.innerHTML = `<span style="color: var(--text-muted); font-size: 0.8rem; font-style: italic;">Engar nýjar ábendingar í bið.</span>`;
         return;
       }
       el.innerHTML = USER_REQUESTS.map(req => {
         const hasIssue = Boolean(req.issueCreated && req.issueNumber);
         const issueBadge = hasIssue
-          ? `<a href="${req.issueUrl || `https://github.com/sigurjonaxel/sweeden_2027/issues/${req.issueNumber}`}" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 4px; background: #dcfce7; color: #166534; padding: 2px 8px; border-radius: 6px; font-weight: 700; font-size: 0.76rem; text-decoration: none; border: 1px solid #bbf7d0;">🟢 GitHub Issue #${req.issueNumber} ↗</a>`
-          : `<span style="display: inline-flex; align-items: center; gap: 4px; background: #fef9c3; color: #854d0e; padding: 2px 8px; border-radius: 6px; font-weight: 700; font-size: 0.76rem; border: 1px solid #fef08a;">⏳ Í bið eftir samstillingu</span>`;
+          ? `<a href="${req.issueUrl || `https://github.com/sigurjonaxel/sweeden_2027/issues/${req.issueNumber}`}" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 4px; background: #dcfce7; color: #166534; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 0.72rem; text-decoration: none;">GitHub #${req.issueNumber} ↗</a>`
+          : `<span style="background: #fef9c3; color: #854d0e; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 0.72rem;">Ósamstillt</span>`;
 
         const dateStr = req.createdAt ? new Date(req.createdAt).toLocaleDateString('is-IS', { day: 'numeric', month: 'short' }) : '';
 
         return `
-          <div style="background: white; border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; margin-bottom: 8px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; margin-bottom: 4px;">
-              <span style="font-weight: 700; font-size: 0.88rem; color: var(--text);">${escapeHtml(req.title)}</span>
-              ${issueBadge}
+          <div style="background: white; border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; margin-bottom: 6px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 4px; margin-bottom: 3px;">
+              <span style="font-weight: 700; font-size: 0.84rem; color: var(--text);">${escapeHtml(req.title)}</span>
+              <div style="display: flex; gap: 6px; align-items: center;">
+                ${issueBadge}
+                <button onclick="dismissUserRequest('${req.id}')" style="background: none; border: none; font-size: 0.75rem; color: var(--text-muted); cursor: pointer;" title="Fjarlægja ábendingu">✕</button>
+              </div>
             </div>
-            ${req.details ? `<div style="font-size: 0.82rem; color: var(--text); margin-bottom: 6px; line-height: 1.4;">${escapeHtml(req.details)}</div>` : ''}
-            <div style="display: flex; gap: 12px; font-size: 0.74rem; color: var(--text-muted); flex-wrap: wrap;">
-              <span>👤 <strong>${escapeHtml(req.person)}</strong></span>
+            ${req.details ? `<div style="font-size: 0.78rem; color: #334155; margin-bottom: 4px; line-height: 1.3;">${escapeHtml(req.details)}</div>` : ''}
+            <div style="display: flex; gap: 10px; font-size: 0.72rem; color: var(--text-muted);">
+              <span>👤 ${escapeHtml(req.person)}</span>
               <span>🏷️ ${escapeHtml(req.category || 'Hugmynd')}</span>
               ${dateStr ? `<span>📅 ${dateStr}</span>` : ''}
             </div>
           </div>
         `;
       }).join("");
+    }
+
+    async function dismissUserRequest(id) {
+      USER_REQUESTS = USER_REQUESTS.filter(r => r.id !== id);
+      localStorage.setItem("sweeden_2027_user_requests", JSON.stringify(USER_REQUESTS));
+      renderUserRequests();
+      await pushToCloud();
+      showToast("Ábending fjarlægð.");
+    }
+
+    async function clearAllUserRequests() {
+      if (!confirm("Viltu hreinsa allar skráðar ábendingar?")) return;
+      USER_REQUESTS = [];
+      localStorage.setItem("sweeden_2027_user_requests", JSON.stringify(USER_REQUESTS));
+      renderUserRequests();
+      await pushToCloud();
+      showToast("Allar ábendingar hreinsaðar.");
     }
 
     function renderComments() {
