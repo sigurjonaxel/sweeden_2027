@@ -1006,12 +1006,16 @@
       </p>
       <input type="hidden" id="weekNoteTargetWeek">
       <input type="hidden" id="weekNoteTargetPerson">
-      <div style="margin-bottom: 14px;">
+      <div id="weekNoteInputWrap" style="margin-bottom: 14px;">
         <input type="text" id="weekNoteInput" placeholder="t.d. Vinnutörn, annað ferðalag, skóli..." style="width: 100%; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.92rem; box-sizing: border-box;" onkeydown="if(event.key==='Enter') saveWeekNote()">
       </div>
-      <div style="display: flex; gap: 8px; justify-content: flex-end;">
-        <button type="button" onclick="closeWeekNoteModal()" style="padding: 8px 16px; border: 1px solid var(--border); background: white; border-radius: 8px; font-size: 0.85rem; cursor: pointer; font-weight: 600;">Hætta við</button>
-        <button type="button" onclick="saveWeekNote()" style="padding: 8px 20px; background: #dc2626; color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 0.85rem; cursor: pointer; box-shadow: 0 2px 4px rgba(220,38,38,0.25);">Vista skýringu 💾</button>
+      <div id="weekNoteReadOnlyWrap" style="display: none; margin-bottom: 14px; padding: 12px 14px; background: #fef2f2; border: 1.5px solid #fecaca; border-radius: 8px; color: #991b1b; font-size: 0.92rem; line-height: 1.45;">
+        <span id="weekNoteReadOnlyText" style="font-weight: 600;"></span>
+      </div>
+      <div style="display: flex; gap: 8px; justify-content: flex-end; align-items: center;">
+        <button type="button" id="weekNoteDeleteBtn" onclick="deleteWeekNote()" style="display: none; padding: 8px 14px; border: 1px solid #fca5a5; background: #fff1f2; color: #b91c1c; border-radius: 8px; font-size: 0.85rem; cursor: pointer; font-weight: 600; margin-right: auto;">Fjarlægja 🗑️</button>
+        <button type="button" id="weekNoteCancelBtn" onclick="closeWeekNoteModal()" style="padding: 8px 16px; border: 1px solid var(--border); background: white; border-radius: 8px; font-size: 0.85rem; cursor: pointer; font-weight: 600;">Hætta við</button>
+        <button type="button" id="weekNoteSaveBtn" onclick="saveWeekNote()" style="padding: 8px 20px; background: #dc2626; color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 0.85rem; cursor: pointer; box-shadow: 0 2px 4px rgba(220,38,38,0.25);">Vista skýringu 💾</button>
       </div>
     </div>
   </div>
@@ -1021,8 +1025,10 @@
     let FAMILY_BIRTHDAYS = [];
 
     const USER_AVATARS = {
+      "Sigurjón Axel (Sissi)": "images/avatars/sigurjon.jpg?v=2",
       "Sigurjón Axel": "images/avatars/sigurjon.jpg?v=2",
       "Sigurjón": "images/avatars/sigurjon.jpg?v=2",
+      "Sissi": "images/avatars/sigurjon.jpg?v=2",
       "Ólafía Rósbjörg (Lóa)": "images/avatars/loa.jpg?v=2",
       "Ólafía Rósbjörg": "images/avatars/loa.jpg?v=2",
       "Lóa": "images/avatars/loa.jpg?v=2",
@@ -1066,6 +1072,7 @@
     let currentFilter = "all";
     const SIGURJON_MASTER_PIN = "6243";
     let USER_PINS = {
+      "Sigurjón Axel (Sissi)": SIGURJON_MASTER_PIN,
       "Sigurjón Axel": SIGURJON_MASTER_PIN,
       "Sigurjón": SIGURJON_MASTER_PIN
     };
@@ -1073,7 +1080,28 @@
     function isSigurjon(name) {
       if (!name) return false;
       const clean = name.trim().toLowerCase();
-      return clean === "sigurjón axel" || clean === "sigurjón" || clean === "sigurjon axel" || clean === "sigurjon";
+      return clean === "sigurjón axel (sissi)" || clean === "sigurjón axel" || clean === "sigurjón" || clean === "sissi" || clean === "sigurjon axel (sissi)" || clean === "sigurjon axel" || clean === "sigurjon" || clean.startsWith("sigurjón") || clean.startsWith("sigurjon");
+    }
+
+    function isSamePerson(name1, name2) {
+      if (!name1 || !name2) return false;
+      const n1 = name1.trim().toLowerCase();
+      const n2 = name2.trim().toLowerCase();
+      if (n1 === n2) return true;
+      if (isSigurjon(n1) && isSigurjon(n2)) return true;
+      if (n1.startsWith(n2) || n2.startsWith(n1)) return true;
+      if (n1.includes("birkir") && n2.includes("birkir")) return true;
+      if ((n1.includes("lóa") || n1.includes("ólafía")) && (n2.includes("lóa") || n2.includes("ólafía"))) return true;
+      if (n1.includes("axel") && n2.includes("axel") && !isSigurjon(n1) && !isSigurjon(n2)) return true;
+      if (n1.includes("tóta") && n2.includes("þórhildur")) return true;
+      if (n2.includes("tóta") && n1.includes("þórhildur")) return true;
+      return false;
+    }
+
+    function canEditPersonNotes(person) {
+      if (!currentPerson) return false;
+      if (isSigurjon(currentPerson) || isMasterSession) return true;
+      return isSamePerson(currentPerson, person);
     }
     let PIN_RESET_REQUESTS = {};
     let selectingUser = "";
@@ -1509,17 +1537,23 @@
         closeBtn.style.display = currentPerson ? "block" : "none";
       }
 
-      const allKnownNames = [...FAMILY_MEMBERS];
-      Object.keys(allVotes).forEach(p => {
-        if (p && !allKnownNames.includes(p) && !isDisallowedName(p)) allKnownNames.push(p);
-      });
-      Object.keys(USER_PINS).forEach(p => {
-        if (p && !allKnownNames.includes(p) && !isDisallowedName(p)) allKnownNames.push(p);
-      });
+      // Samræma nöfn og tryggja að Sigurjón Axel (Sissi) sé aðeins einu sinni og engar tvítekningar
+      const allKnownNames = [];
+      const addName = (raw) => {
+        if (!raw || isDisallowedName(raw)) return;
+        const norm = isSigurjon(raw) ? "Sigurjón Axel (Sissi)" : raw.trim();
+        if (!allKnownNames.some(existing => isSamePerson(existing, norm) || existing.toLowerCase() === norm.toLowerCase())) {
+          allKnownNames.push(norm);
+        }
+      };
+
+      FAMILY_MEMBERS.forEach(addName);
+      Object.keys(allVotes).forEach(addName);
+      Object.keys(USER_PINS).forEach(addName);
 
       chipsEl.innerHTML = allKnownNames.map(name => {
-        const isActive = (currentPerson === name) ? 'active' : '';
-        const hasPin = !!USER_PINS[name];
+        const isActive = isSamePerson(currentPerson, name) ? 'active' : '';
+        const hasPin = !!USER_PINS[name] || (isSigurjon(name) && !!SIGURJON_MASTER_PIN);
         return `
           <button class="person-chip ${isActive}" onclick="onUserChosenFromModal('${name}')" style="font-size: 0.95rem; padding: 6px 16px 6px 8px; border-radius: 999px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;">
             ${getUserAvatarHTML(name, 30)}
@@ -2141,11 +2175,16 @@
         const renderList = (arr) => arr.map(n => `<span style="display: inline-flex; align-items: center; gap: 4px; background: rgba(255,255,255,0.7); padding: 1px 6px 1px 2px; border-radius: 999px; margin: 1px 2px;">${getUserAvatarHTML(n, 18)}<span>${n}</span></span>`).join(" ");
         const renderNoList = (arr) => arr.map(n => {
           const note = allVotes[n]?.weekNotes?.[weekId];
+          const canEdit = canEditPersonNotes(n);
           return `<span style="display: inline-flex; align-items: center; gap: 4px; background: rgba(254,226,226,0.9); border: 1px solid #fca5a5; padding: 3px 8px 3px 4px; border-radius: 999px; margin: 2px 2px;">
             ${getUserAvatarHTML(n, 18)}
             <strong>${n}</strong>
             ${note ? `<span style="font-size: 0.76rem; color: #991b1b; font-style: italic;">(„${escapeHtml(note)}“)</span>` : `<span style="font-size: 0.72rem; color: #b91c1c; opacity: 0.85;">(engin skýring)</span>`}
-            <button type="button" onclick="openWeekNoteModal('${weekId}', '${escapeHtml(n)}')" title="Skrifa eða breyta skýringu" style="background: white; border: 1.5px solid #ef4444; border-radius: 6px; color: #b91c1c; font-size: 0.72rem; font-weight: 700; cursor: pointer; padding: 1px 7px; margin-left: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.06);">✏️ Skýring</button>
+            ${canEdit ? `
+              <button type="button" onclick="openWeekNoteModal('${weekId}', '${escapeHtml(n)}')" title="Skrifa eða breyta skýringu" style="background: white; border: 1.5px solid #ef4444; border-radius: 6px; color: #b91c1c; font-size: 0.72rem; font-weight: 700; cursor: pointer; padding: 1px 7px; margin-left: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.06);">✏️ Skýring</button>
+            ` : (note ? `
+              <button type="button" onclick="openWeekNoteModal('${weekId}', '${escapeHtml(n)}')" title="Skoða skýringu" style="background: white; border: 1px solid #fca5a5; border-radius: 6px; color: #b91c1c; font-size: 0.72rem; font-weight: 600; cursor: pointer; padding: 1px 6px; margin-left: 4px;">👁️ Skoða</button>
+            ` : '')}
           </span>`;
         }).join(" ");
 
@@ -2362,18 +2401,54 @@
     function openWeekNoteModal(weekId, person) {
       const w = WEEKS.find(x => x.id === weekId);
       const weekLabel = w ? `${w.num} (${w.dates})` : weekId;
-      document.getElementById("weekNoteModalTitle").textContent = `Skýring fyrir ${person} – ${w ? w.num : ''}`;
-      document.getElementById("weekNoteModalDesc").innerHTML = `Hvað kemur í veg fyrir að <strong>${escapeHtml(person)}</strong> komist í <strong>${weekLabel}</strong>? (t.d. sumarvinna, skóli, annað ferðalag):`;
+      const canEdit = canEditPersonNotes(person);
+      const currentNote = (allVotes[person] && allVotes[person].weekNotes && allVotes[person].weekNotes[weekId]) || "";
+
       document.getElementById("weekNoteTargetWeek").value = weekId;
       document.getElementById("weekNoteTargetPerson").value = person;
-      const currentNote = (allVotes[person] && allVotes[person].weekNotes && allVotes[person].weekNotes[weekId]) || "";
-      document.getElementById("weekNoteInput").value = currentNote;
+
+      const inputWrap = document.getElementById("weekNoteInputWrap");
+      const readOnlyWrap = document.getElementById("weekNoteReadOnlyWrap");
+      const readOnlyText = document.getElementById("weekNoteReadOnlyText");
+      const saveBtn = document.getElementById("weekNoteSaveBtn");
+      const deleteBtn = document.getElementById("weekNoteDeleteBtn");
+      const cancelBtn = document.getElementById("weekNoteCancelBtn");
+
+      if (canEdit) {
+        document.getElementById("weekNoteModalTitle").textContent = `Skýring fyrir ${person} – ${w ? w.num : ''}`;
+        document.getElementById("weekNoteModalDesc").innerHTML = `Hvað kemur í veg fyrir að <strong>${escapeHtml(person)}</strong> komist í <strong>${weekLabel}</strong>? (t.d. sumarvinna, skóli, annað ferðalag):`;
+        if (inputWrap) inputWrap.style.display = "block";
+        if (readOnlyWrap) readOnlyWrap.style.display = "none";
+        document.getElementById("weekNoteInput").value = currentNote;
+        if (saveBtn) saveBtn.style.display = "inline-block";
+        if (deleteBtn) deleteBtn.style.display = currentNote ? "inline-block" : "none";
+        if (cancelBtn) cancelBtn.textContent = "Hætta við";
+      } else {
+        document.getElementById("weekNoteModalTitle").textContent = `Skýring: ${person} – ${w ? w.num : ''}`;
+        document.getElementById("weekNoteModalDesc").innerHTML = `Skráð skýring fyrir <strong>${escapeHtml(person)}</strong> í <strong>${weekLabel}</strong>:`;
+        if (inputWrap) inputWrap.style.display = "none";
+        if (readOnlyWrap) readOnlyWrap.style.display = "block";
+        if (readOnlyText) {
+          readOnlyText.textContent = currentNote ? `„${currentNote}“` : "Engin nánari skýring hefur verið skráð enn.";
+        }
+        if (saveBtn) saveBtn.style.display = "none";
+        if (deleteBtn) deleteBtn.style.display = "none";
+        if (cancelBtn) cancelBtn.textContent = "Loka";
+      }
+
       document.getElementById("weekNoteModal").style.display = "flex";
-      setTimeout(() => document.getElementById("weekNoteInput").focus(), 60);
+      if (canEdit) {
+        setTimeout(() => document.getElementById("weekNoteInput").focus(), 60);
+      }
     }
 
     function closeWeekNoteModal() {
       document.getElementById("weekNoteModal").style.display = "none";
+    }
+
+    async function deleteWeekNote() {
+      document.getElementById("weekNoteInput").value = "";
+      await saveWeekNote();
     }
 
     async function saveWeekNote() {
@@ -2382,6 +2457,12 @@
       const note = document.getElementById("weekNoteInput").value.trim();
 
       if (!person || !weekId) return;
+      if (!canEditPersonNotes(person)) {
+        showToast("⚠️ Þú hefur aðeins aðgang að breyta þínum eigin svörum.", "warning");
+        closeWeekNoteModal();
+        return;
+      }
+
       if (!allVotes[person]) allVotes[person] = { weeks: {}, houseVotes: {}, houseComments: {}, comment: "" };
       if (!allVotes[person].weekNotes) allVotes[person].weekNotes = {};
 
@@ -2391,7 +2472,7 @@
         delete allVotes[person].weekNotes[weekId];
       }
 
-      if (person === currentPerson) {
+      if (isSamePerson(person, currentPerson)) {
         if (!currentVote.weekNotes) currentVote.weekNotes = {};
         if (note) currentVote.weekNotes[weekId] = note;
         else delete currentVote.weekNotes[weekId];
@@ -2401,7 +2482,7 @@
       closeWeekNoteModal();
       renderWeeks();
       await pushToCloud();
-      showToast(`💾 Skýring vistuð fyrir ${person}!`);
+      showToast(note ? `💾 Skýring vistuð fyrir ${person}!` : `🗑️ Skýring fjarlægð fyrir ${person}!`);
     }
 
     function renderFamilyAvailabilityOverview() {
@@ -2504,16 +2585,21 @@
                   const votes = allVotes[ps.name]?.weeks || {};
                   const isTopBlocker = ps.noCount >= 4;
                   const userNotes = Object.entries(allVotes[ps.name]?.weekNotes || {});
+                  const canEdit = canEditPersonNotes(ps.name);
                   let notesCol = "";
                   if (userNotes.length > 0) {
                     notesCol = userNotes.map(([wkId, nText]) => {
                       const wk = WEEKS.find(x => x.id === wkId);
-                      return `<button type="button" onclick="openWeekNoteModal('${wkId}', '${escapeHtml(ps.name)}')" style="display: inline-flex; align-items: center; gap: 3px; background: #fee2e2; color: #991b1b; padding: 2px 7px; border-radius: 4px; font-size: 0.72rem; margin: 1px 2px; border: 1px solid #fca5a5; cursor: pointer; font-family: inherit; font-weight: 500;" title="Smelltu til að skoða eða breyta skýringu fyrir ${wk ? wk.num : wkId}"><strong>${wk ? wk.num : wkId}:</strong> ${escapeHtml(nText)} <span style="font-size: 0.65rem; opacity: 0.8;">✏️</span></button>`;
+                      return `<button type="button" onclick="openWeekNoteModal('${wkId}', '${escapeHtml(ps.name)}')" style="display: inline-flex; align-items: center; gap: 3px; background: #fee2e2; color: #991b1b; padding: 2px 7px; border-radius: 4px; font-size: 0.72rem; margin: 1px 2px; border: 1px solid #fca5a5; cursor: pointer; font-family: inherit; font-weight: 500;" title="${canEdit ? 'Smelltu til að breyta skýringu' : 'Smelltu til að lesa skýringu'} fyrir ${wk ? wk.num : wkId}"><strong>${wk ? wk.num : wkId}:</strong> ${escapeHtml(nText)} <span style="font-size: 0.65rem; opacity: 0.8;">${canEdit ? '✏️' : '👁️'}</span></button>`;
                     }).join(" ");
                   } else if (ps.noCount > 0) {
-                    const firstNoWeek = WEEKS.find(x => votes[x.id] === 'no');
-                    const targetWkId = firstNoWeek ? firstNoWeek.id : '';
-                    notesCol = `<button type="button" onclick="openWeekNoteModal('${targetWkId}', '${escapeHtml(ps.name)}')" style="background: #fff5f5; border: 1px dashed #f87171; border-radius: 6px; padding: 2px 8px; color: #b91c1c; font-style: italic; font-size: 0.74rem; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-family: inherit;" title="Smelltu til að skrá skýringu">+ Skrá skýringu ✏️</button>`;
+                    if (canEdit) {
+                      const firstNoWeek = WEEKS.find(x => votes[x.id] === 'no');
+                      const targetWkId = firstNoWeek ? firstNoWeek.id : '';
+                      notesCol = `<button type="button" onclick="openWeekNoteModal('${targetWkId}', '${escapeHtml(ps.name)}')" style="background: #fff5f5; border: 1px dashed #f87171; border-radius: 6px; padding: 2px 8px; color: #b91c1c; font-style: italic; font-size: 0.74rem; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-family: inherit;" title="Smelltu til að skrá skýringu">+ Skrá skýringu ✏️</button>`;
+                    } else {
+                      notesCol = `<span style="color: #b91c1c; font-style: italic; font-size: 0.74rem;">Engin skýring skráð</span>`;
+                    }
                   } else {
                     notesCol = `<span style="color: #94a3b8; font-size: 0.75rem;">—</span>`;
                   }
@@ -2533,11 +2619,21 @@
                         if (val === 'yes') return `<td><span class="matrix-cell-yes" title="${ps.name}: Kemst vel í ${w.num}">✅</span></td>`;
                         if (val === 'maybe') return `<td><span class="matrix-cell-maybe" title="${ps.name}: Gæti gengið í ${w.num}">🟡</span></td>`;
                         if (val === 'no') {
-                          return `<td>
-                            <button type="button" onclick="openWeekNoteModal('${w.id}', '${escapeHtml(ps.name)}')" class="matrix-cell-no" style="cursor: pointer; border: 1.5px solid #f87171; border-radius: 6px; font-family: inherit; font-size: 0.8rem; transition: all 0.15s; display: inline-flex; align-items: center; justify-content: center; gap: 3px; padding: 3px 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.06);" title="${ps.name}: Kemst ekki í ${w.num} — Smelltu til að ${note ? 'skoða/breyta skýringu' : 'bæta við skýringu'}">
-                              <span>❌</span><span style="font-size: 0.7rem;">✏️</span>
-                            </button>
-                          </td>`;
+                          if (canEdit) {
+                            return `<td>
+                              <button type="button" onclick="openWeekNoteModal('${w.id}', '${escapeHtml(ps.name)}')" class="matrix-cell-no" style="cursor: pointer; border: 1.5px solid #f87171; border-radius: 6px; font-family: inherit; font-size: 0.8rem; transition: all 0.15s; display: inline-flex; align-items: center; justify-content: center; gap: 3px; padding: 3px 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.06);" title="${ps.name}: Kemst ekki í ${w.num} — Smelltu til að ${note ? 'breyta skýringu' : 'bæta við skýringu'}">
+                                <span>❌</span><span style="font-size: 0.7rem;">✏️</span>
+                              </button>
+                            </td>`;
+                          } else if (note) {
+                            return `<td>
+                              <button type="button" onclick="openWeekNoteModal('${w.id}', '${escapeHtml(ps.name)}')" class="matrix-cell-no" style="cursor: pointer; border: 1px solid #fca5a5; border-radius: 6px; font-family: inherit; font-size: 0.8rem; transition: all 0.15s; display: inline-flex; align-items: center; justify-content: center; gap: 3px; padding: 3px 6px; background: #fee2e2;" title="${ps.name}: Kemst ekki í ${w.num} — „${escapeHtml(note)}“ (Smelltu til að lesa)">
+                                <span>❌</span><span style="font-size: 0.7rem;">💬</span>
+                              </button>
+                            </td>`;
+                          } else {
+                            return `<td><span class="matrix-cell-no" title="${ps.name}: Kemst ekki í ${w.num}">❌</span></td>`;
+                          }
                         }
                         return `<td><span class="matrix-cell-empty">—</span></td>`;
                       }).join("")}

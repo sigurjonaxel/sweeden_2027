@@ -36,7 +36,7 @@ def build():
         houses = json.load(f)
 
     family_members = [
-        "Sigurjón Axel",
+        "Sigurjón Axel (Sissi)",
         "Ólafía Rósbjörg (Lóa)",
         "Axel Bjarkar",
         "Anna Huyen Ngo",
@@ -53,7 +53,7 @@ def build():
     family_birthdays = [
         { "name": "Ólafía Rósbjörg (Lóa)", "shortName": "Lóa", "avatar": "images/avatars/loa.jpg?v=2", "date": "10. janúar 1974", "dayMonth": "10. jan", "year": 1974, "age2027": 53 },
         { "name": "Vala Björk", "shortName": "Vala", "avatar": "images/avatars/vala.jpg?v=2", "date": "1. febrúar 2005", "dayMonth": "1. feb", "year": 2005, "age2027": 22 },
-        { "name": "Sigurjón Axel", "shortName": "Sigurjón", "avatar": "images/avatars/sigurjon.jpg?v=2", "date": "4. febrúar 1974", "dayMonth": "4. feb", "year": 1974, "age2027": 53 },
+        { "name": "Sigurjón Axel (Sissi)", "shortName": "Sigurjón (Sissi)", "avatar": "images/avatars/sigurjon.jpg?v=2", "date": "4. febrúar 1974", "dayMonth": "4. feb", "year": 1974, "age2027": 53 },
         { "name": "Viktor Ingi", "shortName": "Viktor", "avatar": "images/avatars/viktor.jpg?v=2", "date": "14. mars 1999", "dayMonth": "14. mar", "year": 1999, "age2027": 28 },
         { "name": "Birkir Evan", "shortName": "Birkir", "avatar": "images/avatars/birkir.jpg?v=2", "date": "6. maí 2014", "dayMonth": "6. maí", "year": 2014, "age2027": 13 },
         { "name": "Axel Bjarkar", "shortName": "Axel", "avatar": "images/avatars/axel.jpg?v=2", "date": "22. júní 2003", "dayMonth": "22. jún", "year": 2003, "age2027": 24, "inSummer": True },
