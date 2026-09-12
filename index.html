@@ -4367,7 +4367,7 @@
             <div class="house-badge-loc">${h.region}</div>
             <div id="pop-badge-${h.id}" style="display:contents;">${getHouseBadgeHTML(h)}</div>
             ${h.suggestedBy ? `<div class="house-badge-custom" style="${h.suggestedBy.toLowerCase().includes('gemini') ? 'background: linear-gradient(135deg, #4f46e5, #9333ea); color: #fff; font-weight: 800; border: 1px solid rgba(255,255,255,0.4); box-shadow: 0 2px 8px rgba(147, 51, 234, 0.4);' : ''}">✨ Tillaga: ${h.suggestedBy}</div>` : (h.isCustom ? `<div class="house-badge-custom">Tillaga: ${h.suggestedBy || 'Fjölskylda'}</div>` : '')}
-            <div class="house-badge-price" title="${activeWk ? `€${curNightly} á nótt · €${curWkPrice.toLocaleString('de-DE')} fyrir 7 nætur í ${activeWk.toUpperCase()}` : (h.pricesByWeek ? `Verð er breytilegt eftir vikum: Frá €${Math.min(...Object.values(h.pricesByWeek)).toLocaleString('de-DE')} (síðsumar) upp í €${Math.max(...Object.values(h.pricesByWeek)).toLocaleString('de-DE')} (háönn í júlí)` : '')}">${displayPrice}</div>
+            <div class="house-badge-price" title="${activeWk ? `€${curNightly} á nótt · €${curWkPrice.toLocaleString('de-DE')} fyrir 7 nætur í ${activeWk.toUpperCase()}` : (h.pricesByWeek && Object.keys(h.pricesByWeek).length > 0 ? (Math.min(...Object.values(h.pricesByWeek)) !== Math.max(...Object.values(h.pricesByWeek)) ? `Verð frá Airbnb: Frá €${Math.min(...Object.values(h.pricesByWeek)).toLocaleString('de-DE')} upp í €${Math.max(...Object.values(h.pricesByWeek)).toLocaleString('de-DE')} eftir vikum` : `Fast verð frá Airbnb: €${(h.priceEur || 3000).toLocaleString('de-DE')} / vika`) : '')}">${displayPrice}</div>
           </div>
           <div class="house-body">
             <h3 class="house-title">${h.title}</h3>

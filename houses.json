@@ -12,8 +12,8 @@
     ],
     "rating": "4.98",
     "ratingLabel": "4.98 out of 5 average rating",
-    "priceEur": 2959,
-    "priceFormatted": "€2.959 / vika",
+    "priceEur": 3488,
+    "priceFormatted": "€3.488 – €4.439 / vika",
     "photo": "https://a0.muscache.com/im/pictures/8eea17a1-7d73-456c-99b5-7da0b06e62d5.jpg?im_w=720",
     "url": "https://www.airbnb.com/rooms/36790419",
     "coordinates": {
@@ -22,13 +22,23 @@
     },
     "isBudgetFit": true,
     "availableWeeks": [
+      "w25",
       "w26",
+      "w31",
       "w32",
       "w33",
       "w34"
     ],
-    "availabilitySummary": "Laust í 4 af 11 vikum á Airbnb (V26, V32, V33, V34)",
-    "pricePerNightEur": 423
+    "availabilitySummary": "Laust í 6 af 10 vikum á Airbnb (V25, V26, V31, V32, V33, V34)",
+    "pricePerNightEur": 498,
+    "pricesByWeek": {
+      "w25": 4228,
+      "w26": 4333,
+      "w31": 4439,
+      "w32": 4439,
+      "w33": 4439,
+      "w34": 3488
+    }
   },
   {
     "id": "1626731935043177678",
@@ -44,7 +54,7 @@
     "rating": "Nýtt",
     "ratingLabel": "",
     "priceEur": 2770,
-    "priceFormatted": "€2.770 / vika",
+    "priceFormatted": "€2.770 – €4.959 / vika",
     "photo": "https://a0.muscache.com/im/pictures/hosting/Hosting-1626731935043177678/original/59a71a4f-66bc-4a48-9881-d1091a90245e.jpeg?im_w=720",
     "url": "https://www.airbnb.com/rooms/1626731935043177678",
     "coordinates": {
@@ -64,8 +74,20 @@
       "w33",
       "w34"
     ],
-    "availabilitySummary": "Laust í 10 af 11 vikum á Airbnb (V25, V26, V27, V28, V29, V30, V31, V32, V33, V34)",
-    "pricePerNightEur": 396
+    "availabilitySummary": "Laust í 10 af 10 vikum á Airbnb (V25, V26, V27, V28, V29, V30, V31, V32, V33, V34)",
+    "pricePerNightEur": 396,
+    "pricesByWeek": {
+      "w25": 2770,
+      "w26": 3018,
+      "w27": 4265,
+      "w28": 4959,
+      "w29": 4959,
+      "w30": 4959,
+      "w31": 4959,
+      "w32": 4421,
+      "w33": 4131,
+      "w34": 3018
+    }
   },
   {
     "id": "1327640733143373140",
@@ -80,8 +102,8 @@
     ],
     "rating": "4.89",
     "ratingLabel": "4.89 out of 5 average rating",
-    "priceEur": 4308,
-    "priceFormatted": "€4.308 / vika",
+    "priceEur": 3836,
+    "priceFormatted": "€3.836 / vika",
     "photo": "https://a0.muscache.com/im/pictures/hosting/Hosting-1327640733143373140/original/93bce83c-e9b4-4787-a473-03529bfd1795.jpeg?im_w=720",
     "url": "https://www.airbnb.com/rooms/1327640733143373140",
     "coordinates": {
@@ -97,8 +119,16 @@
       "w33",
       "w34"
     ],
-    "availabilitySummary": "Laust í 6 af 11 vikum á Airbnb (V29, V30, V31, V32, V33, V34)",
-    "pricePerNightEur": 615
+    "availabilitySummary": "Laust í 6 af 10 vikum á Airbnb (V29, V30, V31, V32, V33, V34)",
+    "pricePerNightEur": 548,
+    "pricesByWeek": {
+      "w29": 3836,
+      "w30": 3836,
+      "w31": 3836,
+      "w32": 3836,
+      "w33": 3836,
+      "w34": 3836
+    }
   },
   {
     "id": "1689999064583921885",
@@ -113,8 +143,8 @@
     ],
     "rating": "Nýtt",
     "ratingLabel": "",
-    "priceEur": 3751,
-    "priceFormatted": "€3.751 / vika",
+    "priceEur": 4722,
+    "priceFormatted": "€4.722 – €8.249 / vika",
     "photo": "https://a0.muscache.com/im/pictures/hosting/Hosting-1689999064583921885/original/074f5432-f92d-44cf-a184-aa77d3f3ec67.jpeg?im_w=720",
     "url": "https://www.airbnb.com/rooms/1689999064583921885",
     "coordinates": {
@@ -123,19 +153,25 @@
     },
     "isBudgetFit": false,
     "availableWeeks": [
-      "w25",
       "w26",
       "w27",
-      "w28",
       "w29",
-      "w30",
       "w31",
       "w32",
       "w33",
       "w34"
     ],
-    "availabilitySummary": "Laust í 10 af 11 vikum á Airbnb (V25, V26, V27, V28, V29, V30, V31, V32, V33, V34)",
-    "pricePerNightEur": 536
+    "availabilitySummary": "Laust í 7 af 10 vikum á Airbnb (V26, V27, V29, V31, V32, V33, V34)",
+    "pricePerNightEur": 675,
+    "pricesByWeek": {
+      "w26": 4722,
+      "w27": 6587,
+      "w29": 8249,
+      "w31": 7482,
+      "w32": 7890,
+      "w33": 6338,
+      "w34": 4722
+    }
   },
   {
     "id": "1735771750873059110",
@@ -160,8 +196,9 @@
     },
     "isBudgetFit": false,
     "availableWeeks": [],
-    "availabilitySummary": "Uppbókað eða lokað allar vikur á laugardögum á Airbnb",
-    "pricePerNightEur": 677
+    "availabilitySummary": "Ekki laust í sumar 2027 á Airbnb",
+    "pricePerNightEur": 677,
+    "pricesByWeek": {}
   },
   {
     "id": "1090334101923876759",
@@ -176,8 +213,8 @@
     ],
     "rating": "5.0",
     "ratingLabel": "5.0 out of 5 average rating",
-    "priceEur": 3183,
-    "priceFormatted": "€3.183 / vika",
+    "priceEur": 2924,
+    "priceFormatted": "€2.924 – €5.660 / vika",
     "photo": "https://a0.muscache.com/im/pictures/hosting/Hosting-1090334101923876759/original/6efa88ad-7fcb-49b3-a4df-31c35cd6a089.jpeg?im_w=720",
     "url": "https://www.airbnb.com/rooms/1090334101923876759",
     "coordinates": {
@@ -186,19 +223,21 @@
     },
     "isBudgetFit": false,
     "availableWeeks": [
-      "w25",
-      "w26",
       "w27",
       "w28",
       "w29",
-      "w30",
-      "w31",
       "w32",
-      "w33",
       "w34"
     ],
-    "availabilitySummary": "Laust í 10 af 11 vikum á Airbnb (V25, V26, V27, V28, V29, V30, V31, V32, V33, V34)",
-    "pricePerNightEur": 455
+    "availabilitySummary": "Laust í 5 af 10 vikum á Airbnb (V27, V28, V29, V32, V34)",
+    "pricePerNightEur": 418,
+    "pricesByWeek": {
+      "w27": 4829,
+      "w28": 5535,
+      "w29": 5660,
+      "w32": 4717,
+      "w34": 2924
+    }
   },
   {
     "id": "683762981373209125",
@@ -223,8 +262,9 @@
     },
     "isBudgetFit": false,
     "availableWeeks": [],
-    "availabilitySummary": "Uppbókað eða lokað allar vikur á laugardögum á Airbnb",
-    "pricePerNightEur": 647
+    "availabilitySummary": "Ekki laust í sumar 2027 á Airbnb",
+    "pricePerNightEur": 647,
+    "pricesByWeek": {}
   },
   {
     "id": "1125419478579319668",
@@ -239,8 +279,8 @@
     ],
     "rating": "Nýtt",
     "ratingLabel": "",
-    "priceEur": 3339,
-    "priceFormatted": "€3.339 / vika",
+    "priceEur": 5687,
+    "priceFormatted": "€5.687 / vika",
     "photo": "https://a0.muscache.com/im/pictures/miso/Hosting-1125419478579319668/original/21707eb1-6e6a-4a77-8c16-a6c0ad140e3b.jpeg?im_w=720",
     "url": "https://www.airbnb.com/rooms/1125419478579319668",
     "coordinates": {
@@ -256,8 +296,16 @@
       "w32",
       "w33"
     ],
-    "availabilitySummary": "Laust í 6 af 11 vikum á Airbnb (V27, V29, V30, V31, V32, V33)",
-    "pricePerNightEur": 477
+    "availabilitySummary": "Laust í 6 af 10 vikum á Airbnb (V27, V29, V30, V31, V32, V33)",
+    "pricePerNightEur": 812,
+    "pricesByWeek": {
+      "w27": 5687,
+      "w29": 5687,
+      "w30": 5687,
+      "w31": 5687,
+      "w32": 5687,
+      "w33": 5687
+    }
   },
   {
     "id": "1619593928568816076",
@@ -272,8 +320,8 @@
     ],
     "rating": "Nýtt",
     "ratingLabel": "",
-    "priceEur": 4266,
-    "priceFormatted": "€4.266 / vika",
+    "priceEur": 5185,
+    "priceFormatted": "€5.185 – €6.749 / vika",
     "photo": "https://a0.muscache.com/im/pictures/hosting/Hosting-1619593928568816076/original/2a18c84f-6859-4843-938d-b791f9917a5c.jpeg?im_w=720",
     "url": "https://www.airbnb.com/rooms/1619593928568816076",
     "coordinates": {
@@ -286,8 +334,13 @@
       "w33",
       "w34"
     ],
-    "availabilitySummary": "Laust í 3 af 11 vikum á Airbnb (V32, V33, V34)",
-    "pricePerNightEur": 609
+    "availabilitySummary": "Laust í 3 af 10 vikum á Airbnb (V32, V33, V34)",
+    "pricePerNightEur": 741,
+    "pricesByWeek": {
+      "w32": 6749,
+      "w33": 5632,
+      "w34": 5185
+    }
   },
   {
     "id": "7838623",
@@ -302,8 +355,8 @@
     ],
     "rating": "4.79",
     "ratingLabel": "4.79 out of 5 average rating",
-    "priceEur": 2857,
-    "priceFormatted": "€2.857 / vika",
+    "priceEur": 4285,
+    "priceFormatted": "€4.285 / vika",
     "photo": "https://a0.muscache.com/im/pictures/99804511/25f7406a_original.jpg?im_w=720",
     "url": "https://www.airbnb.com/rooms/7838623",
     "coordinates": {
@@ -318,8 +371,15 @@
       "w32",
       "w33"
     ],
-    "availabilitySummary": "Laust í 5 af 11 vikum á Airbnb (V26, V27, V31, V32, V33)",
-    "pricePerNightEur": 408
+    "availabilitySummary": "Laust í 5 af 10 vikum á Airbnb (V26, V27, V31, V32, V33)",
+    "pricePerNightEur": 612,
+    "pricesByWeek": {
+      "w26": 4285,
+      "w27": 4285,
+      "w31": 4285,
+      "w32": 4285,
+      "w33": 4285
+    }
   },
   {
     "id": "959289088240377688",
@@ -336,8 +396,8 @@
     ],
     "rating": "4.78",
     "ratingLabel": "4.78 out of 5 average rating",
-    "priceEur": 7148,
-    "priceFormatted": "€7.148 / vika",
+    "priceEur": 6328,
+    "priceFormatted": "€6.328 / vika",
     "photo": "https://a0.muscache.com/im/pictures/hosting/Hosting-959289088240377688/original/98d155be-a382-4c93-a279-fdabd2785182.jpeg",
     "url": "https://www.airbnb.com/rooms/959289088240377688",
     "coordinates": {
@@ -357,8 +417,20 @@
       "w33",
       "w34"
     ],
-    "availabilitySummary": "Laust í 10 af 11 vikum á Airbnb (V25, V26, V27, V28, V29, V30, V31, V32, V33, V34)",
-    "pricePerNightEur": 1021
+    "availabilitySummary": "Laust í 10 af 10 vikum á Airbnb (V25, V26, V27, V28, V29, V30, V31, V32, V33, V34)",
+    "pricePerNightEur": 904,
+    "pricesByWeek": {
+      "w25": 6328,
+      "w26": 6328,
+      "w27": 6328,
+      "w28": 6328,
+      "w29": 6328,
+      "w30": 6328,
+      "w31": 6328,
+      "w32": 6328,
+      "w33": 6328,
+      "w34": 6328
+    }
   },
   {
     "id": "1671670810787993416",
@@ -373,8 +445,8 @@
     ],
     "rating": "5.0",
     "ratingLabel": "5.0 out of 5 average rating",
-    "priceEur": 7403,
-    "priceFormatted": "€7.403 / vika",
+    "priceEur": 7136,
+    "priceFormatted": "€7.136 – €7.372 / vika",
     "photo": "https://a0.muscache.com/im/pictures/hosting/Hosting-1671670810787993416/original/e13da2b4-021b-44b4-9170-fdf8bc63655b.jpeg?im_w=720",
     "url": "https://www.airbnb.com/rooms/1671670810787993416",
     "coordinates": {
@@ -387,8 +459,13 @@
       "w26",
       "w30"
     ],
-    "availabilitySummary": "Laust í 3 af 11 vikum á Airbnb (V25, V26, V30)",
-    "pricePerNightEur": 1058
+    "availabilitySummary": "Laust í 3 af 10 vikum á Airbnb (V25, V26, V30)",
+    "pricePerNightEur": 1019,
+    "pricesByWeek": {
+      "w25": 7136,
+      "w26": 7136,
+      "w30": 7372
+    }
   },
   {
     "id": "1767296663427055904",
@@ -405,8 +482,8 @@
     ],
     "rating": "Nýtt",
     "ratingLabel": "Glænýtt á Airbnb (byggt 2017)",
-    "priceEur": 2580,
-    "priceFormatted": "€2.580 / vika",
+    "priceEur": 2444,
+    "priceFormatted": "€2.444 – €3.333 / vika",
     "photo": "https://a0.muscache.com/im/pictures/hosting/Hosting-1767296663427055904/original/3c005a37-d3db-4ed7-9fad-708f7536ff92.jpeg?im_w=1200",
     "url": "https://www.airbnb.com/rooms/1767296663427055904",
     "coordinates": {
@@ -421,8 +498,14 @@
       "w33",
       "w34"
     ],
-    "availabilitySummary": "Laust í 4 af 11 vikum á Airbnb (V25, V26, V33, V34)",
-    "pricePerNightEur": 369
+    "availabilitySummary": "Laust í 4 af 10 vikum á Airbnb (V25, V26, V33, V34)",
+    "pricePerNightEur": 349,
+    "pricesByWeek": {
+      "w25": 3333,
+      "w26": 3333,
+      "w33": 2444,
+      "w34": 2444
+    }
   },
   {
     "id": "1236701408674132678",
@@ -439,8 +522,8 @@
     ],
     "rating": "5.0",
     "ratingLabel": "5.0 af 5 (fullkomin einkunn)",
-    "priceEur": 2660,
-    "priceFormatted": "€2.660 / vika",
+    "priceEur": 4955,
+    "priceFormatted": "€4.955 / vika",
     "photo": "https://a0.muscache.com/im/pictures/hosting/Hosting-1236701408674132678/original/faf2c635-372e-4768-b500-8fffef85e485.jpeg?im_w=1200",
     "url": "https://www.airbnb.com/rooms/1236701408674132678",
     "coordinates": {
@@ -450,17 +533,12 @@
     "isBudgetFit": true,
     "suggestedBy": "Gemini",
     "availableWeeks": [
-      "w26",
-      "w27",
-      "w28",
-      "w29",
-      "w30",
-      "w31",
-      "w32",
-      "w33",
-      "w34"
+      "w33"
     ],
-    "availabilitySummary": "Laust í 9 af 11 vikum á Airbnb (V26, V27, V28, V29, V30, V31, V32, V33, V34)",
-    "pricePerNightEur": 380
+    "availabilitySummary": "Laust í 1 af 10 vikum á Airbnb (V33)",
+    "pricePerNightEur": 708,
+    "pricesByWeek": {
+      "w33": 4955
+    }
   }
 ]
