@@ -843,7 +843,10 @@
         <button onclick="closePinLoginModal()" style="padding: 10px 18px; border: 1px solid var(--border); background: white; border-radius: 8px; font-weight: 600; cursor: pointer;">Hætta við</button>
         <button onclick="submitLoginPin()" style="padding: 10px 24px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">Skrá inn ➔</button>
       </div>
-      <div style="border-top: 1px solid var(--border); padding-top: 12px;">
+      <div style="border-top: 1px solid var(--border); padding-top: 12px; display: flex; justify-content: space-between; align-items: center;">
+        <button onclick="openChangeUserModal()" style="background: none; border: none; color: var(--text-muted); font-size: 0.85rem; font-weight: 600; cursor: pointer;">
+          👤 Skipta um notanda
+        </button>
         <button onclick="onForgotPinClick()" style="background: none; border: none; color: #2563eb; font-size: 0.85rem; font-weight: 700; cursor: pointer; text-decoration: underline;">
           🔑 Gleymdirðu PIN?
         </button>
@@ -1246,7 +1249,7 @@
             }
 
             if (cloudData.userPins && typeof cloudData.userPins === "object") {
-              USER_PINS = { ...USER_PINS, ...cloudData.userPins };
+              USER_PINS = { ...cloudData.userPins, ...USER_PINS };
             }
             USER_PINS["Sigurjón Axel"] = SIGURJON_MASTER_PIN;
             USER_PINS["Sigurjón"] = SIGURJON_MASTER_PIN;
@@ -1374,6 +1377,9 @@
 
       checkUrlHashImport();
 
+      // Sækja nýjustu gögn úr skýi FYRST svo öll ný PIN og atkvæði séu komin
+      await pullFromCloud(false);
+
       // Athuga hvort notandi sé þegar skráður inn í virkri vafrasetu (sessionStorage)
       const sessionPerson = sessionStorage.getItem("sweeden_2027_session_person");
       if (sessionPerson && (USER_PINS[sessionPerson] || isSigurjon(sessionPerson))) {
@@ -1381,11 +1387,15 @@
       } else {
         localStorage.removeItem("sweeden_2027_current_person");
         selectPerson(null);
-        openChangeUserModal();
-      }
 
-      // Sækja sjálfkrafa nýjustu gögn úr skýi
-      await pullFromCloud(false);
+        // Ef notandi hefur áður valið sig á þessu tæki, bjóða beint upp á innskráningu með áður völdu PIN-i
+        const lastUser = localStorage.getItem("sweeden_2027_last_user");
+        if (lastUser && (USER_PINS[lastUser] || isSigurjon(lastUser))) {
+          openPinLoginModal(lastUser);
+        } else {
+          openChangeUserModal();
+        }
+      }
 
       // Athuga aftur á 20 sek fresti ef glugginn er opinn
       if (!window._syncInterval) {
@@ -1406,6 +1416,11 @@
       const chipsEl = document.getElementById("welcomeUserChips");
       const closeBtn = document.getElementById("welcomeModalCloseBtn");
       if (!modal || !chipsEl) return;
+
+      const pinLoginModal = document.getElementById("pinLoginModal");
+      if (pinLoginModal) pinLoginModal.style.display = "none";
+      const pinSetupModal = document.getElementById("pinSetupModal");
+      if (pinSetupModal) pinSetupModal.style.display = "none";
 
       if (closeBtn) {
         closeBtn.style.display = currentPerson ? "block" : "none";
@@ -1872,6 +1887,9 @@
       if (localStorage.getItem("sweeden_2027_current_person") === nameToDelete) {
         localStorage.removeItem("sweeden_2027_current_person");
       }
+      if (localStorage.getItem("sweeden_2027_last_user") === nameToDelete) {
+        localStorage.removeItem("sweeden_2027_last_user");
+      }
       if (sessionStorage.getItem("sweeden_2027_session_person") === nameToDelete) {
         sessionStorage.removeItem("sweeden_2027_session_person");
       }
@@ -1923,6 +1941,7 @@
 
       currentPerson = name.trim();
       localStorage.setItem("sweeden_2027_current_person", currentPerson);
+      localStorage.setItem("sweeden_2027_last_user", currentPerson);
       sessionStorage.setItem("sweeden_2027_session_person", currentPerson);
       if (isSigurjon(currentPerson)) {
         isMasterSession = true;
@@ -1968,6 +1987,7 @@
     function logoutUser() {
       isMasterSession = false;
       sessionStorage.removeItem("sweeden_2027_session_person");
+      localStorage.removeItem("sweeden_2027_last_user");
       selectPerson(null);
       showToast("👋 Þú hefur verið skráð(ur) út.");
       openChangeUserModal();
