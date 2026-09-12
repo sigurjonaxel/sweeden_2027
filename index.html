@@ -2087,6 +2087,52 @@
       document.getElementById("lockOverlay").style.display = "flex";
     }
 
+    const SEASONAL_FACTORS = {
+      "w25": 1.00, // 19. jún – 26. jún (Midsommar / Skólalok)
+      "w26": 1.02, // 26. jún – 03. júl (Skólafrí)
+      "w27": 1.15, // 03. júl – 10. júl (Háönn júlí)
+      "w28": 1.25, // 10. júl – 17. júl (Háönn júlí)
+      "w29": 1.25, // 17. júl – 24. júl (Háönn júlí)
+      "w30": 1.18, // 24. júl – 31. júl (Háönn lok)
+      "w31": 1.08, // 31. júl – 07. ágú (Verslunarmannahelgi)
+      "w32": 0.98, // 07. ágú – 14. ágú (Ágúst)
+      "w33": 0.88, // 14. ágú – 21. ágú (Síðsumar)
+      "w34": 0.82  // 21. ágú – 28. ágú (Lokavika sumarfrís)
+    };
+
+    function getHousePriceForWeek(h, weekId) {
+      if (!h) return 0;
+      if (h.pricesByWeek && weekId && h.pricesByWeek[weekId]) {
+        return h.pricesByWeek[weekId];
+      }
+      const factor = (weekId && SEASONAL_FACTORS[weekId]) ? SEASONAL_FACTORS[weekId] : 1.0;
+      return Math.round((h.priceEur || 3000) * factor);
+    }
+
+    function getHouseDisplayPrice(h, weekId) {
+      if (!h) return "";
+      if (weekId && weekId !== 'all' && weekId !== 'top') {
+        const p = getHousePriceForWeek(h, weekId);
+        const w = WEEKS.find(x => x.id === weekId);
+        const wNum = w ? w.num.replace("Vika ", "V") : weekId.toUpperCase();
+        return `€${p.toLocaleString('de-DE')} / vika (${wNum})`;
+      }
+      if (h.priceRangeFormatted) {
+        return h.priceRangeFormatted;
+      }
+      if (h.pricesByWeek) {
+        const prices = Object.values(h.pricesByWeek).filter(p => typeof p === 'number' && p > 0);
+        if (prices.length > 0) {
+          const min = Math.min(...prices);
+          const max = Math.max(...prices);
+          if (min !== max) {
+            return `€${min.toLocaleString('de-DE')} – €${max.toLocaleString('de-DE')} / vika`;
+          }
+        }
+      }
+      return h.priceFormatted || `€${(h.priceEur || 3000).toLocaleString('de-DE')} / vika`;
+    }
+
     function normalizeHouse(h) {
       if (!h) return h;
       if (!h.priceEur && h.priceFormatted) {
@@ -2109,12 +2155,25 @@
         h.pricePerNightEur = Math.round(h.priceEur / 7);
       }
 
-      // Tryggja að eingöngu sé notað Euro (enga dollara eða brotna strengi)
-      if (!h.priceFormatted || h.priceFormatted.includes("$") || !h.priceFormatted.includes("€") || h.priceFormatted.includes("~,")) {
-        h.priceFormatted = `€${h.priceEur.toLocaleString('de-DE')} / vika`;
+      if (!h.pricesByWeek && h.priceEur) {
+        h.pricesByWeek = {};
+        for (const [wId, f] of Object.entries(SEASONAL_FACTORS)) {
+          h.pricesByWeek[wId] = Math.round(h.priceEur * f);
+        }
+      }
+      if (h.pricesByWeek && !h.priceRangeFormatted) {
+        const pVals = Object.values(h.pricesByWeek);
+        const minP = Math.min(...pVals);
+        const maxP = Math.max(...pVals);
+        h.priceRangeFormatted = `€${minP.toLocaleString('de-DE')} – €${maxP.toLocaleString('de-DE')} / vika`;
       }
 
-      // Viðmiðunarfjárhagsáætlun: <= 3000 Euro á viku
+      // Tryggja að eingöngu sé notað Euro (enga dollara eða brotna strengi)
+      if (!h.priceFormatted || h.priceFormatted.includes("$") || !h.priceFormatted.includes("€") || h.priceFormatted.includes("~,")) {
+        h.priceFormatted = h.priceRangeFormatted || `€${h.priceEur.toLocaleString('de-DE')} / vika`;
+      }
+
+      // Viðmiðunarfjárhagsáætlun: <= 3000 Euro á viku (grunnverð)
       h.isBudgetFit = (h.priceEur <= 3000);
       return h;
     }
@@ -3370,8 +3429,9 @@
                     <div style="font-weight: 700; font-size: 0.85rem; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                       ${hMedal} ${escapeHtml(h.title)}
                     </div>
-                    <div style="font-size: 0.76rem; color: var(--text-muted); display: flex; gap: 8px;">
+                    <div style="font-size: 0.76rem; color: var(--text-muted); display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
                       <span>${escapeHtml(h.city || h.region || '')}</span>
+                      <strong style="color: #0369a1; background: #e0f2fe; padding: 1px 6px; border-radius: 4px; font-weight: 700;">€${getHousePriceForWeek(h, weekId).toLocaleString('de-DE')} / vika</strong>
                       <strong style="color: ${pop.score > 0 ? '#15803d' : '#475569'};">${pop.score > 0 ? '+' : ''}${pop.score} stig</strong>
                     </div>
                   </div>
@@ -3901,9 +3961,11 @@
           return (parseFloat(b.rating) || 0) - (parseFloat(a.rating) || 0);
         });
       } else if (sortKey === 'price-asc') {
-        sorted.sort((a, b) => (a.priceEur || a.priceUsdApprox || 99999) - (b.priceEur || b.priceUsdApprox || 99999));
+        const wk = (houseWeekFilter && houseWeekFilter !== 'all' && houseWeekFilter !== 'top') ? houseWeekFilter : null;
+        sorted.sort((a, b) => getHousePriceForWeek(a, wk) - getHousePriceForWeek(b, wk));
       } else if (sortKey === 'price-desc') {
-        sorted.sort((a, b) => (b.priceEur || b.priceUsdApprox || 0) - (a.priceEur || a.priceUsdApprox || 0));
+        const wk = (houseWeekFilter && houseWeekFilter !== 'all' && houseWeekFilter !== 'top') ? houseWeekFilter : null;
+        sorted.sort((a, b) => getHousePriceForWeek(b, wk) - getHousePriceForWeek(a, wk));
       } else if (sortKey === 'rating') {
         sorted.sort((a, b) => (parseFloat(b.rating) || 0) - (parseFloat(a.rating) || 0));
       }
@@ -4334,6 +4396,10 @@
         cardPhoto = defaultImg;
       }
       const cur = (currentVote && currentVote.houseVotes) ? currentVote.houseVotes[h.id] : null;
+      const activeWk = (houseWeekFilter && houseWeekFilter !== 'all' && houseWeekFilter !== 'top') ? houseWeekFilter : null;
+      const displayPrice = getHouseDisplayPrice(h, activeWk);
+      const curWkPrice = getHousePriceForWeek(h, activeWk);
+      const curNightly = Math.round(curWkPrice / 7);
 
       return `
         <div class="house-card" id="house-card-${h.id}">
@@ -4342,7 +4408,7 @@
             <div class="house-badge-loc">${h.region}</div>
             <div id="pop-badge-${h.id}" style="display:contents;">${getHouseBadgeHTML(h)}</div>
             ${h.suggestedBy ? `<div class="house-badge-custom" style="${h.suggestedBy.toLowerCase().includes('gemini') ? 'background: linear-gradient(135deg, #4f46e5, #9333ea); color: #fff; font-weight: 800; border: 1px solid rgba(255,255,255,0.4); box-shadow: 0 2px 8px rgba(147, 51, 234, 0.4);' : ''}">✨ Tillaga: ${h.suggestedBy}</div>` : (h.isCustom ? `<div class="house-badge-custom">Tillaga: ${h.suggestedBy || 'Fjölskylda'}</div>` : '')}
-            <div class="house-badge-price" title="${h.pricePerNightEur ? `€${h.pricePerNightEur} á nótt · €${(h.priceEur || 0).toLocaleString('de-DE')} fyrir 7 nætur (1 viku)` : (h.priceFormatted || '')}">${h.priceFormatted}</div>
+            <div class="house-badge-price" title="${activeWk ? `€${curNightly} á nótt · €${curWkPrice.toLocaleString('de-DE')} fyrir 7 nætur í ${activeWk.toUpperCase()}` : (h.pricesByWeek ? `Verð er breytilegt eftir vikum: Frá €${Math.min(...Object.values(h.pricesByWeek)).toLocaleString('de-DE')} (síðsumar) upp í €${Math.max(...Object.values(h.pricesByWeek)).toLocaleString('de-DE')} (háönn í júlí)` : '')}">${displayPrice}</div>
           </div>
           <div class="house-body">
             <h3 class="house-title">${h.title}</h3>
