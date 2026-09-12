@@ -1617,8 +1617,7 @@
     }
 
     function canEditPersonNotes(person) {
-      if (!currentPerson) return false;
-      if (isSigurjon(currentPerson) || isMasterSession) return true;
+      if (!currentPerson || !person) return false;
       return isSamePerson(currentPerson, person);
     }
 
