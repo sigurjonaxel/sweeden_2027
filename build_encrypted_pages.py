@@ -47,22 +47,37 @@ def build():
         "Sara Kristín"
     ]
 
+    # Afmæli sótt beint úr Sag/Ancestry gagnagrunninum (ancestry.db)
+    # https://sigurjonaxel.github.io/ancestry/
+    family_birthdays = [
+        { "name": "Ólafía Rósbjörg (Lóa)", "shortName": "Lóa", "date": "10. janúar 1974", "dayMonth": "10. jan", "year": 1974, "age2027": 53 },
+        { "name": "Vala Björk", "shortName": "Vala", "date": "1. febrúar 2005", "dayMonth": "1. feb", "year": 2005, "age2027": 22 },
+        { "name": "Sigurjón Axel", "shortName": "Sigurjón", "date": "4. febrúar 1974", "dayMonth": "4. feb", "year": 1974, "age2027": 53 },
+        { "name": "Viktor Ingi", "shortName": "Viktor", "date": "14. mars 1999", "dayMonth": "14. mar", "year": 1999, "age2027": 28 },
+        { "name": "Birkir Evan", "shortName": "Birkir", "date": "6. maí 2014", "dayMonth": "6. maí", "year": 2014, "age2027": 13 },
+        { "name": "Axel Bjarkar", "shortName": "Axel", "date": "22. júní 2003", "dayMonth": "22. jún", "year": 2003, "age2027": 24, "inSummer": True },
+        { "name": "Sara Kristín", "shortName": "Sara", "date": "18. júlí 2010", "dayMonth": "18. júl", "year": 2010, "age2027": 17, "inSummer": True },
+        { "name": "Þórhildur Soffía", "shortName": "Þórhildur", "date": "10. ágúst 2010", "dayMonth": "10. ágú", "year": 2010, "age2027": 17, "inSummer": True },
+        { "name": "Rannveig Arna", "shortName": "Rannveig", "date": "5. september 2005", "dayMonth": "5. sep", "year": 2005, "age2027": 22 }
+    ]
+
     weeks = [
-        { "id": "w25", "num": "Vika 25", "dates": "15. jún – 22. jún 2027", "tag": "Skólaslit" },
-        { "id": "w26", "num": "Vika 26", "dates": "22. jún – 29. jún 2027", "tag": "🇸🇪 Midsommar!" },
+        { "id": "w25", "num": "Vika 25", "dates": "15. jún – 22. jún 2027", "tag": "Skólaslit · 🎂 Axel Bjarkar 22. jún" },
+        { "id": "w26", "num": "Vika 26", "dates": "22. jún – 29. jún 2027", "tag": "🇸🇪 Midsommar! · 🎂 Axel Bjarkar 22. jún (24 ára)" },
         { "id": "w27", "num": "Vika 27", "dates": "29. jún – 06. júl 2027", "tag": "" },
         { "id": "w28", "num": "Vika 28", "dates": "06. júl – 13. júl 2027", "tag": "" },
-        { "id": "w29", "num": "Vika 29", "dates": "13. júl – 20. júl 2027", "tag": "Háannatími" },
+        { "id": "w29", "num": "Vika 29", "dates": "13. júl – 20. júl 2027", "tag": "Háannatími · 🎂 Sara Kristín 18. júl (17 ára)" },
         { "id": "w30", "num": "Vika 30", "dates": "20. júl – 27. júl 2027", "tag": "Háannatími" },
         { "id": "w31", "num": "Vika 31", "dates": "27. júl – 03. ágú 2027", "tag": "Verslunarmannahelgi" },
-        { "id": "w32", "num": "Vika 32", "dates": "03. ágú – 10. ágú 2027", "tag": "" },
-        { "id": "w33", "num": "Vika 33", "dates": "10. ágú – 17. ágú 2027", "tag": "" },
+        { "id": "w32", "num": "Vika 32", "dates": "03. ágú – 10. ágú 2027", "tag": "🎂 Þórhildur Soffía 10. ágú (17 ára)" },
+        { "id": "w33", "num": "Vika 33", "dates": "10. ágú – 17. ágú 2027", "tag": "🎂 Þórhildur Soffía 10. ágú" },
         { "id": "w34", "num": "Vika 34", "dates": "17. ágú – 24. ágú 2027", "tag": "" },
-        { "id": "w35", "num": "Vika 35", "dates": "24. ágú – 31. ágú 2027", "tag": "Lok ágúst" }
+        { "id": "w35", "num": "Vika 35", "dates": "24. ágú – 31. ágú 2027", "tag": "Lok ágúst · 🎂 Rannveig Arna 5. sep" }
     ]
 
     payload = {
         "familyMembers": family_members,
+        "familyBirthdays": family_birthdays,
         "weeks": weeks,
         "houses": houses
     }

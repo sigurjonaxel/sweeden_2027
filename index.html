@@ -487,6 +487,7 @@
             </div>
           </div>
           <div class="card-desc">Merktu við allar vikur sem gætu hentað þér. Vikur þar sem allir komast raðast sjálfkrafa efst, en árekstrar (ef einhver kemst ekki) fá rauða viðvörun!</div>
+          <div id="familyBirthdaysSection" style="margin-bottom: 16px;"></div>
           <div id="weekConflictSummary"></div>
           <div class="weeks-grid" id="weeksGrid"></div>
           <div id="weeksExpandWrap" style="text-align: center; margin-top: 14px;"></div>
@@ -836,6 +837,7 @@
 
   <script>
     let FAMILY_MEMBERS = [];
+    let FAMILY_BIRTHDAYS = [];
     let WEEKS = [];
     let HOUSES = [];
     let CUSTOM_HOUSES = [];
@@ -1163,6 +1165,7 @@
           const payload = await resp.json();
           const data = await decryptPayload(pin, payload);
           FAMILY_MEMBERS = data.familyMembers;
+          FAMILY_BIRTHDAYS = data.familyBirthdays || [];
           WEEKS = data.weeks;
           HOUSES = data.houses;
 
@@ -1957,7 +1960,83 @@
       updateWeekConflictSummary();
     }
 
+    let showAllBirthdaysExpanded = false;
+
+    function toggleAllBirthdays() {
+      showAllBirthdaysExpanded = !showAllBirthdaysExpanded;
+      renderFamilyBirthdays();
+    }
+
+    function renderFamilyBirthdays() {
+      const container = document.getElementById("familyBirthdaysSection");
+      if (!container) return;
+
+      const birthdays = (FAMILY_BIRTHDAYS && FAMILY_BIRTHDAYS.length > 0) ? FAMILY_BIRTHDAYS : [
+        { name: "Ólafía Rósbjörg (Lóa)", shortName: "Lóa", date: "10. janúar 1974", dayMonth: "10. jan", year: 1974, age2027: 53 },
+        { name: "Vala Björk", shortName: "Vala", date: "1. febrúar 2005", dayMonth: "1. feb", year: 2005, age2027: 22 },
+        { name: "Sigurjón Axel", shortName: "Sigurjón", date: "4. febrúar 1974", dayMonth: "4. feb", year: 1974, age2027: 53 },
+        { name: "Viktor Ingi", shortName: "Viktor", date: "14. mars 1999", dayMonth: "14. mar", year: 1999, age2027: 28 },
+        { name: "Birkir Evan", shortName: "Birkir", date: "6. maí 2014", dayMonth: "6. maí", year: 2014, age2027: 13 },
+        { name: "Axel Bjarkar", shortName: "Axel", date: "22. júní 2003", dayMonth: "22. jún", year: 2003, age2027: 24, inSummer: true },
+        { name: "Sara Kristín", shortName: "Sara", date: "18. júlí 2010", dayMonth: "18. júl", year: 2010, age2027: 17, inSummer: true },
+        { name: "Þórhildur Soffía", shortName: "Þórhildur", date: "10. ágúst 2010", dayMonth: "10. ágú", year: 2010, age2027: 17, inSummer: true },
+        { name: "Rannveig Arna", shortName: "Rannveig", date: "5. september 2005", dayMonth: "5. sep", year: 2005, age2027: 22 }
+      ];
+
+      const summerBirthdays = birthdays.filter(b => b.inSummer);
+
+      container.innerHTML = `
+        <div style="background: #fffbeb; border: 1.5px solid #fef3c7; border-left: 4px solid #f59e0b; border-radius: 12px; padding: 14px 16px; margin-top: 6px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 1.25rem;">🎂</span>
+              <span style="font-weight: 800; font-size: 0.95rem; color: #92400e;">Afmælisdagar í ferðatímanum (sumarið 2027):</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <a href="https://sigurjonaxel.github.io/ancestry/" target="_blank" rel="noopener" style="font-size: 0.78rem; color: #b45309; text-decoration: none; font-weight: 700; background: rgba(245,158,11,0.12); padding: 3px 8px; border-radius: 6px;">
+                🌳 Sag ættartré ↗
+              </a>
+              <button type="button" onclick="toggleAllBirthdays()" style="background: none; border: none; font-size: 0.8rem; font-weight: 700; color: #d97706; cursor: pointer; text-decoration: underline; padding: 0;">
+                ${showAllBirthdaysExpanded ? "Fela önnur afmæli ▴" : "Sýna öll 9 afmælin úr Sag ▾"}
+              </button>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;">
+            ${summerBirthdays.map(b => `
+              <div style="background: white; border: 1px solid #fde68a; border-radius: 8px; padding: 8px 12px; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+                <span style="font-size: 1.15rem;">🎉</span>
+                <div>
+                  <div style="font-weight: 800; font-size: 0.88rem; color: #78350f;">${b.name}</div>
+                  <div style="font-size: 0.78rem; color: #92400e;">
+                    <strong>${b.dayMonth}</strong> · verður <strong>${b.age2027} ára</strong>
+                  </div>
+                </div>
+              </div>
+            `).join("")}
+          </div>
+
+          ${showAllBirthdaysExpanded ? `
+            <div style="margin-top: 14px; padding-top: 12px; border-top: 1px dashed #fde68a;">
+              <div style="font-size: 0.82rem; font-weight: 700; color: #92400e; margin-bottom: 8px;">
+                Öll afmæli fjölskyldunnar (úr Sag / Ancestry kerfinu):
+              </div>
+              <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px;">
+                ${birthdays.map(b => `
+                  <div style="background: ${b.inSummer ? '#fef3c7' : 'white'}; border: 1px solid ${b.inSummer ? '#f59e0b' : '#f1f5f9'}; border-radius: 8px; padding: 6px 10px; font-size: 0.82rem; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-weight: 700; color: var(--text);">${b.name}</span>
+                    <span style="color: var(--text-muted); font-size: 0.76rem;">${b.dayMonth} (${b.age2027} ára)</span>
+                  </div>
+                `).join("")}
+              </div>
+            </div>
+          ` : ""}
+        </div>
+      `;
+    }
+
     function renderWeeks() {
+      renderFamilyBirthdays();
       const grid = document.getElementById("weeksGrid");
       const expandWrap = document.getElementById("weeksExpandWrap");
       const sortedWeeks = sortWeeksList(WEEKS, tab1WeeksSort);
