@@ -1038,10 +1038,15 @@
       }
 
       checkUrlHashImport();
-
       renderPersonChips();
-      selectPerson(null);
-      openWelcomeUserModal();
+
+      const savedPerson = localStorage.getItem("sweeden_2027_current_person");
+      if (savedPerson && !isDisallowedName(savedPerson)) {
+        selectPerson(savedPerson);
+      } else {
+        selectPerson(null);
+        openWelcomeUserModal();
+      }
 
       // Sækja sjálfkrafa nýjustu gögn úr skýi
       await pullFromCloud(false);
@@ -1161,6 +1166,7 @@
     function selectPerson(name) {
       if (!name || name === currentPerson) {
         currentPerson = null;
+        localStorage.removeItem("sweeden_2027_current_person");
         document.getElementById("customNameInput").value = "";
         document.querySelectorAll(".person-chip").forEach(el => el.classList.remove("active"));
         document.getElementById("saveBarName").textContent = "Enginn valinn";
@@ -1184,6 +1190,7 @@
       }
 
       currentPerson = name.trim();
+      localStorage.setItem("sweeden_2027_current_person", currentPerson);
       document.getElementById("customNameInput").value = FAMILY_MEMBERS.includes(currentPerson) ? "" : currentPerson;
       document.querySelectorAll(".person-chip").forEach(el => el.classList.remove("active"));
       const safeId = "chip-" + currentPerson.replace(/[^a-zA-Z0-9]/g, '');
