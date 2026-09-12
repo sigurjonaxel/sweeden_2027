@@ -486,6 +486,7 @@
           <div class="card-desc">Merktu við allar vikur sem gætu hentað þér. Vikur þar sem allir komast raðast sjálfkrafa efst, en árekstrar (ef einhver kemst ekki) fá rauða viðvörun!</div>
           <div id="weekConflictSummary"></div>
           <div class="weeks-grid" id="weeksGrid"></div>
+          <div id="weeksExpandWrap" style="text-align: center; margin-top: 14px;"></div>
         </div>
 
         <div class="card">
@@ -519,6 +520,7 @@
           </div>
 
           <div class="houses-grid" id="allHousesGrid"></div>
+          <div id="housesExpandWrap" style="text-align: center; margin-top: 18px; width: 100%;"></div>
         </div>
 
         <div class="card">
@@ -852,6 +854,8 @@
     let PIN_RESET_REQUESTS = {};
     let selectingUser = "";
     let isMasterSession = false;
+    let weeksExpanded = false;
+    let housesExpanded = false;
 
     const CLOUD_SYNC_URL = "https://kvdb.io/SKmnoosJYG9rrzQ9ioVJEn/family_sync";
 
@@ -1963,9 +1967,12 @@
 
     function renderWeeks() {
       const grid = document.getElementById("weeksGrid");
+      const expandWrap = document.getElementById("weeksExpandWrap");
       const sortedWeeks = sortWeeksList(WEEKS, tab1WeeksSort);
 
-      grid.innerHTML = sortedWeeks.map(w => {
+      const visibleWeeks = weeksExpanded ? sortedWeeks : sortedWeeks.slice(0, 4);
+
+      grid.innerHTML = visibleWeeks.map(w => {
         return `
           <div class="week-row" id="row-${w.id}">
             <div style="flex: 1; min-width: 240px;">
@@ -1990,8 +1997,25 @@
         `;
       }).join("");
 
+      if (expandWrap) {
+        if (sortedWeeks.length > 4) {
+          expandWrap.innerHTML = `
+            <button type="button" onclick="toggleWeeksExpand()" style="padding: 10px 22px; background: #eff6ff; color: #1d4ed8; border: 1.5px solid #bfdbfe; border-radius: 10px; font-weight: 700; font-size: 0.88rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s;">
+              ${weeksExpanded ? '⬆️ Sýna færri vikur (aðeins efstu 4)' : `⬇️ Sýna fleiri vikur (+${sortedWeeks.length - 4} í viðbót)`}
+            </button>
+          `;
+        } else {
+          expandWrap.innerHTML = "";
+        }
+      }
+
       updateWeeksUI();
       updateWeekConflictSummary();
+    }
+
+    function toggleWeeksExpand() {
+      weeksExpanded = !weeksExpanded;
+      renderWeeks();
     }
 
     function changeTab1WeeksSort(val) {
@@ -2086,6 +2110,7 @@
     function renderAllHouses(filter) {
       currentFilter = filter || currentFilter || 'all';
       const grid = document.getElementById("allHousesGrid");
+      const expandWrap = document.getElementById("housesExpandWrap");
       if (!grid) return;
       let list = HOUSES;
       if (currentFilter === 'popularity') {
@@ -2102,8 +2127,28 @@
       }
 
       list = sortHousesList(list, housesSort);
-      grid.innerHTML = list.map(h => createHouseCardHTML(h)).join("");
+      const visibleHouses = housesExpanded ? list : list.slice(0, 4);
+
+      grid.innerHTML = visibleHouses.map(h => createHouseCardHTML(h)).join("");
+
+      if (expandWrap) {
+        if (list.length > 4) {
+          expandWrap.innerHTML = `
+            <button type="button" onclick="toggleHousesExpand()" style="padding: 12px 28px; background: #eff6ff; color: #1d4ed8; border: 1.5px solid #bfdbfe; border-radius: 12px; font-weight: 700; font-size: 0.92rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 2px 8px rgba(37,99,235,0.12); transition: all 0.2s;">
+              ${housesExpanded ? '⬆️ Sýna færri hús (aðeins efstu 4)' : `⬇️ Sýna öll hús (+${list.length - 4} hús í viðbót)`}
+            </button>
+          `;
+        } else {
+          expandWrap.innerHTML = "";
+        }
+      }
+
       updateHouseVotesUI();
+    }
+
+    function toggleHousesExpand() {
+      housesExpanded = !housesExpanded;
+      renderAllHouses(currentFilter);
     }
 
     function changeHousesSort(val) {
@@ -2713,58 +2758,21 @@
       const voters = Object.keys(allVotes);
       const withGeneralComments = voters.filter(p => allVotes[p] && allVotes[p].comment && allVotes[p].comment.trim());
 
-      const houseCommentsList = [];
-      HOUSES.forEach(h => {
-        const hc = getHouseComments(h.id);
-        if (hc.length > 0) {
-          houseCommentsList.push({ house: h, comments: hc });
-        }
-      });
-
-      if (withGeneralComments.length === 0 && houseCommentsList.length === 0) {
+      if (withGeneralComments.length === 0) {
         commentsDiv.innerHTML = `<p style="color: var(--text-muted); font-size: 0.85rem; font-style: italic;">Engar athugasemdir skráðar enn.</p>`;
         return;
       }
 
-      let html = "";
-      if (withGeneralComments.length > 0) {
-        html += `
-          <h4 style="margin: 0 0 10px 0; font-size: 0.95rem; color: var(--primary);">📝 Almennar óskir & athugasemdir</h4>
-          <div style="display:flex; flex-direction:column; gap:8px; margin-bottom: 20px;">
-            ${withGeneralComments.map(p => `
-              <div class="comment-item">
-                <div class="comment-author">${escapeHtml(p)}</div>
-                <div class="comment-text">${escapeHtml(allVotes[p].comment)}</div>
-              </div>
-            `).join("")}
-          </div>
-        `;
-      }
-
-      if (houseCommentsList.length > 0) {
-        html += `
-          <h4 style="margin: 0 0 10px 0; font-size: 0.95rem; color: var(--primary);">🏡 Athugasemdir við einstök hús</h4>
-          <div style="display:flex; flex-direction:column; gap:12px;">
-            ${houseCommentsList.map(item => `
-              <div style="background: white; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 12px;">
-                <div style="font-weight: 700; font-size: 0.9rem; margin-bottom: 8px; color: var(--text);">
-                  ${escapeHtml(item.house.title)} <span style="font-weight: normal; color: var(--text-muted); font-size: 0.8rem;">(${escapeHtml(item.house.region)})</span>
-                </div>
-                <div style="display: flex; flex-direction: column; gap: 6px;">
-                  ${item.comments.map(c => `
-                    <div class="house-comment-item">
-                      <div class="house-comment-header">
-                        <strong>💬 ${escapeHtml(c.person)}:</strong>
-                      </div>
-                      <div class="house-comment-text">${escapeHtml(c.text)}</div>
-                    </div>
-                  `).join("")}
-                </div>
-              </div>
-            `).join("")}
-          </div>
-        `;
-      }
+      let html = `
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          ${withGeneralComments.map(p => `
+            <div class="comment-item">
+              <div class="comment-author">${escapeHtml(p)}</div>
+              <div class="comment-text">${escapeHtml(allVotes[p].comment)}</div>
+            </div>
+          `).join("")}
+        </div>
+      `;
 
       commentsDiv.innerHTML = html;
     }
