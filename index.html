@@ -1072,7 +1072,7 @@
             <span class="legend-item"><span class="legend-icon">⛺</span> Verslunarmannahelgi</span>
             <span class="legend-item"><span class="legend-icon">🎂</span> Afmæli</span>
             <span class="legend-item"><span class="legend-icon">🥇🥈🥉</span> Röðun</span>
-            <span class="legend-item" style="color: var(--primary);"><span class="legend-icon">ℹ️</span> Smelltu á vikuhaus eða rank fyrir nánar</span>
+            <span class="legend-item" style="color: var(--primary);"><span class="legend-icon">ℹ️</span> Smelltu á vikuhaus eða röðun fyrir nánar</span>
           </div>
 
           <div id="familyAvailabilityOverview"></div>
@@ -3580,7 +3580,7 @@
                       <div class="th-events-row">
                         ${events.map(ev => `<span class="th-event-badge" title="${escapeHtml(ev.shortDesc)}">${ev.icon}</span>`).join("")}
                       </div>
-                      <div class="th-rank-row">
+                      <div class="th-rank-row" title="Röðun: #${rankData.rank} í vali hópsins">
                         <span class="th-medal">${rankData.medal}</span>
                         <span class="th-rank-lbl">#${rankData.rank}</span>
                       </div>
