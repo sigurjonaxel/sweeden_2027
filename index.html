@@ -78,29 +78,27 @@
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       color: white;
-      padding: 12px 20px 10px;
+      padding: 10px 20px 8px;
       text-align: center;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-      transition: padding 0.2s ease, box-shadow 0.2s ease;
       overflow: hidden;
     }
-    header.header-scrolled {
-      padding: 6px 16px 6px;
-      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+    header h1 {
+      font-size: 1.35rem;
+      margin: 2px 0 3px 0;
+      font-weight: 800;
     }
-    header.header-scrolled .subtitle,
-    header.header-scrolled .quick-stats {
-      display: none !important;
+    header .subtitle {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 6px;
     }
-    header.header-scrolled h1 {
-      font-size: 1.15rem;
-      margin: 0;
-    }
-    header.header-scrolled .header-top-bar {
-      margin-bottom: 2px;
-    }
-    header.header-scrolled .flag-banner {
-      width: 60px; height: 38px;
+    header .quick-stats {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 2px;
     }
 
     .header-flags-bg {
@@ -3076,17 +3074,6 @@
       document.getElementById("lockOverlay").style.display = "flex";
       document.getElementById("appContainer").style.display = "none";
     });
-
-    window.addEventListener("scroll", () => {
-      const headerEl = document.querySelector("header");
-      if (headerEl) {
-        if (window.scrollY > 25) {
-          headerEl.classList.add("header-scrolled");
-        } else {
-          headerEl.classList.remove("header-scrolled");
-        }
-      }
-    }, { passive: true });
   </script>
 </body>
 </html>
