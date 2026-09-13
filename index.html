@@ -1402,18 +1402,29 @@
         <!-- SÉRKAFLI: HEILDARGREINING, FLUG & BESTI KOSTURINN -->
         <div class="card rec-card-hero" id="bestOptionSynthesisCard" style="margin-bottom: 24px; padding: 14px 18px;">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; cursor: pointer;" onclick="toggleRecommendationCard()">
-            <div style="flex: 1; min-width: 250px;">
-              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
+            <div style="flex: 1; min-width: 270px;">
+              <!-- Efri röð: Titill og stöðumerki -->
+              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px;">
                 <span style="font-size: 1.25rem;">🎯</span>
                 <span style="font-size: 1.15rem; font-weight: 800; color: #0f172a;">Niðurstaða & Ráðgjöf</span>
                 <span class="rec-pill rec-pill-blue" style="font-size: 0.74rem; padding: 2px 9px;">✈️ Flug CPH</span>
                 <span class="rec-pill rec-pill-green" style="font-size: 0.74rem; padding: 2px 9px;">🌟 Vika 27 (0 nei)</span>
-                <span class="rec-pill rec-pill-amber" style="font-size: 0.74rem; padding: 2px 9px;">🥇 Strandhuset Borrby</span>
+                <span class="rec-pill rec-pill-amber" style="font-size: 0.74rem; padding: 2px 9px;">🎂 Anna 6. júlí</span>
               </div>
-              <div style="font-size: 0.83rem; color: var(--text-muted); line-height: 1.35;">
-                Heildargreining á flugi til Kaupmannahafnar, aksturstíma, afmæli Önnu og 3 bestu húsunum m.v. öll gögn.
+
+              <!-- Sæti 1, 2 og 3 í compact -->
+              <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 6px; font-size: 0.81rem; font-weight: 700;">
+                <span style="color: #0369a1; background: #e0f2fe; padding: 2px 8px; border-radius: 6px; border: 1px solid #bae6fd;">🥇 1. Strandhuset Borrby (V27)</span>
+                <span style="color: #334155; background: #f1f5f9; padding: 2px 8px; border-radius: 6px; border: 1px solid #cbd5e1;">🥈 2. Brantevik Strandsetur (V26)</span>
+                <span style="color: #92400e; background: #fef3c7; padding: 2px 8px; border-radius: 6px; border: 1px solid #fde68a;">🥉 3. Hasmark Otterup (V27)</span>
+              </div>
+
+              <!-- Borgholm / Öland í compact -->
+              <div style="font-size: 0.81rem; color: #475569; line-height: 1.4; background: #fdf4ff; border: 1px solid #f5d0fe; padding: 4px 10px; border-radius: 8px; margin-top: 2px; display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                <span>🏰 <strong>Borgholm / Öland:</strong> Spennandi kostur m. sundlaug og frábærlega staðsett fyrir Smálönd & Astrid Lindgren – en langur akstur frá CPH (~4,5–5 klst.).</span>
               </div>
             </div>
+
             <div>
               <button type="button" id="recToggleBtn" class="rec-btn-toggle" onclick="event.stopPropagation(); toggleRecommendationCard()">
                 + Skoða ráðgjöf & greiningu (Expand)
@@ -1432,8 +1443,8 @@
                 </div>
                 <div class="rec-insight-desc">
                   Þegar lent er á Kastrup (CPH) tekur aðeins <strong>~1 klst. og 25 mín.</strong> að keyra yfir Eyrarsundsbrúna til <strong>Österlen (Borrby/Brantevik)</strong>.<br>
-                  <span style="display: inline-block; margin-top: 6px; color: #b91c1c; font-weight: 600;">
-                    ⚠️ Öland er hins vegar í 4,5 – 5 klst. akstri (>420 km hvor leið) – of mikill akstur eftir flug með börn og farangur!
+                  <span style="display: inline-block; margin-top: 6px; color: #7c3aed; font-weight: 600;">
+                    🏰 <strong>Borgholm / Öland:</strong> Er í 4,5 – 5 klst. akstri (>420 km hvor leið). Það er frábær staðsetning til að skoða Smálönd og Astrid Lindgrens Värld, en mun meiri akstur eftir flugið með börn og farangur miðað við Österlen.
                   </span>
                 </div>
               </div>
@@ -1462,10 +1473,10 @@
               </div>
             </div>
 
-            <!-- Mælt með: 3 bestu húsin -->
+            <!-- Mælt með: Helstu valkostir -->
             <div style="margin-top: 18px;">
               <div style="font-size: 1rem; font-weight: 800; color: #0f172a; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
-                <span>🏆 3 bestu valkostirnir m.v. öll gögn:</span>
+                <span>🏆 Bestu valkostirnir m.v. öll gögn:</span>
               </div>
               <div style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px;">
                 Smelltu á „Skoða hús á síðunni ⬇️“ til að hoppa beint á spjaldið með öllum myndum og atkvæðum.
@@ -1537,6 +1548,29 @@
                     <div class="rec-house-actions">
                       <button type="button" class="rec-btn-jump" onclick="jumpToHouse('1090334101923876759')">Skoða hús á síðunni ⬇️</button>
                       <a href="https://www.airbnb.com/rooms/1090334101923876759" target="_blank" rel="noopener" class="rec-btn-airbnb">Airbnb ↗</a>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Hús 4: Borgholm / Köpingsvik (Öland) -->
+                <div class="rec-house-item" style="border: 1.5px solid #d8b4fe;">
+                  <span class="rec-house-badge" style="background: #7c3aed; color: white;">🏰 SMÁLÖND & ÖLAND: SPENNANDI KOSTUR</span>
+                  <img src="https://a0.muscache.com/im/pictures/8eea17a1-7d73-456c-99b5-7da0b06e62d5.jpg?im_w=720" alt="Borgholm Köpingsvik Öland" class="rec-house-img" loading="lazy" />
+                  <div class="rec-house-body">
+                    <div class="rec-house-title">New villa with pool – Borgholm / Köpingsvik (Öland)</div>
+                    <div class="rec-house-price">€4.332 <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-muted);">/ vika 26 (~640 þús. kr.)</span></div>
+                    <div class="rec-house-specs">
+                      <span>🏊 Upphituð útisundlaug</span> · <span>🛏️ 4 svefnherb.</span> · <span>🏖️ Köpingsvik strönd</span> · <span>🚗 ~4,5–5 klst. frá CPH</span>
+                    </div>
+                    <ul class="rec-house-highlights" style="padding-left: 18px; margin: 0 0 14px 0;">
+                      <li><strong>Smálönd & Astrid Lindgren:</strong> Frábær staðsetning til að heimsækja söguheim Astrid Lindgren í Vimmerby (Emil í Kattholti, Pippi o.fl.), Borgholms Slott og sólareyjunna Öland.</li>
+                      <li><strong>Lúxusaðstaða:</strong> Nýlegt hús með upphitaðri útisundlaug, stórum palli og stutt í fallegar sandstrendur.</li>
+                      <li><strong>Athugið aksturinn:</strong> ~4,5 til 5 klst. akstur frá Kastrup (>420 km) – krefst lengri ferðadags miðað við Österlen.</li>
+                      <li><strong>Laust í:</strong> Viku 26 (og viku 32–34). Uppbókað í viku 27.</li>
+                    </ul>
+                    <div class="rec-house-actions">
+                      <button type="button" class="rec-btn-jump" onclick="jumpToHouse('36790419')">Skoða hús á síðunni ⬇️</button>
+                      <a href="https://www.airbnb.com/rooms/36790419" target="_blank" rel="noopener" class="rec-btn-airbnb">Airbnb ↗</a>
                     </div>
                   </div>
                 </div>
