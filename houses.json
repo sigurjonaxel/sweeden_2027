@@ -70,7 +70,7 @@
       "w33",
       "w34"
     ],
-    "availabilitySummary": "Laust í 10 af 10 vikum á Airbnb (V25, V26, V27, V28, V29, V30, V31, V32, V33, V34)",
+    "availabilitySummary": "Laust í 10 af 10 vikum á Airbnb (V25, V26, V27, V28, V29, V30, V31, V32, V33, V34 · Fös–Fös)",
     "pricePerNightEur": 396,
     "pricesByWeek": {
       "w25": 2770,
@@ -209,28 +209,36 @@
     ],
     "rating": "5.0",
     "ratingLabel": "5.0 out of 5 average rating",
-    "priceEur": 4574,
-    "priceFormatted": "€4.574 – €5.660 / vika",
+    "priceEur": 2924,
+    "priceFormatted": "€2.924 – €5.660 / vika",
     "photo": "https://a0.muscache.com/im/pictures/hosting/Hosting-1090334101923876759/original/6efa88ad-7fcb-49b3-a4df-31c35cd6a089.jpeg?im_w=720",
     "url": "https://www.airbnb.com/rooms/1090334101923876759",
     "coordinates": {
       "lat": 55.56264,
       "lng": 10.44925
     },
-    "isBudgetFit": false,
+    "isBudgetFit": true,
     "availableWeeks": [
+      "w27",
       "w28",
+      "w29",
       "w30",
       "w31",
-      "w33"
+      "w32",
+      "w33",
+      "w34"
     ],
-    "availabilitySummary": "Laust í 4 af 10 vikum á Airbnb (V28, V30, V31, V33)",
-    "pricePerNightEur": 653,
+    "availabilitySummary": "Laust í 8 af 10 vikum á Airbnb (V27, V28, V29, V30, V31, V32, V33, V34 · Fös–Fös)",
+    "pricePerNightEur": 418,
     "pricesByWeek": {
+      "w27": 4829,
       "w28": 5535,
+      "w29": 5660,
       "w30": 5660,
       "w31": 5660,
-      "w33": 4574
+      "w32": 4717,
+      "w33": 4574,
+      "w34": 2924
     }
   },
   {
@@ -427,8 +435,8 @@
     ],
     "rating": "5.0",
     "ratingLabel": "5.0 out of 5 average rating",
-    "priceEur": 7136,
-    "priceFormatted": "€7.136 – €7.372 / vika",
+    "priceEur": 5318,
+    "priceFormatted": "€5.318 / vika",
     "photo": "https://a0.muscache.com/im/pictures/hosting/Hosting-1671670810787993416/original/e13da2b4-021b-44b4-9170-fdf8bc63655b.jpeg?im_w=720",
     "url": "https://www.airbnb.com/rooms/1671670810787993416",
     "coordinates": {
@@ -436,10 +444,16 @@
       "lng": 13.1367
     },
     "isBudgetFit": false,
-    "availableWeeks": [],
-    "availabilitySummary": "Ekki laust í sumar 2027 á Airbnb",
-    "pricePerNightEur": 1019,
-    "pricesByWeek": {}
+    "availableWeeks": [
+      "w29",
+      "w30"
+    ],
+    "availabilitySummary": "Laust í 2 af 10 vikum á Airbnb (V29 [hliðrað um 1 dag: 18.–25. júl], V30 [24.–31. júl])",
+    "pricePerNightEur": 760,
+    "pricesByWeek": {
+      "w29": 5318,
+      "w30": 5318
+    }
   },
   {
     "id": "1767296663427055904",
@@ -492,8 +506,8 @@
     ],
     "rating": "5.0",
     "ratingLabel": "5.0 af 5 (fullkomin einkunn)",
-    "priceEur": 5884,
-    "priceFormatted": "€5.884 / vika",
+    "priceEur": 3174,
+    "priceFormatted": "€3.174 – €6.197 / vika",
     "photo": "https://a0.muscache.com/im/pictures/hosting/Hosting-1236701408674132678/original/faf2c635-372e-4768-b500-8fffef85e485.jpeg?im_w=1200",
     "url": "https://www.airbnb.com/rooms/1236701408674132678",
     "coordinates": {
@@ -503,12 +517,22 @@
     "isBudgetFit": false,
     "suggestedBy": "Gemini",
     "availableWeeks": [
-      "w28"
+      "w26",
+      "w27",
+      "w28",
+      "w29",
+      "w30",
+      "w33"
     ],
-    "availabilitySummary": "Laust í 1 af 10 vikum á Airbnb (V28)",
-    "pricePerNightEur": 841,
+    "availabilitySummary": "Laust í 6 af 10 vikum á Airbnb (V26, V27, V28, V29, V30, V33 · Fös–Fös)",
+    "pricePerNightEur": 453,
     "pricesByWeek": {
-      "w28": 5884
+      "w26": 3174,
+      "w27": 4802,
+      "w28": 5884,
+      "w29": 5896,
+      "w30": 6197,
+      "w33": 4955
     }
   }
 ]
