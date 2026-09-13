@@ -683,8 +683,42 @@
       background: none; border: none; padding: 0; font-size: 0.72rem;
       color: var(--primary); cursor: pointer; font-weight: 600;
     }
-    .comment-action-btn.btn-danger-action { color: #ef4444; }
-    .house-comment-text { color: var(--text); line-height: 1.35; word-break: break-word; }
+    .house-comment-text {
+      color: var(--text);
+      line-height: 1.4;
+      word-break: break-word;
+      font-size: 0.81rem;
+    }
+    .house-comment-text.is-clamped {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: pre-wrap;
+    }
+    .house-comment-text.is-expanded {
+      display: block;
+      white-space: pre-wrap;
+    }
+    .comment-expand-btn {
+      background: none;
+      border: none;
+      padding: 0;
+      color: #0284c7;
+      cursor: pointer;
+      font-size: 0.74rem;
+      font-weight: 700;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .comment-expand-btn:hover {
+      text-decoration: underline;
+      color: #0369a1;
+    }
     .house-comments-empty { font-size: 0.76rem; color: var(--text-muted); margin-bottom: 8px; font-style: italic; }
     .house-comment-input-wrap { display: flex; gap: 6px; }
     .house-comment-input {
@@ -4100,34 +4134,83 @@
       return list;
     }
 
+    let expandedHouseComments = {};
+    let expandedHouseCommentsList = {};
+
+    function toggleHouseCommentTextExpand(commentKey, houseId) {
+      expandedHouseComments[commentKey] = !expandedHouseComments[commentKey];
+      const el = document.getElementById(`house-comments-${houseId}`);
+      if (el) el.innerHTML = getHouseCommentsHTML(houseId);
+    }
+
+    function toggleHouseCommentsListExpand(houseId) {
+      expandedHouseCommentsList[houseId] = !expandedHouseCommentsList[houseId];
+      const el = document.getElementById(`house-comments-${houseId}`);
+      if (el) el.innerHTML = getHouseCommentsHTML(houseId);
+    }
+
     function getHouseCommentsHTML(houseId) {
       const comments = getHouseComments(houseId);
       const myComment = (currentVote && currentVote.houseComments && currentVote.houseComments[houseId]) ? currentVote.houseComments[houseId] : "";
       const hasMyComment = Boolean(myComment && myComment.trim());
+      const isListExpanded = !!expandedHouseCommentsList[houseId];
+
+      const visibleComments = (comments.length > 2 && !isListExpanded)
+        ? comments.slice(0, 2)
+        : comments;
+      const hiddenCount = comments.length - visibleComments.length;
 
       return `
         <div class="house-comments-box">
-          <div class="house-comments-title">
+          <div class="house-comments-title" style="display: flex; justify-content: space-between; align-items: center;">
             <span>💬 Athugasemdir (${comments.length})</span>
+            ${comments.length > 2 ? `
+              <button type="button" onclick="toggleHouseCommentsListExpand('${houseId}')" class="comment-expand-btn" style="font-size: 0.72rem; text-transform: none; letter-spacing: normal;">
+                ${isListExpanded ? '− Collapse' : `+ Expand (${hiddenCount} í viðbót)`}
+              </button>
+            ` : ''}
           </div>
 
           ${comments.length > 0 ? `
             <div class="house-comments-list">
-              ${comments.map(c => `
-                <div class="house-comment-item ${c.isMe ? 'comment-item-me' : ''}">
-                  <div class="house-comment-header">
-                    <strong>${escapeHtml(c.person)}${c.isMe ? ' (þú)' : ''}:</strong>
-                    ${c.isMe ? `
-                      <div class="house-comment-actions">
-                        <button type="button" onclick="editHouseComment('${houseId}')" class="comment-action-btn" title="Breyta þinni athugasemd">✏️ Breyta</button>
-                        <button type="button" onclick="deleteHouseComment('${houseId}')" class="comment-action-btn btn-danger-action" title="Eyða þinni athugasemd">🗑️</button>
+              ${visibleComments.map(c => {
+                const commentKey = `${houseId}_${c.person}`;
+                const isExpanded = !!expandedHouseComments[commentKey];
+                const isLong = (c.text.length > 80 || c.text.includes('\n'));
+
+                return `
+                  <div class="house-comment-item ${c.isMe ? 'comment-item-me' : ''}">
+                    <div class="house-comment-header">
+                      <strong>${escapeHtml(c.person)}${c.isMe ? ' (þú)' : ''}:</strong>
+                      ${c.isMe ? `
+                        <div class="house-comment-actions">
+                          <button type="button" onclick="editHouseComment('${houseId}')" class="comment-action-btn" title="Breyta þinni athugasemd">✏️ Breyta</button>
+                          <button type="button" onclick="deleteHouseComment('${houseId}')" class="comment-action-btn btn-danger-action" title="Eyða þinni athugasemd">🗑️</button>
+                        </div>
+                      ` : ''}
+                    </div>
+                    <div 
+                      class="house-comment-text ${isLong && !isExpanded ? 'is-clamped' : 'is-expanded'}"
+                      ${isLong && !isExpanded ? `onclick="toggleHouseCommentTextExpand('${escapeHtml(commentKey)}', '${houseId}')" style="cursor: pointer;" title="Smelltu til að stækka"` : ''}
+                    >${escapeHtml(c.text)}</div>
+                    ${isLong ? `
+                      <div style="margin-top: 3px;">
+                        <button type="button" onclick="toggleHouseCommentTextExpand('${escapeHtml(commentKey)}', '${houseId}')" class="comment-expand-btn">
+                          ${isExpanded ? '− Collapse' : '+ Expand'}
+                        </button>
                       </div>
                     ` : ''}
                   </div>
-                  <div class="house-comment-text">${escapeHtml(c.text)}</div>
-                </div>
-              `).join("")}
+                `;
+              }).join("")}
             </div>
+            ${(comments.length > 2 && !isListExpanded) ? `
+              <div style="margin: -2px 0 8px 0; text-align: left;">
+                <button type="button" onclick="toggleHouseCommentsListExpand('${houseId}')" class="comment-expand-btn">
+                  + Expand (${hiddenCount} fleiri athugasemdir)
+                </button>
+              </div>
+            ` : ''}
           ` : `
             <div class="house-comments-empty">Engin athugasemd enn við þetta hús</div>
           `}
