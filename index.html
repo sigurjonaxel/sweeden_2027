@@ -1093,6 +1093,26 @@
     .rec-pill-blue { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
     .rec-pill-green { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
     .rec-pill-amber { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+    .rec-btn-toggle {
+      background: #0284c7;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s, transform 0.15s;
+      white-space: nowrap;
+      box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25);
+    }
+    .rec-btn-toggle:hover {
+      background: #0369a1;
+      transform: translateY(-1px);
+    }
     
     .rec-insights-grid {
       display: grid;
@@ -1380,140 +1400,153 @@
         </div>
 
         <!-- SÉRKAFLI: HEILDARGREINING, FLUG & BESTI KOSTURINN -->
-        <div class="card rec-card-hero" id="bestOptionSynthesisCard">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 12px;">
+        <div class="card rec-card-hero" id="bestOptionSynthesisCard" style="margin-bottom: 24px; padding: 14px 18px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; cursor: pointer;" onclick="toggleRecommendationCard()">
+            <div style="flex: 1; min-width: 250px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
+                <span style="font-size: 1.25rem;">🎯</span>
+                <span style="font-size: 1.15rem; font-weight: 800; color: #0f172a;">Niðurstaða & Ráðgjöf</span>
+                <span class="rec-pill rec-pill-blue" style="font-size: 0.74rem; padding: 2px 9px;">✈️ Flug CPH</span>
+                <span class="rec-pill rec-pill-green" style="font-size: 0.74rem; padding: 2px 9px;">🌟 Vika 27 (0 nei)</span>
+                <span class="rec-pill rec-pill-amber" style="font-size: 0.74rem; padding: 2px 9px;">🥇 Strandhuset Borrby</span>
+              </div>
+              <div style="font-size: 0.83rem; color: var(--text-muted); line-height: 1.35;">
+                Heildargreining á flugi til Kaupmannahafnar, aksturstíma, afmæli Önnu og 3 bestu húsunum m.v. öll gögn.
+              </div>
+            </div>
             <div>
-              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px;">
-                <span class="rec-pill rec-pill-blue">✈️ Flug: KEF ➔ Kastrup (CPH)</span>
-                <span class="rec-pill rec-pill-green">🌟 Vika 27 (3.–10. júlí): 0 nei-atkvæði</span>
-                <span class="rec-pill rec-pill-amber">🎂 Anna á afmæli 6. júlí</span>
-              </div>
-              <h2 style="font-size: 1.4rem; font-weight: 800; color: #0f172a; margin: 0 0 6px 0; letter-spacing: -0.02em;">
-                🎯 Niðurstaða & Ráðgjöf: Besta heildarplanið fyrir fjölskylduna
-              </h2>
-              <div style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; max-width: 850px;">
-                Greining á öllum atkvæðum hópsins, flugi til Kaupmannahafnar, aksturstíma, aldurshópi krakkanna (10 & 15 ára) og lausum húsum.
-              </div>
+              <button type="button" id="recToggleBtn" class="rec-btn-toggle" onclick="event.stopPropagation(); toggleRecommendationCard()">
+                + Skoða ráðgjöf & greiningu (Expand)
+              </button>
             </div>
           </div>
 
-          <!-- Lykilrök: Flug, Akstur & Vikan -->
-          <div class="rec-insights-grid">
-            <div class="rec-insight-box">
-              <div class="rec-insight-title">
-                <span style="font-size: 1.25rem;">🚗</span>
-                <span>Akstur frá flugvelli skiptir öllu</span>
-              </div>
-              <div class="rec-insight-desc">
-                Þegar lent er á Kastrup (CPH) tekur aðeins <strong>~1 klst. og 25 mín.</strong> að keyra yfir Eyrarsundsbrúna til <strong>Österlen (Borrby/Brantevik)</strong>.<br>
-                <span style="display: inline-block; margin-top: 6px; color: #b91c1c; font-weight: 600;">
-                  ⚠️ Öland er hins vegar í 4,5 – 5 klst. akstri (>420 km hvor leið) – of mikill akstur eftir flug með börn og farangur!
-                </span>
-              </div>
-            </div>
-
-            <div class="rec-insight-box">
-              <div class="rec-insight-title">
-                <span style="font-size: 1.25rem;">📅</span>
-                <span>Vika 27: Hentar öllum (0 nei)</span>
-              </div>
-              <div class="rec-insight-desc">
-                <strong>Vika 27 (3. – 10. júlí)</strong> er eina vikan þar sem <strong>enginn einasti</strong> í fjölskyldunni er forfallaður (6 já, 1 kannski).<br>
-                <span style="display: inline-block; margin-top: 6px; color: #15803d; font-weight: 700;">
-                  🎂 Anna á 24 ára afmæli mánudaginn 6. júlí – fullkomið að fagna saman í sumarbústaðnum!
-                </span>
-              </div>
-            </div>
-
-            <div class="rec-insight-box">
-              <div class="rec-insight-title">
-                <span style="font-size: 1.25rem;">🎢</span>
-                <span>Óskir krakka: Tívolí & Strönd</span>
-              </div>
-              <div class="rec-insight-desc">
-                Birkir óskaði eftir <em>„tívolí og strönd“</em>. Í Österlen er <strong>Kyhlstrand / Sandhammaren</strong> í göngufæri, <strong>Tosselilla Sommarland</strong> (vatnagarður/skemmtigarður) í ~30 mín. akstri og hægt að taka dagsferð í <strong>Tívolí í Kaupmannahöfn</strong>!
-              </div>
-            </div>
-          </div>
-
-          <!-- Mælt með: 3 bestu húsin -->
-          <div style="margin-top: 18px;">
-            <div style="font-size: 1rem; font-weight: 800; color: #0f172a; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
-              <span>🏆 3 bestu valkostirnir m.v. öll gögn:</span>
-            </div>
-            <div style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px;">
-              Smelltu á „Skoða hús á síðunni ⬇️“ til að hoppa beint á spjaldið með öllum myndum og atkvæðum.
-            </div>
-
-            <div class="rec-houses-grid">
-              <!-- Hús 1: Strandhuset Borrby -->
-              <div class="rec-house-item rec-gold">
-                <span class="rec-house-badge badge-gold">🥇 1. VAL: ALLRA BEST Í VIKU 27</span>
-                <img src="https://a0.muscache.com/im/pictures/99804511/25f7406a_original.jpg?im_w=720" alt="Strandhuset Borrby" class="rec-house-img" loading="lazy" />
-                <div class="rec-house-body">
-                  <div class="rec-house-title">Strandhuset – Borrby, Österlen</div>
-                  <div class="rec-house-price">€4.284 <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-muted);">/ vika 27 (~635 þús. kr.)</span></div>
-                  <div class="rec-house-specs">
-                    <span>👥 16 gestir</span> · <span>🛏️ 7 svefnherb.</span> · <span>🛌 16 rúm</span> · <span>🚗 1 klst. 25 mín. frá CPH</span>
-                  </div>
-                  <ul class="rec-house-highlights" style="padding-left: 18px; margin: 0 0 14px 0;">
-                    <li><strong>Aðeins 200m á risa sandströnd</strong> (Kyhlstrand / Sandhammaren).</li>
-                    <li><strong>30 mín. í Tosselilla Sommarland</strong> (vatnagarður, go-kart, leiktæki).</li>
-                    <li><strong>Nóg pláss fyrir alla 10:</strong> 16 rúm, allir fá alvöru rúm.</li>
-                    <li><strong>Vinsælt hjá fjölskyldunni:</strong> 2x ❤️ Love, 3x 👍 Like, 0 dislike.</li>
-                  </ul>
-                  <div class="rec-house-actions">
-                    <button type="button" class="rec-btn-jump" onclick="jumpToHouse('7838623')">Skoða hús á síðunni ⬇️</button>
-                    <a href="https://www.airbnb.com/rooms/7838623" target="_blank" rel="noopener" class="rec-btn-airbnb">Airbnb ↗</a>
-                  </div>
+          <!-- Innihald: Default collapsed (display: none) -->
+          <div id="recCardBody" style="display: none; margin-top: 16px; padding-top: 16px; border-top: 1px dashed #bae6fd;">
+            <!-- Lykilrök: Flug, Akstur & Vikan -->
+            <div class="rec-insights-grid">
+              <div class="rec-insight-box">
+                <div class="rec-insight-title">
+                  <span style="font-size: 1.25rem;">🚗</span>
+                  <span>Akstur frá flugvelli skiptir öllu</span>
+                </div>
+                <div class="rec-insight-desc">
+                  Þegar lent er á Kastrup (CPH) tekur aðeins <strong>~1 klst. og 25 mín.</strong> að keyra yfir Eyrarsundsbrúna til <strong>Österlen (Borrby/Brantevik)</strong>.<br>
+                  <span style="display: inline-block; margin-top: 6px; color: #b91c1c; font-weight: 600;">
+                    ⚠️ Öland er hins vegar í 4,5 – 5 klst. akstri (>420 km hvor leið) – of mikill akstur eftir flug með börn og farangur!
+                  </span>
                 </div>
               </div>
 
-              <!-- Hús 2: Brantevik Strandsetur -->
-              <div class="rec-house-item">
-                <span class="rec-house-badge badge-silver">🥈 2. VAL: ÓDÝRAST EF V26 ER VALIÐ</span>
-                <img src="https://a0.muscache.com/im/pictures/hosting/Hosting-1767296663427055904/original/3c005a37-d3db-4ed7-9fad-708f7536ff92.jpeg?im_w=1200" alt="Brantevik Strandsetur" class="rec-house-img" loading="lazy" />
-                <div class="rec-house-body">
-                  <div class="rec-house-title">Brantevik Strandsetur – Österlen</div>
-                  <div class="rec-house-price">€3.332 <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-muted);">/ vika 26 (~495 þús. kr. - ÓDÝRAST!)</span></div>
-                  <div class="rec-house-specs">
-                    <span>👥 14 gestir</span> · <span>🛏️ 7 svefnherb.</span> · <span>🏊 Innisundlaug</span> · <span>🚗 1 klst. 30 mín. frá CPH</span>
-                  </div>
-                  <ul class="rec-house-highlights" style="padding-left: 18px; margin: 0 0 14px 0;">
-                    <li><strong>Sér innisundlaugahús & sauna</strong> beint við sjóinn.</li>
-                    <li><strong>Lang ódýrasta lúxushúsið:</strong> Aðeins €3.332 fyrir 14 manns.</li>
-                    <li><strong>Galli:</strong> Aðeins laust í <em>Viku 26</em> (uppbókað í viku 27). Afmæli Önnu lendir 3 dögum síðar.</li>
-                    <li><strong>Vinsælt:</strong> 2x ❤️ Love (Lóa, Sissi), 2x 👍 Like.</li>
-                  </ul>
-                  <div class="rec-house-actions">
-                    <button type="button" class="rec-btn-jump" onclick="jumpToHouse('1767296663427055904')">Skoða hús á síðunni ⬇️</button>
-                    <a href="https://www.airbnb.com/rooms/1767296663427055904" target="_blank" rel="noopener" class="rec-btn-airbnb">Airbnb ↗</a>
-                  </div>
+              <div class="rec-insight-box">
+                <div class="rec-insight-title">
+                  <span style="font-size: 1.25rem;">📅</span>
+                  <span>Vika 27: Hentar öllum (0 nei)</span>
+                </div>
+                <div class="rec-insight-desc">
+                  <strong>Vika 27 (3. – 10. júlí)</strong> er eina vikan þar sem <strong>enginn einasti</strong> í fjölskyldunni er forfallaður (6 já, 1 kannski).<br>
+                  <span style="display: inline-block; margin-top: 6px; color: #15803d; font-weight: 700;">
+                    🎂 Anna á 24 ára afmæli mánudaginn 6. júlí – fullkomið að fagna saman í sumarbústaðnum!
+                  </span>
                 </div>
               </div>
 
-              <!-- Hús 3: Otterup Hasmark Strand -->
-              <div class="rec-house-item">
-                <span class="rec-house-badge badge-bronze">🥉 3. VAL: LÚXUS Í DANMÖRKU (V27)</span>
-                <img src="https://a0.muscache.com/im/pictures/hosting/Hosting-1090334101923876759/original/6efa88ad-7fcb-49b3-a4df-31c35cd6a089.jpeg?im_w=720" alt="Hasmark Strand Otterup" class="rec-house-img" loading="lazy" />
-                <div class="rec-house-body">
-                  <div class="rec-house-title">Luxury Retreat – Otterup, Fjón (DK)</div>
-                  <div class="rec-house-price">€4.829 <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-muted);">/ vika 27 (~715 þús. kr.)</span></div>
-                  <div class="rec-house-specs">
-                    <span>👥 14 gestir</span> · <span>🛏️ 6 svefnherb.</span> · <span>🏊 Laug, pottur & leikir</span> · <span>🚗 1 klst. 55 mín. frá CPH</span>
+              <div class="rec-insight-box">
+                <div class="rec-insight-title">
+                  <span style="font-size: 1.25rem;">🎢</span>
+                  <span>Óskir krakka: Tívolí & Strönd</span>
+                </div>
+                <div class="rec-insight-desc">
+                  Birkir óskaði eftir <em>„tívolí og strönd“</em>. Í Österlen er <strong>Kyhlstrand / Sandhammaren</strong> í göngufæri, <strong>Tosselilla Sommarland</strong> (vatnagarður/skemmtigarður) í ~30 mín. akstri og hægt að taka dagsferð í <strong>Tívolí í Kaupmannahöfn</strong>!
+                </div>
+              </div>
+            </div>
+
+            <!-- Mælt með: 3 bestu húsin -->
+            <div style="margin-top: 18px;">
+              <div style="font-size: 1rem; font-weight: 800; color: #0f172a; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+                <span>🏆 3 bestu valkostirnir m.v. öll gögn:</span>
+              </div>
+              <div style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px;">
+                Smelltu á „Skoða hús á síðunni ⬇️“ til að hoppa beint á spjaldið með öllum myndum og atkvæðum.
+              </div>
+
+              <div class="rec-houses-grid">
+                <!-- Hús 1: Strandhuset Borrby -->
+                <div class="rec-house-item rec-gold">
+                  <span class="rec-house-badge badge-gold">🥇 1. VAL: ALLRA BEST Í VIKU 27</span>
+                  <img src="https://a0.muscache.com/im/pictures/99804511/25f7406a_original.jpg?im_w=720" alt="Strandhuset Borrby" class="rec-house-img" loading="lazy" />
+                  <div class="rec-house-body">
+                    <div class="rec-house-title">Strandhuset – Borrby, Österlen</div>
+                    <div class="rec-house-price">€4.284 <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-muted);">/ vika 27 (~635 þús. kr.)</span></div>
+                    <div class="rec-house-specs">
+                      <span>👥 16 gestir</span> · <span>🛏️ 7 svefnherb.</span> · <span>🛌 16 rúm</span> · <span>🚗 1 klst. 25 mín. frá CPH</span>
+                    </div>
+                    <ul class="rec-house-highlights" style="padding-left: 18px; margin: 0 0 14px 0;">
+                      <li><strong>Aðeins 200m á risa sandströnd</strong> (Kyhlstrand / Sandhammaren).</li>
+                      <li><strong>30 mín. í Tosselilla Sommarland</strong> (vatnagarður, go-kart, leiktæki).</li>
+                      <li><strong>Nóg pláss fyrir alla 10:</strong> 16 rúm, allir fá alvöru rúm.</li>
+                      <li><strong>Vinsælt hjá fjölskyldunni:</strong> 2x ❤️ Love, 3x 👍 Like, 0 dislike.</li>
+                    </ul>
+                    <div class="rec-house-actions">
+                      <button type="button" class="rec-btn-jump" onclick="jumpToHouse('7838623')">Skoða hús á síðunni ⬇️</button>
+                      <a href="https://www.airbnb.com/rooms/7838623" target="_blank" rel="noopener" class="rec-btn-airbnb">Airbnb ↗</a>
+                    </div>
                   </div>
-                  <ul class="rec-house-highlights" style="padding-left: 18px; margin: 0 0 14px 0;">
-                    <li><strong>Frábær aðstaða í Danmörku:</strong> Innisundlaug, heitur pottur, gufubað, billjard, borðtennis og leikjatölva.</li>
-                    <li><strong>Laust í Viku 27</strong> (engin Eyrarsundsbrú, keyrt vestur yfir Stórabelti).</li>
-                    <li><strong>Nálægt Odense</strong> (Dýragarður, söguslóðir H.C. Andersen).</li>
-                    <li><strong>Uppáhalds hjá Birki & Sissa:</strong> 2x ❤️ Love, 3x 👍 Like.</li>
-                  </ul>
-                  <div class="rec-house-actions">
-                    <button type="button" class="rec-btn-jump" onclick="jumpToHouse('1090334101923876759')">Skoða hús á síðunni ⬇️</button>
-                    <a href="https://www.airbnb.com/rooms/1090334101923876759" target="_blank" rel="noopener" class="rec-btn-airbnb">Airbnb ↗</a>
+                </div>
+
+                <!-- Hús 2: Brantevik Strandsetur -->
+                <div class="rec-house-item">
+                  <span class="rec-house-badge badge-silver">🥈 2. VAL: ÓDÝRAST EF V26 ER VALIÐ</span>
+                  <img src="https://a0.muscache.com/im/pictures/hosting/Hosting-1767296663427055904/original/3c005a37-d3db-4ed7-9fad-708f7536ff92.jpeg?im_w=1200" alt="Brantevik Strandsetur" class="rec-house-img" loading="lazy" />
+                  <div class="rec-house-body">
+                    <div class="rec-house-title">Brantevik Strandsetur – Österlen</div>
+                    <div class="rec-house-price">€3.332 <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-muted);">/ vika 26 (~495 þús. kr. - ÓDÝRAST!)</span></div>
+                    <div class="rec-house-specs">
+                      <span>👥 14 gestir</span> · <span>🛏️ 7 svefnherb.</span> · <span>🏊 Innisundlaug</span> · <span>🚗 1 klst. 30 mín. frá CPH</span>
+                    </div>
+                    <ul class="rec-house-highlights" style="padding-left: 18px; margin: 0 0 14px 0;">
+                      <li><strong>Sér innisundlaugahús & sauna</strong> beint við sjóinn.</li>
+                      <li><strong>Lang ódýrasta lúxushúsið:</strong> Aðeins €3.332 fyrir 14 manns.</li>
+                      <li><strong>Galli:</strong> Aðeins laust í <em>Viku 26</em> (uppbókað í viku 27). Afmæli Önnu lendir 3 dögum síðar.</li>
+                      <li><strong>Vinsælt:</strong> 2x ❤️ Love (Lóa, Sissi), 2x 👍 Like.</li>
+                    </ul>
+                    <div class="rec-house-actions">
+                      <button type="button" class="rec-btn-jump" onclick="jumpToHouse('1767296663427055904')">Skoða hús á síðunni ⬇️</button>
+                      <a href="https://www.airbnb.com/rooms/1767296663427055904" target="_blank" rel="noopener" class="rec-btn-airbnb">Airbnb ↗</a>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Hús 3: Otterup Hasmark Strand -->
+                <div class="rec-house-item">
+                  <span class="rec-house-badge badge-bronze">🥉 3. VAL: LÚXUS Í DANMÖRKU (V27)</span>
+                  <img src="https://a0.muscache.com/im/pictures/hosting/Hosting-1090334101923876759/original/6efa88ad-7fcb-49b3-a4df-31c35cd6a089.jpeg?im_w=720" alt="Hasmark Strand Otterup" class="rec-house-img" loading="lazy" />
+                  <div class="rec-house-body">
+                    <div class="rec-house-title">Luxury Retreat – Otterup, Fjón (DK)</div>
+                    <div class="rec-house-price">€4.829 <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-muted);">/ vika 27 (~715 þús. kr.)</span></div>
+                    <div class="rec-house-specs">
+                      <span>👥 14 gestir</span> · <span>🛏️ 6 svefnherb.</span> · <span>🏊 Laug, pottur & leikir</span> · <span>🚗 1 klst. 55 mín. frá CPH</span>
+                    </div>
+                    <ul class="rec-house-highlights" style="padding-left: 18px; margin: 0 0 14px 0;">
+                      <li><strong>Frábær aðstaða í Danmörku:</strong> Innisundlaug, heitur pottur, gufubað, billjard, borðtennis og leikjatölva.</li>
+                      <li><strong>Laust í Viku 27</strong> (engin Eyrarsundsbrú, keyrt vestur yfir Stórabelti).</li>
+                      <li><strong>Nálægt Odense</strong> (Dýragarður, söguslóðir H.C. Andersen).</li>
+                      <li><strong>Uppáhalds hjá Birki & Sissa:</strong> 2x ❤️ Love, 3x 👍 Like.</li>
+                    </ul>
+                    <div class="rec-house-actions">
+                      <button type="button" class="rec-btn-jump" onclick="jumpToHouse('1090334101923876759')">Skoða hús á síðunni ⬇️</button>
+                      <a href="https://www.airbnb.com/rooms/1090334101923876759" target="_blank" rel="noopener" class="rec-btn-airbnb">Airbnb ↗</a>
+                    </div>
                   </div>
                 </div>
               </div>
+            </div>
+
+            <div style="margin-top: 20px; text-align: center;">
+              <button type="button" id="recToggleBottomBtn" class="rec-btn-toggle" onclick="toggleRecommendationCard()" style="font-size: 0.8rem; padding: 6px 18px; background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; box-shadow: none;">
+                − Fela greiningu (Collapse)
+              </button>
             </div>
           </div>
         </div>
@@ -4771,6 +4804,22 @@
       renderResults();
       scheduleCloudPush();
       showToast("🗑️ Athugasemd eytt");
+    }
+
+    let isRecommendationExpanded = false;
+
+    function toggleRecommendationCard() {
+      isRecommendationExpanded = !isRecommendationExpanded;
+      const bodyEl = document.getElementById("recCardBody");
+      const btnEl = document.getElementById("recToggleBtn");
+      const bottomBtnEl = document.getElementById("recToggleBottomBtn");
+
+      if (bodyEl) {
+        bodyEl.style.display = isRecommendationExpanded ? "block" : "none";
+      }
+      const label = isRecommendationExpanded ? "− Fela greiningu (Collapse)" : "+ Skoða ráðgjöf & greiningu (Expand)";
+      if (btnEl) btnEl.innerHTML = label;
+      if (bottomBtnEl) bottomBtnEl.innerHTML = label;
     }
 
     function jumpToHouse(houseId) {
