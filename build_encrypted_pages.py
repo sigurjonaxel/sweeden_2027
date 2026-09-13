@@ -60,13 +60,13 @@ def build():
         { "name": "Sara Kristín", "shortName": "Sara", "avatar": "images/avatars/sara.jpg?v=2", "date": "18. júlí 2010", "dayMonth": "18. júl", "year": 2010, "age2027": 17, "inSummer": True },
         { "name": "Þórhildur Soffía", "shortName": "Þórhildur", "avatar": "images/avatars/thorhildur.jpg?v=2", "date": "10. ágúst 2010", "dayMonth": "10. ágú", "year": 2010, "age2027": 17, "inSummer": True },
         { "name": "Rannveig Arna", "shortName": "Rannveig", "avatar": "images/avatars/rannveig.jpg?v=2", "date": "5. september 2005", "dayMonth": "5. sep", "year": 2005, "age2027": 22 },
-        { "name": "Anna Huyen Ngo", "shortName": "Anna", "avatar": "images/avatars/anna.jpg?v=2", "date": "2003", "dayMonth": "2003", "year": 2003, "age2027": 24 }
+        { "name": "Anna Huyen Ngo", "shortName": "Anna", "avatar": "images/avatars/anna.jpg?v=2", "date": "6. júlí 2003", "dayMonth": "6. júl", "year": 2003, "age2027": 24, "inSummer": True }
     ]
 
     weeks = [
         { "id": "w25", "num": "Vika 25", "dates": "19. jún – 26. jún 2027", "tag": "Lau – Lau · 🇸🇪 Midsommar · 🎒 Skólalok · 🎂 Axel 22. jún" },
         { "id": "w26", "num": "Vika 26", "dates": "26. jún – 03. júl 2027", "tag": "Lau – Lau · 🎒 Skólafrí" },
-        { "id": "w27", "num": "Vika 27", "dates": "03. júl – 10. júl 2027", "tag": "Lau – Lau · 🔥 Háönn í júlí" },
+        { "id": "w27", "num": "Vika 27", "dates": "03. júl – 10. júl 2027", "tag": "Lau – Lau · 🔥 Háönn í júlí · 🎂 Anna 6. júl" },
         { "id": "w28", "num": "Vika 28", "dates": "10. júl – 17. júl 2027", "tag": "Lau – Lau · 🔥 Háönn í júlí" },
         { "id": "w29", "num": "Vika 29", "dates": "17. júl – 24. júl 2027", "tag": "Lau – Lau · 🔥 Háönn · 🎂 Sara 18. júl" },
         { "id": "w30", "num": "Vika 30", "dates": "24. júl – 31. júl 2027", "tag": "Lau – Lau · 🔥 Háönn" },

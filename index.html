@@ -2998,6 +2998,7 @@
 
     function getWeekBirthdayInfo(weekId) {
       if (weekId === "w25") return { name: "Axel Bjarkar", day: "22. júní", age: 24, text: "Axel á afmæli 22. júní (verður 24 ára)" };
+      if (weekId === "w27") return { name: "Anna Huyen Ngo", day: "6. júlí", age: 24, text: "Anna á afmæli 6. júlí (verður 24 ára)" };
       if (weekId === "w29") return { name: "Sara Kristín", day: "18. júlí", age: 17, text: "Sara á afmæli 18. júlí (verður 17 ára)" };
       if (weekId === "w32") return { name: "Þórhildur Soffía", day: "10. ágúst", age: 17, text: "Þórhildur á afmæli 10. ágúst (verður 17 ára)" };
       return null;
@@ -3038,6 +3039,12 @@
           name: "Háönn",
           shortDesc: "🔥 Háönn í júlí – heitasti mánuðurinn og mikið líf",
           fullDesc: "🔥 <strong>Háönn í júlí:</strong> Háannatími í Svíþjóð og Danmörku. Skemmtigarðar, strendur og bæir í fullu fjöri."
+        });
+        events.push({
+          icon: "🎂",
+          name: "Afmæli Önnu",
+          shortDesc: "🎂 Anna á afmæli 6. júlí (verður 24 ára)",
+          fullDesc: "🎂 <strong>Afmælisdagur:</strong> Anna Huyen Ngo á afmæli 6. júlí (verður 24 ára)."
         });
       } else if (weekId === "w28") {
         events.push({
