@@ -1064,6 +1064,186 @@
       transform: translateX(-50%) translateY(0);
       pointer-events: auto;
     }
+    /* Best Option Synthesis Card */
+    .rec-card-hero {
+      background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 50%, #fdf4ff 100%);
+      border: 2px solid #0284c7;
+      border-radius: 18px;
+      box-shadow: 0 10px 30px -5px rgba(2, 132, 199, 0.18);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+    .rec-card-hero::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, #0284c7 0%, #38bdf8 50%, #818cf8 100%);
+    }
+    .rec-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+    .rec-pill-blue { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
+    .rec-pill-green { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+    .rec-pill-amber { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+    
+    .rec-insights-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 12px;
+      margin: 16px 0 20px 0;
+    }
+    .rec-insight-box {
+      background: white;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 14px 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .rec-insight-title {
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .rec-insight-desc {
+      font-size: 0.84rem;
+      color: #334155;
+      line-height: 1.45;
+    }
+    .rec-houses-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+      margin-top: 14px;
+    }
+    .rec-house-item {
+      background: white;
+      border-radius: 14px;
+      border: 1.5px solid #e2e8f0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+    }
+    .rec-house-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 22px rgba(0,0,0,0.1);
+    }
+    .rec-house-item.rec-gold {
+      border: 2px solid #0284c7;
+      box-shadow: 0 8px 24px rgba(2, 132, 199, 0.16);
+    }
+    .rec-house-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 2;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .badge-gold { background: #0284c7; color: white; }
+    .badge-silver { background: #475569; color: white; }
+    .badge-bronze { background: #b45309; color: white; }
+    
+    .rec-house-img {
+      width: 100%;
+      height: 165px;
+      object-fit: cover;
+      background: #e2e8f0;
+    }
+    .rec-house-body {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .rec-house-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.35;
+      margin-bottom: 6px;
+    }
+    .rec-house-price {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #0284c7;
+      margin-bottom: 8px;
+    }
+    .rec-house-specs {
+      font-size: 0.8rem;
+      color: #64748b;
+      margin-bottom: 12px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .rec-house-highlights {
+      font-size: 0.82rem;
+      color: #334155;
+      line-height: 1.45;
+      margin-bottom: 14px;
+      flex: 1;
+    }
+    .rec-house-highlights li {
+      margin-bottom: 4px;
+    }
+    .rec-house-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: auto;
+    }
+    .rec-btn-jump {
+      flex: 1;
+      padding: 9px 12px;
+      background: #f0f9ff;
+      color: #0284c7;
+      border: 1.5px solid #bae6fd;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      transition: background 0.15s;
+    }
+    .rec-btn-jump:hover {
+      background: #e0f2fe;
+    }
+    .rec-btn-airbnb {
+      padding: 9px 14px;
+      background: #ff385c;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .rec-btn-airbnb:hover {
+      background: #e00b41;
+    }
   </style>
 </head>
 <body>
@@ -1197,6 +1377,145 @@
           <div id="familyBirthdaysSection" style="display:none;"></div>
           <div id="weeksVsHousesAlignment" style="display:none;"></div>
           <div id="weeksExpandWrap" style="display:none;"></div>
+        </div>
+
+        <!-- SÉRKAFLI: HEILDARGREINING, FLUG & BESTI KOSTURINN -->
+        <div class="card rec-card-hero" id="bestOptionSynthesisCard">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 12px;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px;">
+                <span class="rec-pill rec-pill-blue">✈️ Flug: KEF ➔ Kastrup (CPH)</span>
+                <span class="rec-pill rec-pill-green">🌟 Vika 27 (3.–10. júlí): 0 nei-atkvæði</span>
+                <span class="rec-pill rec-pill-amber">🎂 Anna á afmæli 6. júlí</span>
+              </div>
+              <h2 style="font-size: 1.4rem; font-weight: 800; color: #0f172a; margin: 0 0 6px 0; letter-spacing: -0.02em;">
+                🎯 Niðurstaða & Ráðgjöf: Besta heildarplanið fyrir fjölskylduna
+              </h2>
+              <div style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; max-width: 850px;">
+                Greining á öllum atkvæðum hópsins, flugi til Kaupmannahafnar, aksturstíma, aldurshópi krakkanna (10 & 15 ára) og lausum húsum.
+              </div>
+            </div>
+          </div>
+
+          <!-- Lykilrök: Flug, Akstur & Vikan -->
+          <div class="rec-insights-grid">
+            <div class="rec-insight-box">
+              <div class="rec-insight-title">
+                <span style="font-size: 1.25rem;">🚗</span>
+                <span>Akstur frá flugvelli skiptir öllu</span>
+              </div>
+              <div class="rec-insight-desc">
+                Þegar lent er á Kastrup (CPH) tekur aðeins <strong>~1 klst. og 25 mín.</strong> að keyra yfir Eyrarsundsbrúna til <strong>Österlen (Borrby/Brantevik)</strong>.<br>
+                <span style="display: inline-block; margin-top: 6px; color: #b91c1c; font-weight: 600;">
+                  ⚠️ Öland er hins vegar í 4,5 – 5 klst. akstri (>420 km hvor leið) – of mikill akstur eftir flug með börn og farangur!
+                </span>
+              </div>
+            </div>
+
+            <div class="rec-insight-box">
+              <div class="rec-insight-title">
+                <span style="font-size: 1.25rem;">📅</span>
+                <span>Vika 27: Hentar öllum (0 nei)</span>
+              </div>
+              <div class="rec-insight-desc">
+                <strong>Vika 27 (3. – 10. júlí)</strong> er eina vikan þar sem <strong>enginn einasti</strong> í fjölskyldunni er forfallaður (6 já, 1 kannski).<br>
+                <span style="display: inline-block; margin-top: 6px; color: #15803d; font-weight: 700;">
+                  🎂 Anna á 24 ára afmæli mánudaginn 6. júlí – fullkomið að fagna saman í sumarbústaðnum!
+                </span>
+              </div>
+            </div>
+
+            <div class="rec-insight-box">
+              <div class="rec-insight-title">
+                <span style="font-size: 1.25rem;">🎢</span>
+                <span>Óskir krakka: Tívolí & Strönd</span>
+              </div>
+              <div class="rec-insight-desc">
+                Birkir óskaði eftir <em>„tívolí og strönd“</em>. Í Österlen er <strong>Kyhlstrand / Sandhammaren</strong> í göngufæri, <strong>Tosselilla Sommarland</strong> (vatnagarður/skemmtigarður) í ~30 mín. akstri og hægt að taka dagsferð í <strong>Tívolí í Kaupmannahöfn</strong>!
+              </div>
+            </div>
+          </div>
+
+          <!-- Mælt með: 3 bestu húsin -->
+          <div style="margin-top: 18px;">
+            <div style="font-size: 1rem; font-weight: 800; color: #0f172a; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+              <span>🏆 3 bestu valkostirnir m.v. öll gögn:</span>
+            </div>
+            <div style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px;">
+              Smelltu á „Skoða hús á síðunni ⬇️“ til að hoppa beint á spjaldið með öllum myndum og atkvæðum.
+            </div>
+
+            <div class="rec-houses-grid">
+              <!-- Hús 1: Strandhuset Borrby -->
+              <div class="rec-house-item rec-gold">
+                <span class="rec-house-badge badge-gold">🥇 1. VAL: ALLRA BEST Í VIKU 27</span>
+                <img src="https://a0.muscache.com/im/pictures/99804511/25f7406a_original.jpg?im_w=720" alt="Strandhuset Borrby" class="rec-house-img" loading="lazy" />
+                <div class="rec-house-body">
+                  <div class="rec-house-title">Strandhuset – Borrby, Österlen</div>
+                  <div class="rec-house-price">€4.284 <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-muted);">/ vika 27 (~635 þús. kr.)</span></div>
+                  <div class="rec-house-specs">
+                    <span>👥 16 gestir</span> · <span>🛏️ 7 svefnherb.</span> · <span>🛌 16 rúm</span> · <span>🚗 1 klst. 25 mín. frá CPH</span>
+                  </div>
+                  <ul class="rec-house-highlights" style="padding-left: 18px; margin: 0 0 14px 0;">
+                    <li><strong>Aðeins 200m á risa sandströnd</strong> (Kyhlstrand / Sandhammaren).</li>
+                    <li><strong>30 mín. í Tosselilla Sommarland</strong> (vatnagarður, go-kart, leiktæki).</li>
+                    <li><strong>Nóg pláss fyrir alla 10:</strong> 16 rúm, allir fá alvöru rúm.</li>
+                    <li><strong>Vinsælt hjá fjölskyldunni:</strong> 2x ❤️ Love, 3x 👍 Like, 0 dislike.</li>
+                  </ul>
+                  <div class="rec-house-actions">
+                    <button type="button" class="rec-btn-jump" onclick="jumpToHouse('7838623')">Skoða hús á síðunni ⬇️</button>
+                    <a href="https://www.airbnb.com/rooms/7838623" target="_blank" rel="noopener" class="rec-btn-airbnb">Airbnb ↗</a>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Hús 2: Brantevik Strandsetur -->
+              <div class="rec-house-item">
+                <span class="rec-house-badge badge-silver">🥈 2. VAL: ÓDÝRAST EF V26 ER VALIÐ</span>
+                <img src="https://a0.muscache.com/im/pictures/hosting/Hosting-1767296663427055904/original/3c005a37-d3db-4ed7-9fad-708f7536ff92.jpeg?im_w=1200" alt="Brantevik Strandsetur" class="rec-house-img" loading="lazy" />
+                <div class="rec-house-body">
+                  <div class="rec-house-title">Brantevik Strandsetur – Österlen</div>
+                  <div class="rec-house-price">€3.332 <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-muted);">/ vika 26 (~495 þús. kr. - ÓDÝRAST!)</span></div>
+                  <div class="rec-house-specs">
+                    <span>👥 14 gestir</span> · <span>🛏️ 7 svefnherb.</span> · <span>🏊 Innisundlaug</span> · <span>🚗 1 klst. 30 mín. frá CPH</span>
+                  </div>
+                  <ul class="rec-house-highlights" style="padding-left: 18px; margin: 0 0 14px 0;">
+                    <li><strong>Sér innisundlaugahús & sauna</strong> beint við sjóinn.</li>
+                    <li><strong>Lang ódýrasta lúxushúsið:</strong> Aðeins €3.332 fyrir 14 manns.</li>
+                    <li><strong>Galli:</strong> Aðeins laust í <em>Viku 26</em> (uppbókað í viku 27). Afmæli Önnu lendir 3 dögum síðar.</li>
+                    <li><strong>Vinsælt:</strong> 2x ❤️ Love (Lóa, Sissi), 2x 👍 Like.</li>
+                  </ul>
+                  <div class="rec-house-actions">
+                    <button type="button" class="rec-btn-jump" onclick="jumpToHouse('1767296663427055904')">Skoða hús á síðunni ⬇️</button>
+                    <a href="https://www.airbnb.com/rooms/1767296663427055904" target="_blank" rel="noopener" class="rec-btn-airbnb">Airbnb ↗</a>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Hús 3: Otterup Hasmark Strand -->
+              <div class="rec-house-item">
+                <span class="rec-house-badge badge-bronze">🥉 3. VAL: LÚXUS Í DANMÖRKU (V27)</span>
+                <img src="https://a0.muscache.com/im/pictures/hosting/Hosting-1090334101923876759/original/6efa88ad-7fcb-49b3-a4df-31c35cd6a089.jpeg?im_w=720" alt="Hasmark Strand Otterup" class="rec-house-img" loading="lazy" />
+                <div class="rec-house-body">
+                  <div class="rec-house-title">Luxury Retreat – Otterup, Fjón (DK)</div>
+                  <div class="rec-house-price">€4.829 <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-muted);">/ vika 27 (~715 þús. kr.)</span></div>
+                  <div class="rec-house-specs">
+                    <span>👥 14 gestir</span> · <span>🛏️ 6 svefnherb.</span> · <span>🏊 Laug, pottur & leikir</span> · <span>🚗 1 klst. 55 mín. frá CPH</span>
+                  </div>
+                  <ul class="rec-house-highlights" style="padding-left: 18px; margin: 0 0 14px 0;">
+                    <li><strong>Frábær aðstaða í Danmörku:</strong> Innisundlaug, heitur pottur, gufubað, billjard, borðtennis og leikjatölva.</li>
+                    <li><strong>Laust í Viku 27</strong> (engin Eyrarsundsbrú, keyrt vestur yfir Stórabelti).</li>
+                    <li><strong>Nálægt Odense</strong> (Dýragarður, söguslóðir H.C. Andersen).</li>
+                    <li><strong>Uppáhalds hjá Birki & Sissa:</strong> 2x ❤️ Love, 3x 👍 Like.</li>
+                  </ul>
+                  <div class="rec-house-actions">
+                    <button type="button" class="rec-btn-jump" onclick="jumpToHouse('1090334101923876759')">Skoða hús á síðunni ⬇️</button>
+                    <a href="https://www.airbnb.com/rooms/1090334101923876759" target="_blank" rel="noopener" class="rec-btn-airbnb">Airbnb ↗</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="card">
@@ -4452,6 +4771,39 @@
       renderResults();
       scheduleCloudPush();
       showToast("🗑️ Athugasemd eytt");
+    }
+
+    function jumpToHouse(houseId) {
+      const filterSelect = document.getElementById("filterHouseWeekSelect");
+      if (filterSelect) {
+        filterSelect.value = "all";
+        if (typeof changeHouseWeekFilter === "function") changeHouseWeekFilter("all");
+      }
+      const houseCard = document.getElementById(`house-card-${houseId}`);
+      if (houseCard) {
+        houseCard.scrollIntoView({ behavior: "smooth", block: "center" });
+        houseCard.style.transition = "box-shadow 0.4s ease, transform 0.4s ease";
+        houseCard.style.boxShadow = "0 0 0 4px #0284c7, 0 15px 30px rgba(2, 132, 199, 0.35)";
+        houseCard.style.transform = "scale(1.02)";
+        setTimeout(() => {
+          houseCard.style.boxShadow = "";
+          houseCard.style.transform = "";
+        }, 2200);
+      } else if (typeof filterHouses === "function") {
+        filterHouses("all");
+        setTimeout(() => {
+          const el2 = document.getElementById(`house-card-${houseId}`);
+          if (el2) {
+            el2.scrollIntoView({ behavior: "smooth", block: "center" });
+            el2.style.boxShadow = "0 0 0 4px #0284c7, 0 15px 30px rgba(2, 132, 199, 0.35)";
+            el2.style.transform = "scale(1.02)";
+            setTimeout(() => {
+              el2.style.boxShadow = "";
+              el2.style.transform = "";
+            }, 2200);
+          }
+        }, 200);
+      }
     }
 
     function updateSingleHouseCard(houseId) {
