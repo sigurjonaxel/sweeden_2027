@@ -696,11 +696,71 @@
       line-clamp: 2;
       overflow: hidden;
       text-overflow: ellipsis;
-      white-space: pre-wrap;
+      white-space: pre-line;
     }
     .house-comment-text.is-expanded {
       display: block;
-      white-space: pre-wrap;
+      max-height: 280px;
+      overflow-y: auto;
+      padding: 10px 12px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      line-height: 1.45;
+      margin: 6px 0;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.03);
+    }
+    .house-comment-text.is-expanded::-webkit-scrollbar {
+      width: 6px;
+    }
+    .house-comment-text.is-expanded::-webkit-scrollbar-thumb {
+      background-color: #cbd5e1;
+      border-radius: 3px;
+    }
+    .comment-cardlet {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 8px 10px;
+      margin-bottom: 8px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+    .comment-cardlet:last-child {
+      margin-bottom: 0;
+    }
+    .comment-para {
+      margin-bottom: 8px;
+      line-height: 1.45;
+    }
+    .comment-para:last-child {
+      margin-bottom: 0;
+    }
+    .comment-field {
+      margin-bottom: 3px;
+      line-height: 1.4;
+    }
+    .comment-field:last-child {
+      margin-bottom: 0;
+    }
+    .comment-field-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 5px;
+      padding-bottom: 3px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .comment-field-label {
+      font-weight: 700;
+      color: #334155;
+    }
+    .comment-field-val {
+      color: #1e293b;
+    }
+    .comment-field-plain {
+      margin-bottom: 3px;
+      color: #334155;
     }
     .comment-expand-btn {
       background: none;
@@ -720,19 +780,41 @@
       color: #0369a1;
     }
     .house-comments-empty { font-size: 0.76rem; color: var(--text-muted); margin-bottom: 8px; font-style: italic; }
-    .house-comment-input-wrap { display: flex; gap: 6px; }
-    .house-comment-input {
-      flex: 1; padding: 7px 10px; border: 1px solid #cbd5e1;
-      border-radius: 6px; font-size: 0.8rem; background: white; font-family: inherit;
+    .house-comment-input-wrap {
+      display: flex;
+      gap: 6px;
+      align-items: flex-end;
     }
-    .house-comment-input:focus {
-      outline: none; border-color: var(--primary);
+    .house-comment-textarea {
+      flex: 1;
+      padding: 8px 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      line-height: 1.4;
+      background: white;
+      font-family: inherit;
+      resize: vertical;
+      min-height: 46px;
+      max-height: 180px;
+      box-sizing: border-box;
+    }
+    .house-comment-textarea:focus {
+      outline: none;
+      border-color: var(--primary);
       box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.2);
     }
     .house-comment-submit-btn {
-      background: var(--primary); color: white; border: none;
-      border-radius: 6px; padding: 7px 12px; font-size: 0.78rem;
-      font-weight: 700; cursor: pointer; white-space: nowrap;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      height: 46px;
     }
     .house-comment-submit-btn:hover { background: #0284c7; }
 
@@ -1977,6 +2059,20 @@
                 }
                 votesChanged = true;
               } else if (currentPerson && currentVote && hasLocalVotes) {
+                if (cloudKeyForMe && cloudData.votes[cloudKeyForMe]) {
+                  const cloudMyVote = cloudData.votes[cloudKeyForMe];
+                  if (cloudMyVote && cloudMyVote.houseComments) {
+                    if (!currentVote.houseComments) currentVote.houseComments = {};
+                    for (const hId in cloudMyVote.houseComments) {
+                      const localC = currentVote.houseComments[hId] || "";
+                      const cloudC = cloudMyVote.houseComments[hId] || "";
+                      if (!localC || (cloudC.includes("\n") && !localC.includes("\n")) || (cloudC.length > localC.length && !localC.includes("\n"))) {
+                        currentVote.houseComments[hId] = cloudC;
+                        votesChanged = true;
+                      }
+                    }
+                  }
+                }
                 allVotes[currentPerson] = currentVote;
               }
 
@@ -4149,6 +4245,64 @@
       if (el) el.innerHTML = getHouseCommentsHTML(houseId);
     }
 
+    function renderHouseCommentFormatted(rawText, isClamped, commentKey, houseId, isLong) {
+      if (!rawText) return "";
+      let text = rawText;
+      // Ef nýjar línur vantaði (t.d. ef texta var límt í venjulegan input reit), endurheimta skipulag
+      if (!text.includes("\n")) {
+        text = text
+          .replace(/\s+(Garður:|Staður:|Aðdráttarafl:)/gi, "\n\n$1")
+          .replace(/\s+(Tegund:|Akstur[^:]*:|Helsta aðdráttarafl:)/gi, "\n$1");
+      }
+
+      if (isClamped) {
+        return `
+          <div 
+            class="house-comment-text is-clamped" 
+            ${isLong ? `onclick="toggleHouseCommentTextExpand('${escapeHtml(commentKey)}', '${houseId}')" style="cursor: pointer;" title="Smelltu til að stækka"` : ''}
+          >${escapeHtml(text)}</div>
+        `;
+      }
+
+      const blocks = text.split(/\n{2,}/).map(b => b.trim()).filter(Boolean);
+      const renderedBlocks = blocks.map(block => {
+        const lines = block.split("\n").map(l => l.trim()).filter(Boolean);
+        if (!lines.length) return "";
+
+        const isCardlet = lines.some(l => /^(Garður|Staður|Aðdráttarafl):/i.test(l)) ||
+                          (lines.length >= 2 && lines.filter(l => /^[^:]{2,32}:/.test(l)).length >= 2);
+
+        const renderedLines = lines.map((line, idx) => {
+          const m = line.match(/^([^:]{2,35}):\s*(.*)$/);
+          if (m) {
+            const key = m[1].trim();
+            const val = m[2].trim();
+            const isTitle = (idx === 0 && isCardlet);
+            return `
+              <div class="comment-field ${isTitle ? 'comment-field-title' : ''}">
+                <span class="comment-field-label">${escapeHtml(key)}:</span>
+                <span class="comment-field-val">${escapeHtml(val)}</span>
+              </div>
+            `;
+          } else {
+            return `<div class="comment-field-plain">${escapeHtml(line)}</div>`;
+          }
+        }).join("");
+
+        if (isCardlet) {
+          return `<div class="comment-cardlet">${renderedLines}</div>`;
+        } else {
+          return `<div class="comment-para">${renderedLines}</div>`;
+        }
+      }).join("");
+
+      return `
+        <div class="house-comment-text is-expanded">
+          ${renderedBlocks}
+        </div>
+      `;
+    }
+
     function getHouseCommentsHTML(houseId) {
       const comments = getHouseComments(houseId);
       const myComment = (currentVote && currentVote.houseComments && currentVote.houseComments[houseId]) ? currentVote.houseComments[houseId] : "";
@@ -4166,7 +4320,7 @@
             <span>💬 Athugasemdir (${comments.length})</span>
             ${comments.length > 2 ? `
               <button type="button" onclick="toggleHouseCommentsListExpand('${houseId}')" class="comment-expand-btn" style="font-size: 0.72rem; text-transform: none; letter-spacing: normal;">
-                ${isListExpanded ? '− Collapse' : `+ Expand (${hiddenCount} í viðbót)`}
+                ${isListExpanded ? '− Færri athugasemdir' : `+ Sýna allar (${comments.length})`}
               </button>
             ` : ''}
           </div>
@@ -4176,27 +4330,34 @@
               ${visibleComments.map(c => {
                 const commentKey = `${houseId}_${c.person}`;
                 const isExpanded = !!expandedHouseComments[commentKey];
-                const isLong = (c.text.length > 80 || c.text.includes('\n'));
+                const isLong = (c.text.length > 80 || c.text.includes('\n') || /(Garður|Staður|Tegund):/i.test(c.text));
 
                 return `
                   <div class="house-comment-item ${c.isMe ? 'comment-item-me' : ''}">
                     <div class="house-comment-header">
-                      <strong>${escapeHtml(c.person)}${c.isMe ? ' (þú)' : ''}:</strong>
-                      ${c.isMe ? `
-                        <div class="house-comment-actions">
-                          <button type="button" onclick="editHouseComment('${houseId}')" class="comment-action-btn" title="Breyta þinni athugasemd">✏️ Breyta</button>
-                          <button type="button" onclick="deleteHouseComment('${houseId}')" class="comment-action-btn btn-danger-action" title="Eyða þinni athugasemd">🗑️</button>
-                        </div>
-                      ` : ''}
+                      <div style="display: flex; align-items: center; gap: 6px;">
+                        ${getUserAvatarHTML(c.person, 18)}
+                        <strong>${escapeHtml(c.person)}${c.isMe ? ' (þú)' : ''}:</strong>
+                      </div>
+                      <div style="display: flex; align-items: center; gap: 8px; margin-left: auto;">
+                        ${isLong ? `
+                          <button type="button" onclick="toggleHouseCommentTextExpand('${escapeHtml(commentKey)}', '${houseId}')" class="comment-expand-btn" style="font-size: 0.73rem;">
+                            ${isExpanded ? '− Collapse' : '+ Expand'}
+                          </button>
+                        ` : ''}
+                        ${c.isMe ? `
+                          <div class="house-comment-actions">
+                            <button type="button" onclick="editHouseComment('${houseId}')" class="comment-action-btn" title="Breyta þinni athugasemd">✏️ Breyta</button>
+                            <button type="button" onclick="deleteHouseComment('${houseId}')" class="comment-action-btn btn-danger-action" title="Eyða þinni athugasemd">🗑️</button>
+                          </div>
+                        ` : ''}
+                      </div>
                     </div>
-                    <div 
-                      class="house-comment-text ${isLong && !isExpanded ? 'is-clamped' : 'is-expanded'}"
-                      ${isLong && !isExpanded ? `onclick="toggleHouseCommentTextExpand('${escapeHtml(commentKey)}', '${houseId}')" style="cursor: pointer;" title="Smelltu til að stækka"` : ''}
-                    >${escapeHtml(c.text)}</div>
-                    ${isLong ? `
-                      <div style="margin-top: 3px;">
+                    ${renderHouseCommentFormatted(c.text, !isExpanded, commentKey, houseId, isLong)}
+                    ${(isLong && isExpanded) ? `
+                      <div style="margin-top: 4px; text-align: right;">
                         <button type="button" onclick="toggleHouseCommentTextExpand('${escapeHtml(commentKey)}', '${houseId}')" class="comment-expand-btn">
-                          ${isExpanded ? '− Collapse' : '+ Expand'}
+                          − Collapse
                         </button>
                       </div>
                     ` : ''}
@@ -4207,7 +4368,7 @@
             ${(comments.length > 2 && !isListExpanded) ? `
               <div style="margin: -2px 0 8px 0; text-align: left;">
                 <button type="button" onclick="toggleHouseCommentsListExpand('${houseId}')" class="comment-expand-btn">
-                  + Expand (${hiddenCount} fleiri athugasemdir)
+                  + Sýna allar ${comments.length} athugasemdir
                 </button>
               </div>
             ` : ''}
@@ -4216,19 +4377,18 @@
           `}
 
           <div class="house-comment-input-wrap">
-            <input 
-              type="text" 
+            <textarea 
               id="comment-input-${houseId}" 
-              class="house-comment-input" 
-              placeholder="${hasMyComment ? 'Breyta þinni athugasemd...' : (currentPerson ? `Athugasemd sem ${currentPerson}...` : 'Veldu nafn til að skrifa...')}" 
-              value="${escapeHtml(myComment)}"
-              onkeydown="if(event.key==='Enter') saveHouseComment('${houseId}')"
-            />
+              class="house-comment-textarea" 
+              rows="2"
+              placeholder="${hasMyComment ? 'Breyta þinni athugasemd...' : (currentPerson ? `Athugasemd sem ${currentPerson}...` : 'Veldu nafn til að skrifa...')}"
+              onkeydown="if((event.ctrlKey || event.metaKey) && event.key==='Enter') saveHouseComment('${houseId}')"
+            >${escapeHtml(myComment)}</textarea>
             <button 
               type="button"
               class="house-comment-submit-btn" 
               onclick="saveHouseComment('${houseId}')"
-              title="${hasMyComment ? 'Uppfæra athugasemd' : 'Vista athugasemd'}"
+              title="${hasMyComment ? 'Uppfæra athugasemd (eða Ctrl+Enter)' : 'Vista athugasemd (eða Ctrl+Enter)'}"
             >
               ${hasMyComment ? '💾 Vista' : '💬 Senda'}
             </button>
@@ -4271,6 +4431,7 @@
       if (input) {
         input.focus();
         input.select();
+        input.scrollIntoView({ behavior: "smooth", block: "center" });
       }
     }
 
