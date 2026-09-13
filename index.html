@@ -4538,7 +4538,12 @@
     function filterHouses(filter, btn) {
       currentFilter = filter;
       document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
+      if (btn) {
+        btn.classList.add("active");
+      } else {
+        const activeBtn = Array.from(document.querySelectorAll(".filter-btn")).find(b => b.getAttribute("onclick") && b.getAttribute("onclick").includes(`'${filter}'`));
+        if (activeBtn) activeBtn.classList.add("active");
+      }
       renderAllHouses(filter);
     }
 
@@ -4857,36 +4862,37 @@
     }
 
     function jumpToHouse(houseId) {
+      // 1. Tryggja að öll hús séu sýnd (ekki bara efstu 4)
+      housesExpanded = true;
+
+      // 2. Núllstilla vikur í 'all'
+      houseWeekFilter = 'all';
       const filterSelect = document.getElementById("filterHouseWeekSelect");
-      if (filterSelect) {
-        filterSelect.value = "all";
-        if (typeof changeHouseWeekFilter === "function") changeHouseWeekFilter("all");
-      }
-      const houseCard = document.getElementById(`house-card-${houseId}`);
-      if (houseCard) {
-        houseCard.scrollIntoView({ behavior: "smooth", block: "center" });
-        houseCard.style.transition = "box-shadow 0.4s ease, transform 0.4s ease";
-        houseCard.style.boxShadow = "0 0 0 4px #0284c7, 0 15px 30px rgba(2, 132, 199, 0.35)";
-        houseCard.style.transform = "scale(1.02)";
-        setTimeout(() => {
-          houseCard.style.boxShadow = "";
-          houseCard.style.transform = "";
-        }, 2200);
-      } else if (typeof filterHouses === "function") {
-        filterHouses("all");
-        setTimeout(() => {
-          const el2 = document.getElementById(`house-card-${houseId}`);
-          if (el2) {
-            el2.scrollIntoView({ behavior: "smooth", block: "center" });
-            el2.style.boxShadow = "0 0 0 4px #0284c7, 0 15px 30px rgba(2, 132, 199, 0.35)";
-            el2.style.transform = "scale(1.02)";
-            setTimeout(() => {
-              el2.style.boxShadow = "";
-              el2.style.transform = "";
-            }, 2200);
-          }
-        }, 200);
-      }
+      if (filterSelect) filterSelect.value = "all";
+
+      // 3. Núllstilla flokkun í 'all' og uppfæra síuhnappa
+      currentFilter = 'all';
+      document.querySelectorAll(".filter-btn").forEach(b => {
+        b.classList.toggle("active", b.getAttribute("onclick") && b.getAttribute("onclick").includes("'all'"));
+      });
+
+      // 4. Endurteikna öll húsin svo markhúsið sé 100% komið í DOM
+      renderAllHouses('all');
+
+      // 5. Skruna mjúklega að húsinu og lýsa það upp
+      setTimeout(() => {
+        const houseCard = document.getElementById(`house-card-${houseId}`);
+        if (houseCard) {
+          houseCard.scrollIntoView({ behavior: "smooth", block: "center" });
+          houseCard.style.transition = "box-shadow 0.4s ease, transform 0.4s ease";
+          houseCard.style.boxShadow = "0 0 0 5px #0284c7, 0 20px 40px rgba(2, 132, 199, 0.45)";
+          houseCard.style.transform = "scale(1.03)";
+          setTimeout(() => {
+            houseCard.style.boxShadow = "";
+            houseCard.style.transform = "";
+          }, 2600);
+        }
+      }, 60);
     }
 
     function updateSingleHouseCard(houseId) {
