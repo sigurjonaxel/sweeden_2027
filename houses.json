@@ -20,24 +20,20 @@
       "lat": 56.87619,
       "lng": 16.71966
     },
-    "isBudgetFit": true,
+    "isBudgetFit": false,
     "availableWeeks": [
-      "w25",
       "w26",
-      "w31",
       "w32",
       "w33",
       "w34"
     ],
-    "availabilitySummary": "Laust í 6 af 10 vikum á Airbnb (V25, V26, V31, V32, V33, V34)",
+    "availabilitySummary": "Laust í 4 af 10 vikum á Airbnb (V26, V32, V33, V34)",
     "pricePerNightEur": 498,
     "pricesByWeek": {
-      "w25": 4228,
-      "w26": 4333,
-      "w31": 4439,
-      "w32": 4439,
-      "w33": 4439,
-      "w34": 3488
+      "w26": 4332,
+      "w32": 4438,
+      "w33": 4438,
+      "w34": 3487
     }
   },
   {
