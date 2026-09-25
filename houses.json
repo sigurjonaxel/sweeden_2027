@@ -2,6 +2,8 @@
   {
     "id": "36790419",
     "title": "New villa with pool in a nature friendly area",
+    "isBooked": true,
+    "bookedLabel": "🎉 Bókað af fjölskyldunni!",
     "propertyType": "Home in Köpingsvik",
     "city": "Köpingsvik",
     "region": "Svíþjóð (Öland)",

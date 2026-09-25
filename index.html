@@ -1264,6 +1264,369 @@
     .rec-btn-airbnb:hover {
       background: #e00b41;
     }
+
+    /* ==========================================================================
+       BOOKED TRIP CELEBRATION HERO & 7-DAY ITINERARY STYLES
+       ========================================================================== */
+    .booked-trip-hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 35%, #0369a1 70%, #0284c7 100%);
+      color: #ffffff;
+      border: 3px solid #fbbf24 !important;
+      border-radius: 20px;
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      box-shadow: 0 12px 36px -4px rgba(2, 132, 199, 0.4), 0 0 25px rgba(251, 191, 36, 0.35);
+      position: relative;
+      overflow: hidden;
+    }
+    .booked-trip-hero::before {
+      content: "";
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 220px; height: 220px;
+      background: radial-gradient(circle, rgba(251, 191, 36, 0.25) 0%, rgba(251, 191, 36, 0) 70%);
+      pointer-events: none;
+    }
+    .booked-hero-top-ribbon {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(90deg, #f59e0b, #fbbf24);
+      color: #78350f;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 900;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+      margin-bottom: 14px;
+    }
+    .booked-hero-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      align-items: center;
+    }
+    @media (min-width: 860px) {
+      .booked-hero-grid {
+        grid-template-columns: 1.4fr 1fr;
+        gap: 28px;
+      }
+    }
+    .booked-hero-title {
+      font-size: 1.85rem;
+      font-weight: 900;
+      line-height: 1.2;
+      color: #ffffff;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .booked-hero-desc {
+      font-size: 0.98rem;
+      color: #e0f2fe;
+      line-height: 1.55;
+      margin-bottom: 16px;
+    }
+    .booked-pills-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .booked-pill {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(8px);
+      color: #ffffff;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .booked-hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .booked-btn-gold {
+      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+      color: #78350f;
+      border: none;
+      padding: 11px 20px;
+      border-radius: 10px;
+      font-size: 0.92rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+    .booked-btn-gold:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.5);
+      color: #451a03;
+    }
+    .booked-btn-glass {
+      background: rgba(255, 255, 255, 0.18);
+      color: #ffffff;
+      border: 1.5px solid rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(8px);
+      padding: 11px 18px;
+      border-radius: 10px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+    .booked-btn-glass:hover {
+      background: rgba(255, 255, 255, 0.28);
+      transform: translateY(-2px);
+      color: #ffffff;
+    }
+    .booked-hero-img-wrap {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 3px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+      height: 250px;
+    }
+    .booked-hero-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+    .booked-hero-img-wrap:hover img {
+      transform: scale(1.03);
+    }
+    .booked-hero-img-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+      color: #451a03;
+      padding: 5px 12px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 900;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      letter-spacing: 0.02em;
+    }
+    .booked-hero-img-caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, rgba(15, 23, 42, 0.9) 0%, rgba(15, 23, 42, 0.6) 70%, transparent 100%);
+      padding: 12px 14px;
+      font-size: 0.85rem;
+      color: #f8fafc;
+      font-weight: 700;
+    }
+
+    /* Itinerary Section Styles */
+    .itinerary-card {
+      border: 2px solid #38bdf8;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      border-radius: 18px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 26px rgba(15, 23, 42, 0.08);
+      overflow: hidden;
+    }
+    .itinerary-header {
+      padding: 20px 24px 16px 24px;
+      border-bottom: 1.5px solid #e2e8f0;
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    }
+    .itinerary-nav-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 14px;
+    }
+    .itinerary-nav-pill {
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      color: #334155;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .itinerary-nav-pill:hover, .itinerary-nav-pill.active {
+      background: #0284c7;
+      border-color: #0284c7;
+      color: #ffffff;
+      box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25);
+    }
+    .itinerary-days-container {
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .itinerary-day-box {
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+    .itinerary-day-box:hover {
+      border-color: #38bdf8;
+      box-shadow: 0 4px 16px rgba(2, 132, 199, 0.09);
+    }
+    .itinerary-day-box.is-highlighted {
+      border: 2px solid #0284c7;
+      background: #fafcff;
+    }
+    .itinerary-day-header {
+      padding: 12px 18px;
+      background: #f8fafc;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .itinerary-day-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .day-badge-sat { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
+    .day-badge-sun { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+    .day-badge-mon { background: #e0e7ff; color: #3730a3; border: 1px solid #c7d2fe; }
+    .day-badge-tue { background: #fce7f3; color: #9d174d; border: 1px solid #fbcfe8; }
+    .day-badge-wed { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+    .day-badge-thu { background: #ffedd5; color: #9a3412; border: 1px solid #fed7aa; }
+    .day-badge-fri { background: #fae8ff; color: #86198f; border: 1px solid #f5d0fe; }
+    .itinerary-day-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .itinerary-day-content {
+      padding: 16px 18px;
+    }
+    .itinerary-timeline-item {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    .itinerary-timeline-item:last-child {
+      margin-bottom: 0;
+    }
+    .itinerary-time-tag {
+      flex-shrink: 0;
+      width: 82px;
+      font-size: 0.74rem;
+      font-weight: 800;
+      color: #0284c7;
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      padding: 4px 6px;
+      border-radius: 6px;
+      text-align: center;
+      height: fit-content;
+    }
+    .itinerary-time-body {
+      flex: 1;
+      font-size: 0.86rem;
+      color: #334155;
+      line-height: 1.5;
+    }
+    .itinerary-time-body strong {
+      color: #0f172a;
+      font-weight: 700;
+    }
+    .itinerary-tags-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .itinerary-sub-pill {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #e2e8f0;
+    }
+    .itinerary-tips-box {
+      margin: 16px 24px 20px 24px;
+      background: #fffbeb;
+      border: 1.5px solid #fde68a;
+      border-radius: 12px;
+      padding: 16px 18px;
+    }
+    .itinerary-tips-title {
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: #92400e;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    /* Booked house card highlight styles */
+    .house-card.booked-house-highlight {
+      border: 3px solid #f59e0b !important;
+      box-shadow: 0 10px 30px rgba(245, 158, 11, 0.25) !important;
+    }
+    .house-badge-booked-celebration {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+      color: #451a03;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: 1.5px solid #ffffff;
+      animation: pulseBookedBadge 2.5s infinite;
+    }
+    @keyframes pulseBookedBadge {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+    }
   </style>
 </head>
 <body>
@@ -1368,6 +1731,435 @@
           </div>
         </div>
 
+        <!-- ============================================================ -->
+        <!-- HÁTÍÐARBORÐI: FERÐIN ER ÁKVEÐIN & HÚSIÐ BÓKAÐ Í BORGHOLM!     -->
+        <!-- ============================================================ -->
+        <div class="card booked-trip-hero" id="bookedTripHeroCard">
+          <div class="booked-hero-top-ribbon">
+            <span>🎉 FERÐIN ER ÁKVEÐIN & HÚSIÐ BÓKAÐ! 🇸🇪</span>
+          </div>
+
+          <div class="booked-hero-grid">
+            <div>
+              <h1 class="booked-hero-title">
+                Borgholm / Köpingsvik (Öland) 2027 🏰🏊‍♂️
+              </h1>
+              <p class="booked-hero-desc">
+                Fjölskyldan hefur tekið ákvörðun og glæsilega einbýlishúsið í Köpingsvik með <strong>upphitaðri einkasundlaug</strong> er formlega bókað! Hér fyrir neðan er fullkomin <strong>7 daga ævintýradagskrá</strong> hönnuð sérstaklega fyrir alla aldurshópa í fjölskyldunni (10–14 manns: krakka 10 & 15 ára, unglinga og fullorðna).
+              </p>
+
+              <div class="booked-pills-wrap">
+                <span class="booked-pill">🏊 Upphituð útisundlaug & stór sólpallur</span>
+                <span class="booked-pill">🏖️ Köpingsviksbadet hvítasandströnd (~2 mín)</span>
+                <span class="booked-pill">🦁 Ölands Djur- & Nöjespark (vatnagarður + tívolí)</span>
+                <span class="booked-pill">👧 Astrid Lindgrens Värld (Smálönd)</span>
+                <span class="booked-pill">🏰 Borgholms Slott & Solliden</span>
+                <span class="booked-pill">🚗 Flug KEF ➔ CPH + Frjáls Ölandsbrú</span>
+              </div>
+
+              <div class="booked-hero-actions">
+                <button type="button" class="booked-btn-gold" onclick="jumpToHouse('36790419')">
+                  <span>🔍 Skoða bókaða húsið á síðunni ⬇️</span>
+                </button>
+                <button type="button" class="booked-btn-glass" onclick="document.getElementById('itinerarySection').scrollIntoView({ behavior: 'smooth' })">
+                  <span>🗺️ Skoða 7 daga dagskrána ⬇️</span>
+                </button>
+                <a href="https://www.airbnb.com/rooms/36790419" target="_blank" rel="noopener" class="booked-btn-glass" style="font-size: 0.84rem;">
+                  <span>Airbnb ↗</span>
+                </a>
+              </div>
+            </div>
+
+            <div class="booked-hero-img-wrap">
+              <img src="https://a0.muscache.com/im/pictures/8eea17a1-7d73-456c-99b5-7da0b06e62d5.jpg?im_w=720" alt="Villa í Köpingsvik, Öland" loading="lazy" />
+              <div class="booked-hero-img-badge">⭐ VALIÐ OG BÓKAÐ 2027</div>
+              <div class="booked-hero-img-caption">
+                🏡 Köpingsvik / Borgholm, Öland · Einkasundlaug · 4 herbergi · Pláss fyrir 10–14
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 7 DAGA DRAUMADAGSKRÁ FYRIR BORGHOLM & ÖLAND                   -->
+        <!-- ============================================================ -->
+        <div class="card itinerary-card" id="itinerarySection">
+          <div class="itinerary-header">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+              <div>
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+                  <span style="font-size: 1.5rem;">🗺️</span>
+                  <h2 style="font-size: 1.35rem; font-weight: 900; color: #0f172a; margin: 0;">
+                    7 Daga Draumadagskrá Fjölskyldunnar á Öland & Smálöndum
+                  </h2>
+                </div>
+                <div style="font-size: 0.88rem; color: #475569; line-height: 1.45;">
+                  Sérsniðin fyrir hópinn (10–14 manns: börn 10 & 15 ára, unglinga og fullorðna). Fullkomin blanda af <strong>sundi & slökun</strong>, <strong>skemmtigörðum</strong>, <strong>ævintýrum</strong> og <strong>ljúfri sænskri sumargleði</strong>.
+                </div>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <button type="button" class="rec-btn-toggle" onclick="toggleAllItineraryDays()" id="itineraryExpandAllBtn" style="font-size: 0.8rem; padding: 6px 14px; background: #ffffff; color: #0284c7; border: 1.5px solid #bae6fd; box-shadow: none;">
+                  − Fela alla daga (Collapse)
+                </button>
+              </div>
+            </div>
+
+            <!-- Flýtival / Navigation Pills -->
+            <div class="itinerary-nav-pills">
+              <button type="button" class="itinerary-nav-pill active" data-day="all" onclick="filterItineraryDay('all')">Sjá alla daga</button>
+              <button type="button" class="itinerary-nav-pill" data-day="1" onclick="filterItineraryDay('1')">Lau 1: Flug & Koma</button>
+              <button type="button" class="itinerary-nav-pill" data-day="2" onclick="filterItineraryDay('2')">Sun 2: Hvítasandströnd</button>
+              <button type="button" class="itinerary-nav-pill" data-day="3" onclick="filterItineraryDay('3')">Mán 3: Borgholms Slott</button>
+              <button type="button" class="itinerary-nav-pill" data-day="4" onclick="filterItineraryDay('4')">Þri 4: Risagarður Ölands</button>
+              <button type="button" class="itinerary-nav-pill" data-day="5" onclick="filterItineraryDay('5')">Mið 5: Astrid Lindgren</button>
+              <button type="button" class="itinerary-nav-pill" data-day="6" onclick="filterItineraryDay('6')">Fim 6: Gokart & Tröllaskógur</button>
+              <button type="button" class="itinerary-nav-pill" data-day="7" onclick="filterItineraryDay('7')">Fös 7: Kalmar Slott & Grill</button>
+              <button type="button" class="itinerary-nav-pill" data-day="8" onclick="filterItineraryDay('8')">Lau 8: Heimferð</button>
+            </div>
+          </div>
+
+          <div class="itinerary-days-container" id="itineraryDaysWrapper">
+
+            <!-- DAGUR 1 -->
+            <div class="itinerary-day-box" id="itinerary-day-1">
+              <div class="itinerary-day-header">
+                <div class="itinerary-day-title">
+                  <span class="itinerary-day-badge day-badge-sat">Dagur 1 · Laugardagur</span>
+                  <span>Flugið, Eyrarsundsbrúin & Sundlaugarpartý í Köpingsvik</span>
+                </div>
+                <div class="itinerary-tags-row" style="margin-top: 0;">
+                  <span class="itinerary-sub-pill">✈️ Flug KEF ➔ CPH</span>
+                  <span class="itinerary-sub-pill">🌉 Brýrnar miklu</span>
+                  <span class="itinerary-sub-pill">🏊 Upphituð laug</span>
+                </div>
+              </div>
+              <div class="itinerary-day-content">
+                <div class="itinerary-timeline-item">
+                  <div class="itinerary-time-tag">Morgunn</div>
+                  <div class="itinerary-time-body">
+                    <strong>Flug KEF ➔ Kastrup (CPH) & Bílaleiga:</strong> Lent á Kastrup flugvelli í Kaupmannahöfn. Bílaleigubílar sóttir (t.d. 2 sjö-sæta bílar eða stórir fjölskyldubílar) og farangur settur í skott. Allir tilbúnir í sænska ævintýrið!
+                  </div>
+                </div>
+                <div class="itinerary-timeline-item">
+                  <div class="itinerary-time-tag">Hádegi</div>
+                  <div class="itinerary-time-body">
+                    <strong>Eyrarsundsbrúin & Sænskur hádegisverður:</strong> Ekið yfir hina tignarlegu Eyrarsundsbrú til Svíþjóðar. Stoppað fyrir góðan hádegisverð eða kaffi og sænskar bollur á leiðinni (t.d. í Kristianstad eða fallegu hafnarborginni Karlskrona).
+                  </div>
+                </div>
+                <div class="itinerary-timeline-item">
+                  <div class="itinerary-time-tag">Síðdegi</div>
+                  <div class="itinerary-time-body">
+                    <strong>Eylandsbrúin (Ölandsbron) & Koma í villuna:</strong> Ekið yfir hina frægu 6 km löngu brú yfir til Öland (enginn tollur, ókeypis!). Komið í villuna í Köpingsvik (aðeins 5 mín norðan við Borgholm).
+                  </div>
+                </div>
+                <div class="itinerary-timeline-item">
+                  <div class="itinerary-time-tag">Kvöld</div>
+                  <div class="itinerary-time-body">
+                    <strong>Húsfundur, Fyrsta sundið & Pizzukvöld:</strong> Val á herbergjum, krakkarnir og unglingarnir stökkva strax í upphituðu einkasundlaugina á sólpallinum. Pantaðar dýrindis sænskar pizzur í Borgholm eða eldað létt heima – slakað á eftir ferðadaginn.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- DAGUR 2 -->
+            <div class="itinerary-day-box" id="itinerary-day-2">
+              <div class="itinerary-day-header">
+                <div class="itinerary-day-title">
+                  <span class="itinerary-day-badge day-badge-sun">Dagur 2 · Sunnudagur</span>
+                  <span>Köpingsvik hvítasandströndin & Sumarkvöld í Borgholm</span>
+                </div>
+                <div class="itinerary-tags-row" style="margin-top: 0;">
+                  <span class="itinerary-sub-pill">🏖️ Köpingsviksbadet</span>
+                  <span class="itinerary-sub-pill">🍦 Höfnin í Borgholm</span>
+                  <span class="itinerary-sub-pill">🌅 Sólsetur</span>
+                </div>
+              </div>
+              <div class="itinerary-day-content">
+                <div class="itinerary-timeline-item">
+                  <div class="itinerary-time-tag">Morgunn</div>
+                  <div class="itinerary-time-body">
+                    <strong>Rólegur morgunverður úti á sólpallinum:</strong> Notaleg byrjun, kaffi og ferskt bakkelsi í morgunsólinni með útsýni yfir garðinn og sundlaugina.
+                  </div>
+                </div>
+                <div class="itinerary-timeline-item">
+                  <div class="itinerary-time-tag">Hádegi</div>
+                  <div class="itinerary-time-body">
+                    <strong>Köpingsviksbadet – Sandstrandarparadís:</strong> Örstutt ganga eða 2 mínútu hjólatúr niður á eina fegurstu hvítasandströnd Svíþjóðar. Grunnur, hlýr sjór og mjúkur sandur sem hentar krökkum og unglingum fullkomlega. Strandblak, ís og sund.
+                  </div>
+                </div>
+                <div class="itinerary-timeline-item">
+                  <div class="itinerary-time-tag">Síðdegi</div>
+                  <div class="itinerary-time-body">
+                    <strong>Sundlaugargleði heima við villuna:</strong> Komið heim af ströndinni, skolað af sér sandinn og synt í upphituðu lauginni. Fótbolti eða frisbí á grasflötinni.
+                  </div>
+                </div>
+                <div class="itinerary-timeline-item">
+                  <div class="itinerary-time-tag">Kvöld</div>
+                  <div class="itinerary-time-body">
+                    <strong>Kastalabærinn & Höfnin í Borgholm:</strong> Ekið inn í Borgholm (5 mín). Rölt um aðalgötuna og smábátahöfnina, risastór sænskur kúluís, kvöldverður á hafnarveitingastað og dást að sólsetrinu yfir Kalmarsundi.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- DAGUR 3 -->
+            <div class="itinerary-day-box" id="itinerary-day-3">
+              <div class="itinerary-day-header">
+                <div class="itinerary-day-title">
+                  <span class="itinerary-day-badge day-badge-mon">Dagur 3 · Mánudagur</span>
+                  <span>Riddarar & Konungar – Borgholms Slott & Solliden Slott</span>
+                </div>
+                <div class="itinerary-tags-row" style="margin-top: 0;">
+                  <span class="itinerary-sub-pill">🏰 Borgholms Slott</span>
+                  <span class="itinerary-sub-pill">👑 Solliden konungshöll</span>
+                  <span class="itinerary-sub-pill">🧇 Kaffetorpet</span>
+                </div>
+              </div>
+              <div class="itinerary-day-content">
+                <div class="itinerary-timeline-item">
+                  <div class="itinerary-time-tag">Morgunn</div>
+                  <div class="itinerary-time-body">
+                    <strong>Borgholms Slott – „Norðurlandanna voldugasta rúst“:</strong> Heimsókn í hinn risastóra miðaldakastala rétt hjá Borgholm (~8 mín frá húsinu). Krakkarnir geta tekið þátt í riddaraskóla kastalans (riddarskola), skotið með boga og kannað leyndardómsfull neðanjarðargöng kastalans.
+                  </div>
+                </div>
+                <div class="itinerary-timeline-item">
+                  <div class="itinerary-time-tag">Hádegi</div>
+                  <div class="itinerary-time-body">
+                    <strong>Solliden Slott & Konunglegar Vöfflur:</strong> Gengið yfir í sumarhöll sænsku konungsfjölskyldunnar. Kannaðir ægifagrir hallargarðarnir og snætt hádegi eða nýbakaðar vöfflur með sultu og rjóma á hinu fræga Kaffetorpet.
+                  </div>
+                </div>
+                <div class="itinerary-timeline-item">
+                  <div class="itinerary-time-tag">Síðdegi</div>
+                  <div class="itinerary-time-body">
+                    <strong>Sólbað & Sundlaugardjamm:</strong> Slakað á heima við laugina, hlustað á tónlist og notið sumarsins í einkagarðinum.
+                  </div>
+                </div>
+                <div class="itinerary-timeline-item">
+                  <div class="itinerary-time-tag">Kvöld</div>
+                  <div class="itinerary-time-body">
+                    <strong>Fyrsta stóra grillveislan:</strong> Kjöt og grænmeti keypt í stóra ICA Kvantum í Borgholm og grillað saman á sólpallinum í dásamlegu kvöldveðri.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- DAGUR 4 -->
+            <div class="itinerary-day-box" id="itinerary-day-4">
+              <div class="itinerary-day-header">
+                <div class="itinerary-day-title">
+                  <span class="itinerary-day-badge day-badge-tue">Dagur 4 · Þriðjudagur</span>
+                  <span>Mega-skemmtidagur: Ölands Djur- & Nöjespark (Dýragarður, Vatnagarður & Tívolí)</span>
+                </div>
+                <div class="itinerary-tags-row" style="margin-top: 0;">
+                  <span class="itinerary-sub-pill">🦁 160 dýrategundir</span>
+                  <span class="itinerary-sub-pill">🌊 Risastór vatnagarður</span>
+                  <span class="itinerary-sub-pill">🎢 Tívolí innifalið</span>
+                </div>
+              </div>
+              <div class="itinerary-day-content">
+                <div class="itinerary-timeline-item">
+                  <div class="itinerary-time-tag">Allur dagurinn</div>
+                  <div class="itinerary-time-body">
+                    <strong>Hápunktur fyrir krakkana í Färjestaden (~25 mín akstur):</strong> Einn stærsti og fjölbreyttasti fjölskyldugarður Svíþjóðar þar sem ALLT er innifalið í einum og sama aðgöngumiðanum:
+                    <ul style="margin: 8px 0 8px 18px; padding-left: 0; line-height: 1.55;">
+                      <li><strong>🦁 Dýragarðurinn:</strong> Afrísk ljón, síberíutígrisdýr, sebrahestar, apar og krakkasvæði þar sem má klappa húsdýrum.</li>
+                      <li><strong>🌊 Vatnagarðurinn (Vattenland):</strong> 15.000 m² vatnaparadís með risastórum rennibrautum, ævintýralaugum og sólbaðsaðstöðu.</li>
+                      <li><strong>🎢 Tívolí & Skemmtitæki:</strong> Rússíbanar, bílabrautir, fallturnar og hringekjur fyrir bæði 10 og 15 ára sem og eldri.</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="itinerary-timeline-item">
+                  <div class="itinerary-time-tag">Kvöld</div>
+                  <div class="itinerary-time-body">
+                    <strong>Slökun eftir viðburðaríkan dag:</strong> Fjölskyldan kemur heim þreytt og glöð. Léttur kvöldverður, kvöldsund í upphituðu lauginni undir stjörnubjörtum sumarnæturhimni.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- DAGUR 5 -->
+            <div class="itinerary-day-box" id="itinerary-day-5">
+              <div class="itinerary-day-header">
+                <div class="itinerary-day-title">
+                  <span class="itinerary-day-badge day-badge-wed">Dagur 5 · Miðvikudagur</span>
+                  <span>Ævintýraferð í Smálönd: Astrid Lindgrens Värld (Vimmerby)</span>
+                </div>
+                <div class="itinerary-tags-row" style="margin-top: 0;">
+                  <span class="itinerary-sub-pill">👧 Astrid Lindgrens Värld</span>
+                  <span class="itinerary-sub-pill">🌲 Smálönd</span>
+                  <span class="itinerary-sub-pill">🇸🇪 Emil & Lína</span>
+                </div>
+              </div>
+              <div class="itinerary-day-content">
+                <div class="itinerary-timeline-item">
+                  <div class="itinerary-time-tag">Morgunn</div>
+                  <div class="itinerary-time-body">
+                    <strong>Ekið inn í heillandi skóga Smálanda:</strong> Snæddur morgunverður og ekið yfir Eylandsbrúna til Vimmerby í Smálöndum (~1 klst. 45 mín.). Fallegur akstur um sænska sveit.
+                  </div>
+                </div>
+                <div class="itinerary-timeline-item">
+                  <div class="itinerary-time-tag">Dagurinn</div>
+                  <div class="itinerary-time-body">
+                    <strong>Sögur Astrid Lindgren lifna við:</strong> Ótrúlegur ævintýragarður þar sem sögurnar sem allir þekkja verða að veruleika:
+                    <ul style="margin: 8px 0 8px 18px; padding-left: 0; line-height: 1.55;">
+                      <li><strong>🏡 Kattholt (Katthult):</strong> Emil í Kattholti, Ída litla og hið fræga spikbúr (Snickerboa).</li>
+                      <li><strong>🏴‍☠️ Sjónarhóll (Villa Villekulla):</strong> Hús Línu Langsokk, hesturinn hennar og apinn herra Níels.</li>
+                      <li><strong>🏰 Mattisborgin:</strong> Ronja ræningjadóttir, Birkir og Heljargjáin.</li>
+                      <li><strong>🌸 Bræðurnir Ljónshjarta:</strong> Kirsuberjadalurinn í Nangijala.</li>
+                    </ul>
+                    Lifandi leiksýningar, leiksvæði og klifurgarðar sem heilla jafnt unga sem aldna.
+                  </div>
+                </div>
+                <div class="itinerary-timeline-item">
+                  <div class="itinerary-time-tag">Síðdegi/Kvöld</div>
+                  <div class="itinerary-time-body">
+                    <strong>Sænskt fika & Heimferð:</strong> Kanilsnúðar og kaffi í Smálöndum áður en haldið er heim á Öland. Komið við í ICA Kvantum í Borgholm fyrir kvöldmat og slakað á í lauginni heima.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- DAGUR 6 -->
+            <div class="itinerary-day-box" id="itinerary-day-6">
+              <div class="itinerary-day-header">
+                <div class="itinerary-day-title">
+                  <span class="itinerary-day-badge day-badge-thu">Dagur 6 · Fimmtudagur</span>
+                  <span>Norður-Eyland: Gokartcenter, Tröllaskógurinn & Sjávarréttir í Byxelkrok</span>
+                </div>
+                <div class="itinerary-tags-row" style="margin-top: 0;">
+                  <span class="itinerary-sub-pill">🏎️ Ölands Gokart</span>
+                  <span class="itinerary-sub-pill">🌲 Trollskogen</span>
+                  <span class="itinerary-sub-pill">🐟 Byxelkrok</span>
+                </div>
+              </div>
+              <div class="itinerary-day-content">
+                <div class="itinerary-timeline-item">
+                  <div class="itinerary-time-tag">Morgunn</div>
+                  <div class="itinerary-time-body">
+                    <strong>Spennandi keppni í Ölands Gokartcenter:</strong> Aðeins ~15 mín frá húsinu er ein stærsta og hraðasta útigokartbraut Svíþjóðar. Frábær skemmtun fyrir krakkana (10 & 15 ára) og fullorðnu keppnismennina!
+                  </div>
+                </div>
+                <div class="itinerary-timeline-item">
+                  <div class="itinerary-time-tag">Hádegi</div>
+                  <div class="itinerary-time-body">
+                    <strong>Trollskogen (Tröllaskógurinn) & Skipsflakið Swiks:</strong> Ekið á nyrsta odda Eylands. Gengið um dularfullan ævintýraskóg með kræklóttum forntrjám, fornminjum og skoðað hið fræga skipsflak timburskútunnar <em>Swiks</em> sem strandaði á fjörunni árið 1926.
+                  </div>
+                </div>
+                <div class="itinerary-timeline-item">
+                  <div class="itinerary-time-tag">Síðdegi</div>
+                  <div class="itinerary-time-body">
+                    <strong>Byxelkrok smábátahöfnin:</strong> Litríkar sjóbúðir, nýreyktur lax, rækjur og ljúffengt sjávarfang beint við bryggjuna í Byxelkrok.
+                  </div>
+                </div>
+                <div class="itinerary-timeline-item">
+                  <div class="itinerary-time-tag">Kvöld</div>
+                  <div class="itinerary-time-body">
+                    <strong>Sundlaugargleði & Spilakvöld:</strong> Heimkoma í villuna, sundlaugargleði og skemmtilegt borðspilakvöld úti á sólpallinum.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- DAGUR 7 -->
+            <div class="itinerary-day-box" id="itinerary-day-7">
+              <div class="itinerary-day-header">
+                <div class="itinerary-day-title">
+                  <span class="itinerary-day-badge day-badge-fri">Dagur 7 · Föstudagur</span>
+                  <span>Kalmar Slott, Gamli bærinn & Stóra Kveðjugrillið</span>
+                </div>
+                <div class="itinerary-tags-row" style="margin-top: 0;">
+                  <span class="itinerary-sub-pill">🏰 Kalmar Slott</span>
+                  <span class="itinerary-sub-pill">🏘️ Gamla Stan Kalmar</span>
+                  <span class="itinerary-sub-pill">🥩 Kveðjugrill</span>
+                </div>
+              </div>
+              <div class="itinerary-day-content">
+                <div class="itinerary-timeline-item">
+                  <div class="itinerary-time-tag">Morgunn</div>
+                  <div class="itinerary-time-body">
+                    <strong>Kalmar Slott – Hinn sögufrægi miðaldakastali:</strong> Ekið yfir Eylandsbrúna til Kalmar (~35 mín). Kannaður hinn magnaði kastali sem var lykilstöð í Kalmarsambandinu með virkisgröf, leyndardómum og sýningum.
+                  </div>
+                </div>
+                <div class="itinerary-timeline-item">
+                  <div class="itinerary-time-tag">Hádegi</div>
+                  <div class="itinerary-time-body">
+                    <strong>Gamla Stan í Kalmar:</strong> Rölt um fallegu steinilögðu strætin og torgin í gamla bænum. Kaffihús, ís eða hádegisverður á torginu.
+                  </div>
+                </div>
+                <div class="itinerary-timeline-item">
+                  <div class="itinerary-time-tag">Síðdegi</div>
+                  <div class="itinerary-time-body">
+                    <strong>Síðasti heili laugar- og sólardagurinn:</strong> Allir njóta villunnar og garðsins til hins ítrasta. Síðasta stóra sundlaugarbaðið, sólað sig og slakað á.
+                  </div>
+                </div>
+                <div class="itinerary-timeline-item">
+                  <div class="itinerary-time-tag">Kvöld</div>
+                  <div class="itinerary-time-body">
+                    <strong>Stóra kveðju-grillveislan:</strong> Glæsilegt grillkvöld á sólpallinum í Köpingsvik. Farið yfir hápunkta vikunnar, hlátur, myndir skoðaðar og skálað fyrir frábæru fríi!
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- DAGUR 8 -->
+            <div class="itinerary-day-box" id="itinerary-day-8">
+              <div class="itinerary-day-header">
+                <div class="itinerary-day-title">
+                  <span class="itinerary-day-badge day-badge-sat">Dagur 8 · Laugardagur</span>
+                  <span>Kveðjustund, Ekið til Kastrup (CPH) & Flug Heim til Íslands</span>
+                </div>
+                <div class="itinerary-tags-row" style="margin-top: 0;">
+                  <span class="itinerary-sub-pill">🧳 Útskráning</span>
+                  <span class="itinerary-sub-pill">🚗 Ekið til Kastrup</span>
+                  <span class="itinerary-sub-pill">✈️ Flug KEF</span>
+                </div>
+              </div>
+              <div class="itinerary-day-content">
+                <div class="itinerary-timeline-item">
+                  <div class="itinerary-time-tag">Morgunn</div>
+                  <div class="itinerary-time-body">
+                    <strong>Pakkað saman & Útskráning:</strong> Morgunmatur, gengið frá og kveðjustund í dásamlegu villunni í Köpingsvik. Lagt af stað suður í átt að Kaupmannahöfn (~4 klst. 15 mín. akstur).
+                  </div>
+                </div>
+                <div class="itinerary-timeline-item">
+                  <div class="itinerary-time-tag">Hádegi/Síðdegi</div>
+                  <div class="itinerary-time-body">
+                    <strong>Stopp á leiðinni & Kastrup (CPH):</strong> Góð pásastopp á leiðinni í gegnum Skåne. Ef flugið er seint er hægt að koma við í Malmö eða í miðbæ Kaupmannahafnar áður en haldið er á Kastrup flugvöll.
+                  </div>
+                </div>
+                <div class="itinerary-timeline-item">
+                  <div class="itinerary-time-tag">Kvöld</div>
+                  <div class="itinerary-time-body">
+                    <strong>Skilað bílum & Flug heim:</strong> Bílaleigubílum skilað á Kastrup flugvelli og flogið heim til Íslands með ógleymanlegar minningar og fullar símamyndavélar af ævintýrum á Öland!
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- HAGNÝT RÁÐ FYRIR ÖLANDSFERÐINA -->
+          <div class="itinerary-tips-box">
+            <div class="itinerary-tips-title">
+              <span>💡 Hagnýt Ráð fyrir Ölandsferðina:</span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; font-size: 0.84rem; color: #78350f; line-height: 1.45;">
+              <div>
+                <strong>🚗 Akstur & Brýr:</strong> Ekið er frá Kastrup yfir Eyrarsundsbrúna (tollbrú, hagstætt að kaupa ØresundGO / miða á netinu). Hin 6 km langa Ölandsbrú (frá Kalmar til Öland) er hins vegar <strong>100% ókeypis</strong> án nokkurs tolls!
+              </div>
+              <div>
+                <strong>🛒 Matarinnkaup í Borgholm:</strong> Aðeins 5 mínútur frá húsinu er risastór <strong>ICA Kvantum</strong> sem hefur allt sem stórfjölskyldan þarf: ferskt grillkjöt, ferskt brauð, grænmeti og mikið vöruúrval.
+              </div>
+              <div>
+                <strong>🎟️ Skemmtigarðamiðar:</strong> Gott er að kaupa miða í <strong>Astrid Lindgrens Värld</strong> og <strong>Ölands Djur- & Nöjespark</strong> á netinu fyrirfram svo hægt sé að ganga beint inn án biðraða.
+              </div>
+              <div>
+                <strong>🏊 Einkalaug & Slökun:</strong> Villan býður upp á upphitaða útisundlaug og lokaðan sólpall sem gerir alla heima-daga að algjörri lúxushvíld fyrir alla fjölskyldumeðlimi!
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="card" id="weeksMatrixCard">
           <div class="card-title" style="display: flex; align-items: center; gap: 8px;">
             <span style="font-size: 1.3rem;">📅</span>
@@ -1407,27 +2199,27 @@
               <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px;">
                 <span style="font-size: 1.25rem;">🎯</span>
                 <span style="font-size: 1.15rem; font-weight: 800; color: #0f172a;">Niðurstaða & Ráðgjöf</span>
+                <span class="rec-pill" style="background: linear-gradient(90deg, #fef3c7, #fde68a); color: #78350f; border: 1px solid #f59e0b; font-weight: 900;">🎉 BÓKAÐ: Borgholm (Öland)</span>
                 <span class="rec-pill rec-pill-blue" style="font-size: 0.74rem; padding: 2px 9px;">✈️ Flug CPH</span>
-                <span class="rec-pill rec-pill-green" style="font-size: 0.74rem; padding: 2px 9px;">🌟 Vika 27 (0 nei)</span>
-                <span class="rec-pill rec-pill-amber" style="font-size: 0.74rem; padding: 2px 9px;">🎂 Anna 6. júlí</span>
+                <span class="rec-pill rec-pill-green" style="font-size: 0.74rem; padding: 2px 9px;">🌟 Sumar 2027</span>
               </div>
 
               <!-- Sæti 1, 2 og 3 í compact -->
               <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; font-size: 0.81rem; font-weight: 700;">
+                <span style="color: #78350f; background: #fef3c7; padding: 3px 10px; border-radius: 6px; border: 1.5px solid #f59e0b;">
+                  ⭐ BÓKAÐ: New villa with pool – Borgholm / Köpingsvik (Öland)
+                </span>
                 <span style="color: #0369a1; background: #e0f2fe; padding: 3px 9px; border-radius: 6px; border: 1px solid #bae6fd;">
-                  🥇 1. Strandhuset – Borrby, Österlen (Skåne · V27)
+                  🥇 1. Strandhuset – Borrby, Österlen
                 </span>
                 <span style="color: #334155; background: #f1f5f9; padding: 3px 9px; border-radius: 6px; border: 1px solid #cbd5e1;">
-                  🥈 2. Strandsetur – Brantevik, Österlen (Skåne · V26)
-                </span>
-                <span style="color: #92400e; background: #fef3c7; padding: 3px 9px; border-radius: 6px; border: 1px solid #fde68a;">
-                  🥉 3. Hasmark Retreat – Otterup, Fjón (Danmörk · V27)
+                  🥈 2. Strandsetur – Brantevik, Österlen
                 </span>
               </div>
 
               <!-- Borgholm / Öland í compact -->
-              <div style="font-size: 0.82rem; color: #475569; line-height: 1.4; background: #fdf4ff; border: 1px solid #f5d0fe; padding: 5px 10px; border-radius: 8px; margin-top: 2px; display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-                <span>🏰 <strong>Borgholm / Köpingsvik (Öland, Svíþjóð):</strong> Spennandi kostur m. sundlaug og frábærlega staðsett fyrir Smálönd & Astrid Lindgren – en langur akstur frá CPH (~4,5–5 klst.).</span>
+              <div style="font-size: 0.82rem; color: #1e3a8a; line-height: 1.4; background: linear-gradient(90deg, #fffbeb, #eff6ff); border: 1.5px solid #f59e0b; padding: 6px 12px; border-radius: 8px; margin-top: 2px; display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; font-weight: 700;">
+                <span>🎉 <strong>ÁKVÖRÐUN TEKIN:</strong> Villan í Köpingsvik / Borgholm er formlega bókuð! Sjá hátíðarborða og 7 daga heildardagskrána efst á síðunni.</span>
               </div>
             </div>
 
@@ -1559,18 +2351,19 @@
                 </div>
 
                 <!-- Hús 4: Borgholm / Köpingsvik (Öland) -->
-                <div class="rec-house-item" style="border: 1.5px solid #d8b4fe;">
-                  <span class="rec-house-badge" style="background: #7c3aed; color: white;">🏰 SMÁLÖND & ÖLAND: SPENNANDI KOSTUR</span>
+                <div class="rec-house-item" style="border: 2px solid #f59e0b; box-shadow: 0 4px 18px rgba(245, 158, 11, 0.25);">
+                  <span class="rec-house-badge" style="background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #451a03; font-weight: 900;">🎉 VALIÐ & BÓKAÐ AF FJÖLSKYLDUNNI! ⭐</span>
                   <img src="https://a0.muscache.com/im/pictures/8eea17a1-7d73-456c-99b5-7da0b06e62d5.jpg?im_w=720" alt="Borgholm Köpingsvik Öland" class="rec-house-img" loading="lazy" />
                   <div class="rec-house-body">
                     <div class="rec-house-title">New villa with pool – Borgholm / Köpingsvik (Öland)</div>
-                    <div class="rec-house-price">€4.332 <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-muted);">/ vika 26 (~640 þús. kr.)</span></div>
+                    <div class="rec-house-price">€4.332 <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-muted);">/ vika (~640 þús. kr.)</span></div>
                     <div class="rec-house-specs">
                       <span>🏊 Upphituð útisundlaug</span> · <span>🛏️ 4 svefnherb.</span> · <span>🏖️ Köpingsvik strönd</span> · <span>🚗 ~4,5–5 klst. frá CPH</span>
                     </div>
                     <ul class="rec-house-highlights" style="padding-left: 18px; margin: 0 0 14px 0;">
+                      <li><strong>🎉 BÓKAÐ FYRIR FERÐINA:</strong> Þetta glæsilega hús var valið og bókað af fjölskyldunni!</li>
                       <li><strong>Smálönd & Astrid Lindgren:</strong> Frábær staðsetning til að heimsækja söguheim Astrid Lindgren í Vimmerby (Emil í Kattholti, Pippi o.fl.), Borgholms Slott og sólareyjunna Öland.</li>
-                      <li><strong>Lúxusaðstaða:</strong> Nýlegt hús með upphitaðri útisundlaug, stórum palli og stutt í fallegar sandstrendur.</li>
+                      <li><strong>Lúxusaðstaða:</strong> Nýlegt hús með upphitaðri útisundlaug, stórum palli og örstutt í hvítasandströndina Köpingsviksbadet.</li>
                       <li><strong>Athugið aksturinn:</strong> ~4,5 til 5 klst. akstur frá Kastrup (>420 km) – krefst lengri ferðadags miðað við Österlen.</li>
                       <li><strong>Laust í:</strong> Viku 26 (og viku 32–34). Uppbókað í viku 27.</li>
                     </ul>
@@ -4851,6 +5644,52 @@
       showToast("🗑️ Athugasemd eytt");
     }
 
+    let allItineraryExpanded = true;
+    function toggleAllItineraryDays() {
+      allItineraryExpanded = !allItineraryExpanded;
+      const wrap = document.getElementById("itineraryDaysWrapper");
+      const btn = document.getElementById("itineraryExpandAllBtn");
+      if (wrap) {
+        wrap.style.display = allItineraryExpanded ? "flex" : "none";
+      }
+      if (btn) {
+        btn.innerHTML = allItineraryExpanded ? "− Fela alla daga (Collapse)" : "+ Sýna alla daga (Expand)";
+      }
+    }
+
+    function filterItineraryDay(dayId) {
+      const wrap = document.getElementById("itineraryDaysWrapper");
+      if (wrap) wrap.style.display = "flex";
+      allItineraryExpanded = true;
+      const expandBtn = document.getElementById("itineraryExpandAllBtn");
+      if (expandBtn) expandBtn.innerHTML = "− Fela alla daga (Collapse)";
+
+      const allDays = document.querySelectorAll('.itinerary-day-box');
+      const allPills = document.querySelectorAll('.itinerary-nav-pill');
+      allPills.forEach(p => p.classList.remove('active'));
+
+      const activePill = document.querySelector(`.itinerary-nav-pill[data-day="${dayId}"]`);
+      if (activePill) activePill.classList.add('active');
+
+      if (dayId === 'all') {
+        allDays.forEach(d => {
+          d.style.display = 'block';
+          d.classList.remove('is-highlighted');
+        });
+      } else {
+        allDays.forEach(d => {
+          if (d.id === `itinerary-day-${dayId}`) {
+            d.style.display = 'block';
+            d.classList.add('is-highlighted');
+            d.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          } else {
+            d.style.display = 'none';
+            d.classList.remove('is-highlighted');
+          }
+        });
+      }
+    }
+
     let isRecommendationExpanded = false;
 
     function toggleRecommendationCard() {
@@ -5066,11 +5905,18 @@
       const curWkPrice = getHousePriceForWeek(h, activeWk);
       const curNightly = Math.round(curWkPrice / 7);
 
+      const isThisBooked = h.isBooked || h.id === '36790419';
+
       return `
-        <div class="house-card" id="house-card-${h.id}">
+        <div class="house-card ${isThisBooked ? 'booked-house-highlight' : ''}" id="house-card-${h.id}">
           <div class="house-img-box">
             <img src="${cardPhoto}" alt="${h.title}" loading="lazy" onerror="this.src='${defaultImg}'" />
-            <div class="house-badge-loc">${h.region}</div>
+            ${isThisBooked ? `
+              <div class="house-badge-booked-celebration">🎉 BÓKAÐ AF FJÖLSKYLDUNNI! ⭐</div>
+              <div class="house-badge-loc" style="top: auto; bottom: 10px; left: 10px;">${h.region}</div>
+            ` : `
+              <div class="house-badge-loc">${h.region}</div>
+            `}
             <div id="pop-badge-${h.id}" style="display:contents;">${getHouseBadgeHTML(h)}</div>
             ${h.suggestedBy ? `<div class="house-badge-custom" style="${h.suggestedBy.toLowerCase().includes('gemini') ? 'background: linear-gradient(135deg, #4f46e5, #9333ea); color: #fff; font-weight: 800; border: 1px solid rgba(255,255,255,0.4); box-shadow: 0 2px 8px rgba(147, 51, 234, 0.4);' : ''}">✨ Tillaga: ${h.suggestedBy}</div>` : (h.isCustom ? `<div class="house-badge-custom">Tillaga: ${h.suggestedBy || 'Fjölskylda'}</div>` : '')}
             <div class="house-badge-price" title="${activeWk ? `€${curNightly} á nótt · €${curWkPrice.toLocaleString('de-DE')} fyrir 7 nætur í ${activeWk.toUpperCase()}` : (h.pricesByWeek && Object.keys(h.pricesByWeek).length > 0 ? (Math.min(...Object.values(h.pricesByWeek)) !== Math.max(...Object.values(h.pricesByWeek)) ? `Verð frá Airbnb: Frá €${Math.min(...Object.values(h.pricesByWeek)).toLocaleString('de-DE')} upp í €${Math.max(...Object.values(h.pricesByWeek)).toLocaleString('de-DE')} eftir vikum` : `Fast verð frá Airbnb: €${(h.priceEur || 3000).toLocaleString('de-DE')} / vika`) : '')}">${displayPrice}</div>
@@ -5078,6 +5924,7 @@
           <div class="house-body">
             <h3 class="house-title">${h.title}</h3>
             <div class="house-specs">
+              ${isThisBooked ? `<span style="background: linear-gradient(135deg, #fef3c7, #fde68a); color: #78350f; font-weight: 900; border: 1px solid #f59e0b;">🏆 BÓKAÐ FYRIR FERÐINA 2027</span>` : ''}
               <span>⭐ ${h.rating}</span>
               ${specsHTML}
             </div>
