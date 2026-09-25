@@ -72,9 +72,9 @@ UID:oland-2027-v2-6@sweeden2027.is
 DTSTAMP:20260925T223300Z
 DTSTART;VALUE=DATE:20270702
 DTEND;VALUE=DATE:20270703
-SUMMARY:🏎️ Dagur 6 (Fös 2. júl): Gokart, Trollskogen (Tröllaskógur) & Byxelkrok
-DESCRIPTION:Fjölskyldukeppni í Ölands Gokartcenter, ævintýraferð í Tröllaskóginn á nyrsta odda eyjunnar og skoðað skipsflakið Swiks, ferskur reyktur lax í Byxelkrok.
-LOCATION:Ölands Gokart & Trollskogen, Öland
+SUMMARY:🚗 Dagur 6 (Fös 2. júl): Bílagarðurinn (Lådbilslandet), Gokart & Norður-Eyland
+DESCRIPTION:Fjölskyldudagur á Norður-Eylandi: Bílagarðurinn (Lådbilslandet í Löttorp) með alvöru smábílum og ökuskírteinum fyrir krakkana, Ölands Gokartcenter fyrir eldri/fullorðna, ævintýraganga í Tröllaskóginum (Trollskogen) og nýreyktur lax í Byxelkrok.
+LOCATION:Lådbilslandet & Trollskogen, Norður-Öland
 STATUS:CONFIRMED
 END:VEVENT
 BEGIN:VEVENT
