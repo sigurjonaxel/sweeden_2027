@@ -1,0 +1,109 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Svíþjóðarferð 2027//Öland Itinerary//IS
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Svíþjóðarferð 2027 – Borgholm & Öland
+BEGIN:VEVENT
+UID:oland-2027-0@sweeden2027.is
+DTSTAMP:20260925T223000Z
+DTSTART;VALUE=DATE:20270626
+DTEND;VALUE=DATE:20270705
+SUMMARY:🇸🇪 Svíþjóðarferð 2027 – Borgholm & Öland 🏰🏊‍♂️
+DESCRIPTION:Fjölskylduferð í lúxusvillu með upphitaðri sundlaug í Köpingsvik / Borgholm á Öland.
+Bókað hús: https://www.airbnb.com/rooms/36790419
+Flug: KEF - CPH
+LOCATION:Köpingsvik, Borgholm, Öland, Svíþjóð
+STATUS:CONFIRMED
+END:VEVENT
+BEGIN:VEVENT
+UID:oland-2027-1@sweeden2027.is
+DTSTAMP:20260925T223000Z
+DTSTART;VALUE=DATE:20270626
+DTEND;VALUE=DATE:20270627
+SUMMARY:✈️ Dagur 1: Flug KEF ➔ CPH, Eyrarsundsbrúin & Koma í villuna
+DESCRIPTION:Flug til Kaupmannahafnar (CPH), bílaleigubílar sóttir, ekið yfir Eyrarsundsbrúna til Svíþjóðar, stopp í Skåne, yfir 6 km gjaldfrjálsu Ölandsbrúna og komið í villuna í Köpingsvik. Fyrsta sundlaugarpartýið og kvöldverður/pizzur.
+LOCATION:Köpingsvik, Öland
+STATUS:CONFIRMED
+END:VEVENT
+BEGIN:VEVENT
+UID:oland-2027-2@sweeden2027.is
+DTSTAMP:20260925T223000Z
+DTSTART;VALUE=DATE:20270627
+DTEND;VALUE=DATE:20270628
+SUMMARY:🏖️ Dagur 2: Köpingsvik hvítasandströndin & Kvöld í Borgholm
+DESCRIPTION:Morgunverður á sólpallinum, örstutt ganga niður á Köpingsviksbadet hvítasandströndina, sundlaugagleði heima, risastór kúluís og sólsetur við smábátahöfnina í Borgholm.
+LOCATION:Köpingsviksbadet, Öland
+STATUS:CONFIRMED
+END:VEVENT
+BEGIN:VEVENT
+UID:oland-2027-3@sweeden2027.is
+DTSTAMP:20260925T223000Z
+DTSTART;VALUE=DATE:20270628
+DTEND;VALUE=DATE:20270629
+SUMMARY:🏰 Dagur 3: Borgholms Slott & Solliden (Kaffetorpet vöfflur)
+DESCRIPTION:Riddarar, bogfimi og leyndardómar í Borgholms Slott («Norðurlandanna voldugasta rúst»), nýbakaðar vöfflur á Kaffetorpet í hallargörðum Solliden konungshallar. Sund og grill heima.
+LOCATION:Borgholms Slott & Solliden, Öland
+STATUS:CONFIRMED
+END:VEVENT
+BEGIN:VEVENT
+UID:oland-2027-4@sweeden2027.is
+DTSTAMP:20260925T223000Z
+DTSTART;VALUE=DATE:20270629
+DTEND;VALUE=DATE:20270630
+SUMMARY:🦁 Dagur 4: Mega-garðurinn Ölands Djur- & Nöjespark
+DESCRIPTION:Fullur dagur í Färjestaden: Dýragarður (160 dýrategundir), 15.000 m² vatnagarður með rennibrautum og tívolí/leiktæki (allt innifalið í einum miða). Kvöldsund í lauginni heima.
+LOCATION:Ölands Djur- & Nöjespark, Färjestaden
+STATUS:CONFIRMED
+END:VEVENT
+BEGIN:VEVENT
+UID:oland-2027-5@sweeden2027.is
+DTSTAMP:20260925T223000Z
+DTSTART;VALUE=DATE:20270630
+DTEND;VALUE=DATE:20270701
+SUMMARY:👧 Dagur 5: Astrid Lindgrens Värld í Vimmerby (Smálönd)
+DESCRIPTION:Dagsferð inn í skóga Smálanda til Vimmerby. Emil í Kattholti, Lína Langsokk, Ronja ræningjadóttir og Bræðurnir Ljónshjarta lifna við. Sænskt fika og búðarstopp í stóra ICA Kvantum í Borgholm.
+LOCATION:Astrid Lindgrens Värld, Vimmerby
+STATUS:CONFIRMED
+END:VEVENT
+BEGIN:VEVENT
+UID:oland-2027-6@sweeden2027.is
+DTSTAMP:20260925T223000Z
+DTSTART;VALUE=DATE:20270701
+DTEND;VALUE=DATE:20270702
+SUMMARY:🏎️ Dagur 6: Gokart, Trollskogen (Tröllaskógur) & Byxelkrok
+DESCRIPTION:Fjölskyldukeppni í Ölands Gokartcenter, ævintýraferð í Tröllaskóginn á nyrsta odda eyjunnar og skoðað skipsflakið Swiks, ferskur lax í litríku sjóbúðunum í Byxelkrok.
+LOCATION:Ölands Gokart & Trollskogen, Öland
+STATUS:CONFIRMED
+END:VEVENT
+BEGIN:VEVENT
+UID:oland-2027-7@sweeden2027.is
+DTSTAMP:20260925T223000Z
+DTSTART;VALUE=DATE:20270702
+DTEND;VALUE=DATE:20270703
+SUMMARY:🏰 Dagur 7: Kalmar Slott, Gamla Stan & Sundlaugar chill
+DESCRIPTION:Ekið yfir brúna til Kalmar (~35 mín), skoða hinn sögufræga miðaldakastala Kalmar Slott og rölt um Gamla Stan. Síðdegis slökun við sundlaugina heima.
+LOCATION:Kalmar Slott, Kalmar
+STATUS:CONFIRMED
+END:VEVENT
+BEGIN:VEVENT
+UID:oland-2027-8@sweeden2027.is
+DTSTAMP:20260925T223000Z
+DTSTART;VALUE=DATE:20270703
+DTEND;VALUE=DATE:20270704
+SUMMARY:🥩 Dagur 8: Sólbað & Stóra Kveðjugrillið á sólpallinum
+DESCRIPTION:Síðasti heili dagurinn í villunni: Sundlaugarleikir, sólbað, slökun og glæsileg kveðjugrillveisla á sólpallinum í Köpingsvik.
+LOCATION:Köpingsvik, Öland
+STATUS:CONFIRMED
+END:VEVENT
+BEGIN:VEVENT
+UID:oland-2027-9@sweeden2027.is
+DTSTAMP:20260925T223000Z
+DTSTART;VALUE=DATE:20270704
+DTEND;VALUE=DATE:20270705
+SUMMARY:🧳 Dagur 9: Útskráning, Ekið til Kastrup (CPH) & Flug Heim
+DESCRIPTION:Pakkað saman, kveðjustund í villunni, ekið til Kaupmannahafnar (~4 klst. 15 mín.), bílaleigubílum skilað á Kastrup flugvelli og flogið heim til Íslands.
+LOCATION:Kastrup Airport (CPH)
+STATUS:CONFIRMED
+END:VEVENT
+END:VCALENDAR
