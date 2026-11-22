@@ -1,10 +1,7 @@
 name: Sync User Asks to GitHub Issues
 
 on:
-  schedule:
-    # Keyrir sjálfkrafa á 30 mínútna fresti
-    - cron: '*/30 * * * *'
-  workflow_dispatch: # Leyfir líka að keyra handvirkt hvenær sem er úr GitHub Actions flipanum
+  workflow_dispatch: # Leyfir að keyra handvirkt úr GitHub Actions flipanum
 
 jobs:
   sync:

@@ -63,21 +63,40 @@ def encrypt_payload(pin, data_dict):
     }
 
 def fetch_cloud_data(pin):
-    req = urllib.request.Request(CLOUD_SYNC_URL, headers={"User-Agent": "Mozilla/5.0"})
-    with urllib.request.urlopen(req) as resp:
-        enc_dict = json.loads(resp.read().decode("utf-8"))
-    return decrypt_payload(pin, enc_dict)
+    try:
+        req = urllib.request.Request(CLOUD_SYNC_URL, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            content = resp.read().decode("utf-8")
+            if not content.strip():
+                return {}
+            enc_dict = json.loads(content)
+        if not isinstance(enc_dict, dict) or "data" not in enc_dict:
+            return {}
+        return decrypt_payload(pin, enc_dict)
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            print("ℹ️ Engin gögn fundust í skýinu (404 - skýjageymsla tóm eða útrunnin).")
+            return {}
+        print(f"⚠️ Villa við að sækja skýjagögn: HTTP {e.code}")
+        return {}
+    except Exception as e:
+        print(f"⚠️ Villa við að sækja eða afkóða skýjagögn: {e}")
+        return {}
 
 def save_cloud_data(pin, data_dict):
-    encrypted = encrypt_payload(pin, data_dict)
-    req = urllib.request.Request(
-        CLOUD_SYNC_URL,
-        data=json.dumps(encrypted).encode("utf-8"),
-        headers={"Content-Type": "application/json", "User-Agent": "Mozilla/5.0"},
-        method="POST"
-    )
-    with urllib.request.urlopen(req) as resp:
-        return resp.status in (200, 201)
+    try:
+        encrypted = encrypt_payload(pin, data_dict)
+        req = urllib.request.Request(
+            CLOUD_SYNC_URL,
+            data=json.dumps(encrypted).encode("utf-8"),
+            headers={"Content-Type": "application/json", "User-Agent": "Mozilla/5.0"},
+            method="POST"
+        )
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            return resp.status in (200, 201)
+    except Exception as e:
+        print(f"⚠️ Ekki tókst að vista í ský: {e}")
+        return False
 
 def create_github_issue(repo, token, req):
     category = req.get("category", "💡 Hugmynd")
@@ -136,8 +155,14 @@ def main():
 
     print(f"🔍 Athuga skýjagögn á {CLOUD_SYNC_URL}...")
     data = fetch_cloud_data(pin)
+    if not isinstance(data, dict) or not data:
+        print("✅ Engin gögn eða engar ábendingar í skýinu. Allt í lagi!")
+        return
 
     user_requests = data.get("userRequests", [])
+    if not isinstance(user_requests, list):
+        print("✅ Engar ábendingar fundust í gögnunum. Allt í lagi!")
+        return
     print(f"📋 Fann {len(user_requests)} skráðar ábendingar í heildina.")
 
     pending = [r for r in user_requests if not r.get("issueCreated")]
